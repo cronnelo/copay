@@ -237,15 +237,12 @@
                               $ionicLoading.show({
                                 template: 'Broadcasting Transaction. Please Wait...'
                               });
-                              // return root.removeTx(wallet, txp, function() {
-                              //   // comment out thes 5 lines and send `return cb(null,txp) to skip broadcast`
-                              //   return txUtil.submit(tx.signedHex).then(function() {
-                              //     return cb(null, txp)
-                              //   }, function(err) {
-                              //     return cb(err)
-                              //   })
-                              //   // return cb(null,txp)
-                              // })
+                              // comment out thes 5 lines and send `return cb(null,txp) to skip broadcast`
+                              return txUtil.submit(tx.signedHex).then(function() {
+                                return cb(null, txp)
+                              }, function(err) {
+                                return cb(err)
+                              })
                               return cb(null,txp)
                             } else {
                               $log.debug('TX parse error', result)

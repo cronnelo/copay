@@ -1041,13 +1041,15 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
           if (wallet.isPrivKeyExternal()) {
             var externalSource = wallet.getPrivKeyExternalSourceName()
             if(externalSource.indexOf('bitlox') === 0) {
-              signedTxp.status == 'accepted'
-              // ongoingProcess.set('broadcastingTx', false, customStatusHandler); // just tells the UI we are done
+              ongoingProcess.set('broadcastingTx', false, customStatusHandler); // just tells the UI we are done
+              return root.removeTx(wallet, txp, function() {
+              })
+              root.invalidateCache(wallet);              
             }
           }
+
+
           root.invalidateCache(wallet);
-
-
           if (err) {
             $log.warn('sign error:' + err);
             var msg = err && err.message ?
