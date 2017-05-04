@@ -104,6 +104,172 @@
                 // return wallet.updateBalance(); dave says we don't need this anymore
             });
         };
+        Wallet.signTransaction = function(wallet, txp, cb) {
+          if(platformInfo.isMobile && bitlox.api.getStatus() !== bitlox.api.STATUS_CONNECTED && bitlox.api.getStatus() !== bitlox.api.STATUS_IDLE) {
+            var newScope = $rootScope.$new();
+            var successListener;
+            var errorListener
+            $ionicModal.fromTemplateUrl('views/bitlox/tab-attach-bitlox.html', {
+                scope: newScope,
+                animation: 'slide-in-up',
+                hardwareBackButtonClose: false
+              }).then(function(modal) {
+                newScope.modal = modal;
+                newScope.modal.show();
+              }).catch(function(err) {
+                $log.debug('modal error', err)
+              });
+              newScope.closeModal = function() {
+                newScope.modal.remove();
+              };
+              // Cleanup the modal when we're done with it!
+              newScope.$on('$destroy', function() {
+                newScope.modal.remove();
+              });
+              // Execute action on hide modal
+              newScope.$on('modal.hidden', function() {
+                // Execute action
+              });
+
+              newScope.$on('modal.removed', function() {
+                // Execute action
+                successListener()
+                errorListener()
+                setTimeout(function() {_bitloxSend(wallet,txp,cb)},1000)
+              });
+              successListener = newScope.$on('bitloxConnectSuccess', function() {
+                // Execute action
+                newScope.modal.remove()
+              });
+              errorListener = newScope.$on('bitloxConnectError', function() {
+
+                // Execute action
+              });
+          } else {
+            _bitloxSend(wallet,txp,cb)
+          }
+        }
+        function _bitloxSend(wallet,txp,cb) {
+            $ionicLoading.show({
+              template: 'Connecting to BitLox, Please Wait...'
+            });
+            var connectTimer;
+            if(platformInfo.isChromeApp) {
+              connectTimer = setTimeout(function() {
+                cb(new Error("Unable to connect to BitLox"))
+              },20000);
+            }
+            if(platformInfo.isMobile && bitlox.api.getStatus() !== bitlox.api.STATUS_IDLE && bitlox.api.getStatus() !== bitlox.api.STATUS_CONNECTED) {
+
+              return cb(new Error("Unable to connect to BitLox"))
+            }
+
+            try {
+
+              var tx = new bitlox.transaction({
+                  outputs: txp.outputs,
+                  fee: txp.fee,
+                  inputs: txp.inputs,
+                  changeAddress: txp.changeAddress.address,
+                  // forceSmallChange: forceSmallChange,
+              });
+            } catch(e) {
+              return cb(e)
+            }
+            tx.bwsInputs = txp.inputs
+
+
+            $log.info('Requesting Bitlox to sign the transaction');
+            var xPubKeys = lodash.pluck(wallet.credentials.publicKeyRing, 'xPubKey');
+            // var opts = {tx: txp, rawTx: bwcService.getUtils().buildTx(txp).uncheckedSerialize()}
+            if(!xPubKeys) {
+              return cb(new Error("Unable to connect to BitLox, pub key error"))
+            }
+            $log.debug('xPubKeys', xPubKeys)
+
+            return bitlox.api.getDeviceUUID().then(function(results) {
+              if(platformInfo.isChromeApp) { clearTimeout(connectTimer) }
+              var externalSource = wallet.getPrivKeyExternalSourceName()
+              var bitloxInfo = externalSource.split('/')
+              if(bitloxInfo[1] !== results.payload.device_uuid.toString('hex')) {
+                return cb(new Error('This wallet is not on the connected BitLox device or has been moved. Select the correct Bitlox or contact support.'))
+              }
+              $ionicLoading.show({
+                template: 'Opening Wallet. Check Your BitLox...'
+              });
+
+              return bitlox.wallet.list()
+              .then(function(wallets) {
+                for(var i=0; i<wallets.length;i++) {
+                  thisWallet = wallets[i]
+
+                  if(thisWallet._uuid.toString("hex") === bitloxInfo[2]) {
+                    return thisWallet.open()
+                    .then(function() {
+                        $log.debug("WALLET LOADED", thisWallet.xpub)
+                        $ionicLoading.show({
+                          template: 'Preparing Transaction. Please Wait...'
+                        });
+                        if(thisWallet.xpub !== xPubKeys[0]) {
+                          $log.debug('pubkeys do not match')
+                          return cb(new Error('pubkeys do not match'))
+                        }
+                        var changeIndex = txp.changeAddress.path.split('/')[2]
+                        $log.debug('changeIndex', changeIndex)
+                        return bitlox.api.setChangeAddress(changeIndex).then(function() {
+                          $log.debug('Done setting change address')
+                          $ionicLoading.show({
+                            template: 'Signing Transaction. Check Your BitLox...'
+                          });
+                          return bitlox.api.signTransaction(tx)
+                          .then(function(result) {
+                            $log.debug('Bitlox response', result);
+                            if(result.type === bitlox.api.TYPE_SIGNATURE_RETURN) {
+                              txp.signatures = result.payload.signedScripts;
+                              tx.replaceScripts(txp.signatures)
+                              $ionicLoading.show({
+                                template: 'Broadcasting Transaction. Please Wait...'
+                              });
+                              return root.removeTx(wallet, txp, function() {
+                                // comment out thes 5 lines and send `return cb(null,txp) to skip broadcast`
+                                return txUtil.submit(tx.signedHex).then(function() {
+                                  return cb(null, txp)
+                                }, function(err) {
+                                  return cb(err)
+                                })
+                                // return cb(null,txp)
+                              })
+                            } else {
+                              $log.debug('TX parse error', result)
+                              return cb(new Error("TX parse error"))
+                            }
+                          }, function(err) {
+                            $log.debug("TX sign error", err)
+                            return cb(err)
+                          })
+                        }, function(err) {
+                          $log.debug("setChangeAddress error", err)
+                          return cb(err)
+                        })
+                    }, function(err) {
+                      $log.debug('load wallet error', err)
+                      return cb(err)
+                    })
+                  }
+                }
+                return cb(new Error('This wallet is not on the connected BitLox device or has been moved. Select the correct Bitlox or contact support.'))
+
+              }, function(e) {
+                $log.debug('Bitlox wallet list error', e)
+                return cb(e)
+              })
+            }, function(e) {
+              $log.debug('cannot get device uuid', e)
+              if(platformInfo.isChromeApp) { clearTimeout(connectTimer) }
+              return cb(e)
+            })
+        }
+
 
         Wallet.prototype.clearSpent = function(inputs) {
             var wallet = this;
@@ -396,172 +562,6 @@
         };
 
 
-
-        Wallet.prototype.signTransaction = function(wallet, txp, cb) {
-          if(platformInfo.isMobile && bitlox.api.getStatus() !== bitlox.api.STATUS_CONNECTED && bitlox.api.getStatus() !== bitlox.api.STATUS_IDLE) {
-            var newScope = $rootScope.$new();
-            var successListener;
-            var errorListener
-            $ionicModal.fromTemplateUrl('views/bitlox/tab-attach-bitlox.html', {
-                scope: newScope,
-                animation: 'slide-in-up',
-                hardwareBackButtonClose: false
-              }).then(function(modal) {
-                newScope.modal = modal;
-                newScope.modal.show();
-              }).catch(function(err) {
-                $log.debug('modal error', err)
-              });
-              newScope.closeModal = function() {
-                newScope.modal.remove();
-              };
-              // Cleanup the modal when we're done with it!
-              newScope.$on('$destroy', function() {
-                newScope.modal.remove();
-              });
-              // Execute action on hide modal
-              newScope.$on('modal.hidden', function() {
-                // Execute action
-              });
-
-              newScope.$on('modal.removed', function() {
-                // Execute action
-                successListener()
-                errorListener()
-                setTimeout(function() {_bitloxSend(wallet,txp,cb)},1000)
-              });
-              successListener = newScope.$on('bitloxConnectSuccess', function() {
-                // Execute action
-                newScope.modal.remove()
-              });
-              errorListener = newScope.$on('bitloxConnectError', function() {
-
-                // Execute action
-              });
-          } else {
-            _bitloxSend(wallet,txp,cb)
-          }
-        }
-        function _bitloxSend(wallet,txp,cb) {
-            $ionicLoading.show({
-              template: 'Connecting to BitLox, Please Wait...'
-            });
-            var connectTimer;
-            if(platformInfo.isChromeApp) {
-              connectTimer = setTimeout(function() {
-                cb(new Error("Unable to connect to BitLox"))
-              },20000);
-            }
-            if(platformInfo.isMobile && bitlox.api.getStatus() !== bitlox.api.STATUS_IDLE && bitlox.api.getStatus() !== bitlox.api.STATUS_CONNECTED) {
-
-              return cb(new Error("Unable to connect to BitLox"))
-            }
-
-            try {
-
-              var tx = new bitlox.transaction({
-                  outputs: txp.outputs,
-                  fee: txp.fee,
-                  inputs: txp.inputs,
-                  changeAddress: txp.changeAddress.address,
-                  // forceSmallChange: forceSmallChange,
-              });
-            } catch(e) {
-              return cb(e)
-            }
-            tx.bwsInputs = txp.inputs
-
-
-            $log.info('Requesting Bitlox to sign the transaction');
-            var xPubKeys = lodash.pluck(wallet.credentials.publicKeyRing, 'xPubKey');
-            // var opts = {tx: txp, rawTx: bwcService.getUtils().buildTx(txp).uncheckedSerialize()}
-            if(!xPubKeys) {
-              return cb(new Error("Unable to connect to BitLox, pub key error"))
-            }
-            $log.debug('xPubKeys', xPubKeys)
-
-            return bitlox.api.getDeviceUUID().then(function(results) {
-              if(platformInfo.isChromeApp) { clearTimeout(connectTimer) }
-              var externalSource = wallet.getPrivKeyExternalSourceName()
-              var bitloxInfo = externalSource.split('/')
-              if(bitloxInfo[1] !== results.payload.device_uuid.toString('hex')) {
-                return cb(new Error('This wallet is not on the connected BitLox device or has been moved. Select the correct Bitlox or contact support.'))
-              }
-              $ionicLoading.show({
-                template: 'Opening Wallet. Check Your BitLox...'
-              });
-
-              return bitlox.wallet.list()
-              .then(function(wallets) {
-                for(var i=0; i<wallets.length;i++) {
-                  thisWallet = wallets[i]
-
-                  if(thisWallet._uuid.toString("hex") === bitloxInfo[2]) {
-                    return thisWallet.open()
-                    .then(function() {
-                        $log.debug("WALLET LOADED", thisWallet.xpub)
-                        $ionicLoading.show({
-                          template: 'Preparing Transaction. Please Wait...'
-                        });
-                        if(thisWallet.xpub !== xPubKeys[0]) {
-                          $log.debug('pubkeys do not match')
-                          return cb(new Error('pubkeys do not match'))
-                        }
-                        var changeIndex = txp.changeAddress.path.split('/')[2]
-                        $log.debug('changeIndex', changeIndex)
-                        return bitlox.api.setChangeAddress(changeIndex).then(function() {
-                          $log.debug('Done setting change address')
-                          $ionicLoading.show({
-                            template: 'Signing Transaction. Check Your BitLox...'
-                          });
-                          return bitlox.api.signTransaction(tx)
-                          .then(function(result) {
-                            $log.debug('Bitlox response', result);
-                            if(result.type === bitlox.api.TYPE_SIGNATURE_RETURN) {
-                              txp.signatures = result.payload.signedScripts;
-                              tx.replaceScripts(txp.signatures)
-                              $ionicLoading.show({
-                                template: 'Broadcasting Transaction. Please Wait...'
-                              });
-                              return root.removeTx(wallet, txp, function() {
-                                // comment out thes 5 lines and send `return cb(null,txp) to skip broadcast`
-                                return txUtil.submit(tx.signedHex).then(function() {
-                                  return cb(null, txp)
-                                }, function(err) {
-                                  return cb(err)
-                                })
-                                // return cb(null,txp)
-                              })
-                            } else {
-                              $log.debug('TX parse error', result)
-                              return cb(new Error("TX parse error"))
-                            }
-                          }, function(err) {
-                            $log.debug("TX sign error", err)
-                            return cb(err)
-                          })
-                        }, function(err) {
-                          $log.debug("setChangeAddress error", err)
-                          return cb(err)
-                        })
-                    }, function(err) {
-                      $log.debug('load wallet error', err)
-                      return cb(err)
-                    })
-                  }
-                }
-                return cb(new Error('This wallet is not on the connected BitLox device or has been moved. Select the correct Bitlox or contact support.'))
-
-              }, function(e) {
-                $log.debug('Bitlox wallet list error', e)
-                return cb(e)
-              })
-            }, function(e) {
-              $log.debug('cannot get device uuid', e)
-              if(platformInfo.isChromeApp) { clearTimeout(connectTimer) }
-              return cb(e)
-            })
-        }
 
 
 
