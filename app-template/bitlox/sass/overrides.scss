@@ -3,20 +3,6 @@
  */
 
 /* Colors */
-<<<<<<< HEAD
-$v-primary-color:                                    #192c3a;
-$v-secondary-color:                                  #31465b;
-$v-accent-color:                                     #1abb9b;
-
-$v-text-primary-color:                               #192c3a;
-$v-text-secondary-color:                             #c2c9d1;
-$v-text-accent-color:                                #1abb9b;
-
-$v-success-color:                                    #1abb9b;
-$v-warning-color:                                    #bb331a;
-
-/* Theme */ 
-=======
 $v-primary-color:                                    #3a1919;
 $v-secondary-color:                                  #5b3131;
 $v-accent-color:                                     #bb1a1a;
@@ -29,7 +15,18 @@ $v-success-color:                                    #1a42bb;
 $v-warning-color:                                    #b51abb;
 
 /* Theme */
->>>>>>> bitlox-config
+$v-primary-color:                                    #3a1919;
+$v-secondary-color:                                  #5b3131;
+$v-accent-color:                                     #bb1a1a;
+
+$v-text-primary-color:                               #3a1919;
+$v-text-secondary-color:                             #d1c2c2;
+$v-text-accent-color:                                #bb1a1a;
+
+$v-success-color:                                    #1a42bb;
+$v-warning-color:                                    #b51abb;
+
+/* Theme */
 $v-default-wallet-color-index:                       6;
 $v-top-tabs-color:                                   $v-accent-color;
 $v-wallet-backup-phrase-color:                       $v-text-primary-color;
