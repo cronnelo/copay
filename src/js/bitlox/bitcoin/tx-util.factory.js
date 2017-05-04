@@ -47,7 +47,6 @@
             $http.post(baseUrl + '/tx/send', {
                 rawtx: signedHex
             }).then(function(res) {
-                console.log('submit return')
                 if (!res.data || res.data.error) {
                 	console.debug("tx error ", res.data.error);
                     if (res.data.error.indexOf("already spent") >= 0) {
