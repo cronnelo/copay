@@ -16,6 +16,9 @@ angular.module('copayApp.services').factory('configService', function(storageSer
     },
 
     download: {
+      bitlox: {
+        url: 'https://bitlox.io'
+      },
       bitpay: {
         url: 'https://bitpay.com/wallet'
       },
@@ -25,6 +28,11 @@ angular.module('copayApp.services').factory('configService', function(storageSer
     },
 
     rateApp: {
+      bitlox: {
+        ios: 'http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=111111111&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8',
+        android: 'https://play.google.com/store/apps/details?id=com.bitlox.wallet',
+        wp: ''
+      },
       bitpay: {
         ios: 'http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=1149581638&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8',
         android: 'https://play.google.com/store/apps/details?id=com.bitpay.wallet',
@@ -73,7 +81,7 @@ angular.module('copayApp.services').factory('configService', function(storageSer
     },
 
     release: {
-      url: 'https://api.github.com/repos/bitpay/copay/releases/latest'
+      url: 'https://api.github.com/repos/bitlox/copay/releases/latest'
     },
 
     pushNotificationsEnabled: true,
