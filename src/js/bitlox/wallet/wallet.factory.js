@@ -5,15 +5,17 @@
         .factory('bitloxWallet', WalletFactory);
 
     WalletFactory.$inject = [
-        '$q', '$timeout',
+        '$rootScope', '$q', '$timeout',
         'WalletStatus',
-         'bitloxHidChrome', 'bitloxHidWeb', 'bitloxBleApi', 'BIP32', 'bitloxTransaction', 'addressInfo', 'MIN_OUTPUT', 'bcMath', 'platformInfo'
+         'bitloxHidChrome', 'bitloxHidWeb', 'bitloxBleApi', 'BIP32', 'bitloxTransaction', 'addressInfo', 'MIN_OUTPUT', 'bcMath', 'platformInfo',
+         '$ionicLoading',  '$ionicModal', '$log', 'lodash'
       ];
 
     function WalletFactory(
-        $q, $timeout,
+        $rootScope, $q, $timeout,
         WalletStatus,
-        hidchrome,hidweb, bleapi, BIP32, Transaction, addressInfo, MIN_OUTPUT, bcMath, platformInfo) {
+        hidchrome,hidweb, bleapi, BIP32, Transaction, addressInfo, MIN_OUTPUT, bcMath, platformInfo,
+        $ionicLoading, $ionicModal, $log, lodash) {
 
         var Wallet = function(data) {
             this.number = data.wallet_number;
@@ -105,7 +107,7 @@
             });
         };
         Wallet.signTransaction = function(wallet, txp, cb) {
-          if(platformInfo.isMobile && bitlox.api.getStatus() !== bitlox.api.STATUS_CONNECTED && bitlox.api.getStatus() !== bitlox.api.STATUS_IDLE) {
+          if(platformInfo.isMobile && api.getStatus() !== api.STATUS_CONNECTED && api.getStatus() !== api.STATUS_IDLE) {
             var newScope = $rootScope.$new();
             var successListener;
             var errorListener
@@ -159,14 +161,14 @@
                 cb(new Error("Unable to connect to BitLox"))
               },20000);
             }
-            if(platformInfo.isMobile && bitlox.api.getStatus() !== bitlox.api.STATUS_IDLE && bitlox.api.getStatus() !== bitlox.api.STATUS_CONNECTED) {
+            if(platformInfo.isMobile && api.getStatus() !== api.STATUS_IDLE && api.getStatus() !== api.STATUS_CONNECTED) {
 
               return cb(new Error("Unable to connect to BitLox"))
             }
 
             try {
 
-              var tx = new bitlox.transaction({
+              var tx = new Transaction({
                   outputs: txp.outputs,
                   fee: txp.fee,
                   inputs: txp.inputs,
@@ -187,7 +189,7 @@
             }
             $log.debug('xPubKeys', xPubKeys)
 
-            return bitlox.api.getDeviceUUID().then(function(results) {
+            return api.getDeviceUUID().then(function(results) {
               if(platformInfo.isChromeApp) { clearTimeout(connectTimer) }
               var externalSource = wallet.getPrivKeyExternalSourceName()
               var bitloxInfo = externalSource.split('/')
@@ -198,10 +200,15 @@
                 template: 'Opening Wallet. Check Your BitLox...'
               });
 
-              return bitlox.wallet.list()
-              .then(function(wallets) {
+              return api.listWallets()
+              .then(function(res) {
+
+                var wallets = [];
+                res.payload.wallets.forEach(function(data) {
+                    wallets.push(new Wallet(data));
+                });
                 for(var i=0; i<wallets.length;i++) {
-                  thisWallet = wallets[i]
+                  var thisWallet = wallets[i]
 
                   if(thisWallet._uuid.toString("hex") === bitloxInfo[2]) {
                     return thisWallet.open()
@@ -216,15 +223,15 @@
                         }
                         var changeIndex = txp.changeAddress.path.split('/')[2]
                         $log.debug('changeIndex', changeIndex)
-                        return bitlox.api.setChangeAddress(changeIndex).then(function() {
+                        return api.setChangeAddress(changeIndex).then(function() {
                           $log.debug('Done setting change address')
                           $ionicLoading.show({
                             template: 'Signing Transaction. Check Your BitLox...'
                           });
-                          return bitlox.api.signTransaction(tx)
+                          return api.signTransaction(tx)
                           .then(function(result) {
                             $log.debug('Bitlox response', result);
-                            if(result.type === bitlox.api.TYPE_SIGNATURE_RETURN) {
+                            if(result.type === api.TYPE_SIGNATURE_RETURN) {
                               txp.signatures = result.payload.signedScripts;
                               tx.replaceScripts(txp.signatures)
                               $ionicLoading.show({
