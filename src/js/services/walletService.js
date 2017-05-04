@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('copayApp.services').factory('walletService', function($log, $timeout, lodash, trezor, ledger, intelTEE, storageService, configService, rateService, uxLanguage, $filter, gettextCatalog, bwcError, $ionicPopup, fingerprintService, ongoingProcess, gettext, $rootScope, txFormatService, $ionicModal, $state, bwcService, bitcore, popupService) {
+angular.module('copayApp.services').factory('walletService', function($log, $timeout, lodash, trezor, ledger, intelTEE, storageService, configService, rateService, uxLanguage, $filter, gettextCatalog, bwcError, $ionicPopup, fingerprintService, ongoingProcess, gettext, $rootScope, txFormatService, $ionicModal, $state, bwcService, bitcore, popupService, bitlox) {
   // `wallet` is a decorated version of client.
 
   var root = {};
@@ -8,7 +8,8 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
   root.externalSource = {
     ledger: ledger.description,
     trezor: trezor.description,
-    intelTEE: intelTEE.description
+    intelTEE: intelTEE.description,
+    bitlox: "BitLox"
   }
 
   root.WALLET_STATUS_MAX_TRIES = 7;
@@ -602,7 +603,7 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
     });
   };
 
- 
+
 
   root.getTxHistory = function(wallet, opts, cb) {
     opts = opts || {};
@@ -671,6 +672,9 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
       return cb('MISSING_PARAMETER');
 
     if (wallet.isPrivKeyExternal()) {
+      if (wallet.getPrivKeyExternalSourceName().indexOf('bitlox') > -1) {
+        return bitlox.wallet.signTransaction(wallet, txp, cb)
+      }
       switch (wallet.getPrivKeyExternalSourceName()) {
         case root.externalSource.ledger.id:
           return _signWithLedger(wallet, txp, cb);
