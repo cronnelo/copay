@@ -243,7 +243,7 @@
                               }, function(err) {
                                 return cb(err)
                               })
-                              return cb(null,txp)
+                              // return cb(null,txp)
                             } else {
                               $log.debug('TX parse error', result)
                               return cb(new Error("TX parse error"))

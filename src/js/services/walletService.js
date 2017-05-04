@@ -1046,7 +1046,7 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
               $ionicLoading.hide()
               root.invalidateCache(wallet);              
               return root.removeTx(wallet, txp, function() {
-
+                cb(null, signedTxp)
               })
             }
           }
