@@ -8,8 +8,7 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
   root.externalSource = {
     ledger: ledger.description,
     trezor: trezor.description,
-    intelTEE: intelTEE.description,
-    bitlox: "BitLox"
+    intelTEE: intelTEE.description
   }
 
   root.WALLET_STATUS_MAX_TRIES = 7;
