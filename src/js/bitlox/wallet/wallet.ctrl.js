@@ -74,7 +74,7 @@
         var _importExtendedPublicKey = function(wallet) {
           $ionicLoading.show({
             template: 'Importing BitLox wallet...'
-          });          
+          });
           api.getDeviceUUID().then(function(result) {
             var opts = {};
             opts.singleAddress = false
@@ -107,7 +107,7 @@
                 console.error(err)
 
                 profileService.importExtendedPublicKey(opts, function(err, walletId) {
-                  $ionicLoading.hide()
+
                   // console.warn("DONE IMPORTING")
                   if (err) {
                     console.error(err2)
@@ -117,13 +117,14 @@
 
 
                   walletService.updateRemotePreferences(walletId);
+                  $ionicLoading.hide()
                   $ionicHistory.goBack(-3);
 
                 });
                 return;
               }
 
-
+              $ionicLoading.hide()
               walletService.updateRemotePreferences(walletId);
               $ionicHistory.goBack(-3);
 
@@ -151,7 +152,7 @@
             vm.readingWallets = true;
             setTimeout(function() {
               $ionicLoading.hide();
-            },10000)
+            },3000)
             return bitloxWallet.list()
                 .then(function(wallets) {
                     vm.wallets = wallets;
@@ -198,7 +199,6 @@
                 .finally(function() {
                     console.debug("done loading wallet", wallet.number);
                     vm.openingWallet = -99;
-                    $ionicLoading.hide()
                 });
           });
         };
