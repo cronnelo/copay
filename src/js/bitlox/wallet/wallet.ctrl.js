@@ -170,10 +170,10 @@
 
           $ionicPopup.confirm({
             title: "Link BitLox Wallet #"+wallet.number,
-            subTitle: "Are you sure you want to link this wallet?\n\n'"+ wallet.name +"'",
+            subTitle: wallet.name,
             cancelText: "Cancel",
             cancelType: 'button-clear button-positive',
-            okText: "Yes, Import",
+            okText: "Yes, Link",
             okType: 'button-clear button-positive'
           }).then(function(res) {
             if(!res) { return false; }
