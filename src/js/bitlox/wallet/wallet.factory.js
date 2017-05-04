@@ -8,14 +8,14 @@
         '$rootScope', '$q', '$timeout',
         'WalletStatus',
          'bitloxHidChrome', 'bitloxHidWeb', 'bitloxBleApi', 'BIP32', 'bitloxTransaction', 'addressInfo', 'MIN_OUTPUT', 'bcMath', 'platformInfo',
-         '$ionicLoading',  '$ionicModal', '$log', 'lodash'
+         '$ionicLoading',  '$ionicModal', '$log', 'lodash', 'txUtil'
       ];
 
     function WalletFactory(
         $rootScope, $q, $timeout,
         WalletStatus,
         hidchrome,hidweb, bleapi, BIP32, Transaction, addressInfo, MIN_OUTPUT, bcMath, platformInfo,
-        $ionicLoading, $ionicModal, $log, lodash) {
+        $ionicLoading, $ionicModal, $log, lodash, txUtil) {
 
         var Wallet = function(data) {
             this.number = data.wallet_number;

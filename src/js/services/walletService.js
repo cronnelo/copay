@@ -1042,9 +1042,12 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
             var externalSource = wallet.getPrivKeyExternalSourceName()
             if(externalSource.indexOf('bitlox') === 0) {
               ongoingProcess.set('broadcastingTx', false, customStatusHandler); // just tells the UI we are done
-              return root.removeTx(wallet, txp, function() {
-              })
+
+              $ionicLoading.hide()
               root.invalidateCache(wallet);              
+              return root.removeTx(wallet, txp, function() {
+
+              })
             }
           }
 
