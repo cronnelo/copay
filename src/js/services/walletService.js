@@ -1044,9 +1044,10 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
               ongoingProcess.set('broadcastingTx', false, customStatusHandler); // just tells the UI we are done
 
               $ionicLoading.hide()
-              root.invalidateCache(wallet);              
+              root.invalidateCache(wallet);       
+              cb(null, signedTxp)       
               return root.removeTx(wallet, txp, function() {
-                cb(null, signedTxp)
+
               })
             }
           }
