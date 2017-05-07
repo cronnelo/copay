@@ -1,7 +1,7 @@
 {
   "name": "*PACKAGENAME*",
   "description": "*DESCRIPTION*",
-  "author": "BitLox",
+  "author": "*NAME*",
   "version": "*VERSION*",
   "keywords": [
     "bitcoin",
@@ -78,6 +78,7 @@
     "grunt-nw-builder": "^2.0.3",
     "grunt-sass": "^1.2.0",
     "load-grunt-tasks": "^3.5.0",
+    "nopt": "^4.0.1",
     "shelljs": "^0.3.0"
   },
   "scripts": {

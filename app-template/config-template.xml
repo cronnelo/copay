@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.bitlox.*BUNDLENAME*"
+<widget id="*BUNDLENAMEPREFIX**BUNDLENAMESEPARATOR**BUNDLENAME*"
   version="*VERSION*"
   android-versionCode="*ANDROIDVERSION*"
   ios-CFBundleVersion="*VERSION*">
@@ -7,8 +7,8 @@
     <description>
       *PURPOSELINE*
     </description>
-    <author email="support@bitlox.com" href="*URL*">
-        BitLox Ltd.
+    <author email="*SUPPORTEMAIL*" href="*URL*">
+        *COMPANYNAME*
     </author>
     <content src="index.html" />
     <access origin="*" />
@@ -40,7 +40,7 @@
     <plugin name="cordova-plugin-statusbar" spec="~2.2.0" />
     <plugin name="cordova-plugin-inappbrowser" spec="~1.5.0" />
     <plugin name="cordova-plugin-x-toast" spec="~2.5.2" />
-    <plugin name="com.verso.cordova.clipboard" spec="https://github.com/VersoSolutions/CordovaClipboard" />
+    <plugin name="cordova-clipboard" spec="~1.0.0" />
     <plugin name="cordova-plugin-x-socialsharing" spec="https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin.git" />
     <plugin name="cordova-plugin-spinner-dialog" spec="~1.3.1" />
     <plugin name="cordova-plugin-dialogs" spec="~1.3.0" />
@@ -65,8 +65,9 @@
     <plugin name="cordova-plugin-queries-schemes" spec="~0.1.5" />
     <plugin name="cordova-plugin-fcm" spec="2.1.1" />
     <plugin name="cordova-plugin-ble" spec="~2.0.1" />
+    <plugin name="cordova-plugin-firebase" spec="~0.1.20" />
     <!-- Supported Platforms -->
-    <engine name="ios" spec="~4.2.1" />
+    <engine name="ios" spec="~4.4.0" />
     <engine name="android" spec="~5.2.2" />
     <engine name="windows" spec="~4.4.3" />
 

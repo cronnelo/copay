@@ -24,10 +24,11 @@
     "bytebuffer": "5.0.1",
     "protobuf": "5.0.1",
     "bignumber.js": "^4.0.0",
-    "async": "^2.1.5"    
+    "async": "^2.1.5"
   },
   "resolutions": {
     "angular": "1.5.3",
-    "ionic": "298ad4b645"
+    "ionic": "298ad4b645",
+    "bytebuffer": "5.0.1"
   }
 }
