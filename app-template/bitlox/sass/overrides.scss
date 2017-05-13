@@ -3,8 +3,8 @@
  */
 
 /* Colors */
-$v-primary-color:                                    #3a1919; /* #3a1919 */
-$v-secondary-color:                                  #5b3131; /* 5b3131 */
+$v-primary-color:                                    #3a0000; /* #3a1919 */
+$v-secondary-color:                                  #5b0000; /* 5b3131 */
 $v-accent-color:                                     #ff0000;
 
 $bar-royal-bg:                                       #FF0000 !default;
@@ -12,7 +12,7 @@ $bar-royal-border:                                   #AA0000 !default;
 
 $v-text-primary-color:                               #ff0000;
 $v-text-secondary-color:                             #d1c2c2;
-$v-text-accent-color:                                #bb1a1a;
+$v-text-accent-color:                                #bb0000;
 
 $v-success-color:                                    #1a42bb;
 $v-warning-color:                                    #5b3131; //#b51abb
@@ -40,7 +40,7 @@ $v-top-tabs-color:                                   $v-accent-color;
 $v-wallet-backup-phrase-color:                       $v-text-primary-color;
 $v-wallet-backup-select-phrase-color:                $v-secondary-color;
 $v-wallet-backup-select-word-bg:                     $v-accent-color;
-$v-wallet-backup-select-word-color:                  $v-text-primary-color;
+$v-wallet-backup-select-word-color:                  #FFF;
 $v-wallet-backup-select-word-disabled-color:         $v-accent-color;
 $v-tou-bg:                                           $v-secondary-color;
 $v-tou-color:                                        $v-text-secondary-color;
