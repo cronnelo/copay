@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('copayApp.services').factory('configService', function(storageService, lodash, $log, $timeout, $rootScope) {
+angular.module('copayApp.services').factory('configService', function(appConfigService, storageService, lodash, $log, $timeout, $rootScope) {
   var root = {};
 
   var defaultConfig = {
@@ -12,38 +12,14 @@ angular.module('copayApp.services').factory('configService', function(storageSer
 
     // Bitcore wallet service URL
     bws: {
-      url: 'https://bws.bitlox.com/bws/api',
+      url: appConfigService.bwsUrl,
     },
 
     download: {
-      bitlox: {
-        url: 'https://bitlox.io'
-      },
-      bitpay: {
-        url: 'https://bitpay.com/wallet'
-      },
-      copay: {
-        url: 'https://copay.io/#download'
-      }
+      url: appConfigService.downloadUrl
     },
 
-    rateApp: {
-      bitlox: {
-        ios: 'http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=111111111&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8',
-        android: 'https://play.google.com/store/apps/details?id=com.bitlox.wallet',
-        wp: ''
-      },
-      bitpay: {
-        ios: 'http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=1149581638&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8',
-        android: 'https://play.google.com/store/apps/details?id=com.bitpay.wallet',
-        wp: ''
-      },
-      copay: {
-        ios: 'http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=951330296&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8',
-        android: 'https://play.google.com/store/apps/details?id=com.bitpay.copay',
-        wp: ''
-      }
-    },
+    rateApp: appConfigService.rateAppUrls,
     // wallet default config
     wallet: {
       requiredCopayers: 2,
@@ -52,10 +28,10 @@ angular.module('copayApp.services').factory('configService', function(storageSer
       reconnectDelay: 5000,
       idleDurationMin: 4,
       settings: {
-        unitName: 'BTC',
+        unitName: appConfigService.unitName,
         unitToSatoshi: 100000000,
         unitDecimals: 8,
-        unitCode: 'btc',
+        unitCode: appConfigService.unitCode,
         alternativeName: 'US Dollar',
         alternativeIsoCode: 'USD',
       }
@@ -77,11 +53,11 @@ angular.module('copayApp.services').factory('configService', function(storageSer
     },
 
     rates: {
-      url: 'https://insight.bitpay.com:443/api/rates',
+      url: appConfigService.ratesUrl,
     },
 
     release: {
-      url: 'https://api.github.com/repos/bitlox/copay/releases/latest'
+      url: appConfigService.releaseUrl,
     },
 
     pushNotificationsEnabled: true,
