@@ -25,7 +25,7 @@
     "ios": "http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=111111111&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8",
     "android": "https://play.google.com/store/apps/details?id=com.bitlox.wallet",
     "wp": ""
-  }
+  },
   "appDescription": "BitLox Wallet",
   "winAppName": "BitloxWallet",
   "wpPublisherId": "{31cdd08b-457c-413d-b440-f6665eec847d}",
