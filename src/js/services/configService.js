@@ -65,6 +65,28 @@ angular.module('copayApp.services').factory('configService', function(appConfigS
     emailNotifications: {
       enabled: false,
     },
+
+    customNetworks: [
+      {
+        name: 'livenet',
+        alias: 'mainnet',
+        pubkeyhash: 0x00,
+        privatekey: 0x80,
+        scripthash: 0x05,
+        xpubkey: 0x0488b21e,
+        xprivkey: 0x0488ade4,
+        networkMagic: 0xf9beb4d9,
+        port: 8333,
+        dnsSeeds: [
+          'seed.bitcoin.sipa.be',
+          'dnsseed.bluematt.me',
+          'dnsseed.bitcoin.dashjr.org',
+          'seed.bitcoinstats.com',
+          'seed.bitnodes.io',
+          'bitseed.xf2.org'
+        ]
+      }
+    ]
   };
 
   var configCache = null;
