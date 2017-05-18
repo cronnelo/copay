@@ -68,23 +68,18 @@ angular.module('copayApp.services').factory('configService', function(appConfigS
 
     customNetworks: [
       {
-        name: 'livenet',
-        alias: 'mainnet',
-        pubkeyhash: 0x00,
+        name: 'Aureus',
+        alias: 'AUREUS',
+        code: 'aur',
+        symbol: 'AUR',
+        pubkeyhash: 0x17,
         privatekey: 0x80,
-        scripthash: 0x05,
+        scripthash: 0x1C,
         xpubkey: 0x0488b21e,
         xprivkey: 0x0488ade4,
-        networkMagic: 0xf9beb4d9,
-        port: 8333,
-        dnsSeeds: [
-          'seed.bitcoin.sipa.be',
-          'dnsseed.bluematt.me',
-          'dnsseed.bitcoin.dashjr.org',
-          'seed.bitcoinstats.com',
-          'seed.bitnodes.io',
-          'bitseed.xf2.org'
-        ]
+        bwsUrl: 'https://bws.aureus.cc/bws/api',
+        port: 9697,
+        magic: 0x6ee58c2a
       }
     ]
   };
