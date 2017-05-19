@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('copayApp.controllers').controller('createController',
-  function($scope, $rootScope, $timeout, $log, lodash, $state, $ionicScrollDelegate, $ionicHistory, profileService, configService, gettextCatalog, ledger, trezor, intelTEE, derivationPathHelper, ongoingProcess, walletService, storageService, popupService, appConfigService) {
+  function($scope, $rootScope, $timeout, $log, lodash, $state, $ionicScrollDelegate, $ionicHistory, profileService, configService, gettextCatalog, ledger, trezor, intelTEE, derivationPathHelper, ongoingProcess, walletService, storageService, popupService, appConfigService, CUSTOMNETWORKS) {
 
     /* For compressed keys, m*73 + n*34 <= 496 */
     var COPAYER_PAIR_LIMITS = {
@@ -120,40 +120,11 @@ angular.module('copayApp.controllers').controller('createController',
       var networkName = $scope.formData.testnetEnabled ? 'testnet' : 'livenet';
       var bwsUrl = $scope.formData.bwsurl;
 
-      /* custom networks */
-      var customNetworks = {
-      aureus: {
-        name: 'aureus',
-        alias: 'AUREUS',
-        code: 'aur',
-        symbol: 'AUR',
-        pubkeyhash: 0x17,
-        privatekey: 0x80,
-        scripthash: 0x1C,
-        xpubkey: 0x0488b21e,
-        xprivkey: 0x0488ade4,
-        bwsUrl: 'https://bws.aureus.cc/bws/api',
-        port: 9697,
-        magic: 0x6ee58c2a
-      },
-      deuscoin: {
-        name: 'deuscoin',
-        alias: 'DEUSCOIN',
-        code: 'deus',
-        symbol: 'DEUS',
-        pubkeyhash: 0x1e,
-        privatekey: 0x80,
-        scripthash: 0x23,
-        xpubkey: 0x0488b21e,
-        xprivkey: 0x0488ade4,
-        bwsUrl: 'https://bws.deuscoin.org/bws/api',
-        port: 19697,
-        magic: 0x9ee8bc5a
-      }}
+
 
       if($scope.formData.customParam) {
         networkName = $scope.formData.customParam
-        var customNet = customNetworks[$scope.formData.customParam]
+        var customNet = CUSTOMNETWORKS[$scope.formData.customParam]
         if(!customNet) {
           popupService.showAlert(gettextCatalog.getString('Error'), gettextCatalog.getString('Invalid') + ": " + $scope.formData.customParam);
           return;

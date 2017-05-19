@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('copayApp.services').factory('walletService', function($log, $timeout, lodash, trezor, ledger, intelTEE, storageService, configService, rateService, uxLanguage, $filter, gettextCatalog, bwcError, $ionicPopup, fingerprintService, ongoingProcess, gettext, $rootScope, txFormatService, $ionicModal, $state, bwcService, bitcore, popupService, bitlox, $ionicLoading) {
+angular.module('copayApp.services').factory('walletService', function($log, $timeout, lodash, trezor, ledger, intelTEE, storageService, configService, rateService, uxLanguage, $filter, gettextCatalog, bwcError, $ionicPopup, fingerprintService, ongoingProcess, gettext, $rootScope, txFormatService, $ionicModal, $state, bwcService, bitcore, popupService, bitlox, $ionicLoading, CUSTOMNETWORKS) {
   // `wallet` is a decorated version of client.
 
   var root = {};
@@ -209,6 +209,7 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
       cache.unitToSatoshi = config.settings.unitToSatoshi;
       cache.satToUnit = 1 / cache.unitToSatoshi;
       cache.unitName = config.settings.unitName;
+      if(CUSTOMNETWORKS[wallet.network]) { cache.unitName = CUSTOMNETWORKS[wallet.network].symbol; }
 
       //STR
       cache.totalBalanceStr = txFormatService.formatAmount(cache.totalBalanceSat) + ' ' + cache.unitName;
@@ -404,12 +405,12 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
     var fixTxsUnit = function(txs) {
       if (!txs || !txs[0] || !txs[0].amountStr) return;
 
-      var cacheUnit = txs[0].amountStr.split(' ')[1];
+      var cacheUnit = ''; //txs[0].amountStr.split(' ')[1];
 
       if (cacheUnit == config.unitName)
         return;
 
-      var name = ' ' + config.unitName;
+      var name = ' ';// + config.unitName;
 
       $log.debug('Fixing Tx Cache Unit to:' + name)
       lodash.each(txs, function(tx) {
