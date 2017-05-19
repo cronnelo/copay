@@ -85,7 +85,7 @@
     if(platformInfo.isChromeApp) {
         api.$scope.$watch('status', function(hidstatus) {
           checkStatus(hidstatus)
-        });      
+        });
     }
     $scope.$watch('api.getStatus()', function(hidstatus) {
       checkStatus(hidstatus)

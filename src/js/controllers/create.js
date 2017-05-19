@@ -118,8 +118,48 @@ angular.module('copayApp.controllers').controller('createController',
         return;
       }
       var networkName = $scope.formData.testnetEnabled ? 'testnet' : 'livenet';
+      var bwsUrl = $scope.formData.bwsurl;
+
+      /* custom networks */
+      var customNetworks = {
+      aureus: {
+        name: 'aureus',
+        alias: 'AUREUS',
+        code: 'aur',
+        symbol: 'AUR',
+        pubkeyhash: 0x17,
+        privatekey: 0x80,
+        scripthash: 0x1C,
+        xpubkey: 0x0488b21e,
+        xprivkey: 0x0488ade4,
+        bwsUrl: 'https://bws.aureus.cc/bws/api',
+        port: 9697,
+        magic: 0x6ee58c2a
+      },
+      deuscoin: {
+        name: 'deuscoin',
+        alias: 'DEUSCOIN',
+        code: 'deus',
+        symbol: 'DEUS',
+        pubkeyhash: 0x1e,
+        privatekey: 0x80,
+        scripthash: 0x23,
+        xpubkey: 0x0488b21e,
+        xprivkey: 0x0488ade4,
+        bwsUrl: 'https://bws.deuscoin.org/bws/api',
+        port: 19697,
+        magic: 0x9ee8bc5a
+      }}
+
       if($scope.formData.customParam) {
         networkName = $scope.formData.customParam
+        var customNet = customNetworks[$scope.formData.customParam]
+        if(!customNet) {
+          popupService.showAlert(gettextCatalog.getString('Error'), gettextCatalog.getString('Invalid') + ": " + $scope.formData.customParam);
+          return;
+        }
+        bwsUrl = customNet.bwsUrl
+
       }
       var opts = {
         name: $scope.formData.walletName,
@@ -127,7 +167,7 @@ angular.module('copayApp.controllers').controller('createController',
         n: $scope.formData.totalCopayers,
         myName: $scope.formData.totalCopayers > 1 ? $scope.formData.myName : null,
         networkName: networkName,
-        bwsurl: $scope.formData.bwsurl,
+        bwsurl: bwsUrl,
         singleAddress: $scope.formData.singleAddressEnabled,
         walletPrivKey: $scope.formData._walletPrivKey, // Only for testing
       };
