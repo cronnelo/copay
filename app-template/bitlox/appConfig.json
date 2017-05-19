@@ -1,10 +1,10 @@
 {
   "packageName": "bitlox",
   "packageDescription": "Copay Bitcoin Wallet",
-  "packageNameId": "com.bitlox.wallet",
+  "packageNameId": "com.bitlox.wallet2",
   "userVisibleName": "BitLox",
   "purposeLine": "BitLox Wallet",
-  "bundleName": "wallet",
+  "bundleName": "wallet2",
   "appUri": "bitlox",
   "name": "bitlox",
   "nameNoSpace": "bitlox",
