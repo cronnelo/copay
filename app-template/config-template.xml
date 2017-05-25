@@ -64,7 +64,7 @@
     <plugin name="cordova-custom-config" spec="~3.0.5" />
     <plugin name="cordova-plugin-queries-schemes" spec="~0.1.5" />
     <!-- <plugin name="cordova-plugin-fcm" spec="2.1.1" /> -->
-    <plugin name="https://github.com/lp1bp/cordova-plugin-fcm" spec="2.1.1" />
+    <plugin name="https://github.com/lp1bp/cordova-plugin-fcm" />
     <plugin name="cordova-plugin-ble" spec="~2.0.1" />
     <!-- Supported Platforms -->
     <engine name="ios" spec="~4.2.1" />
