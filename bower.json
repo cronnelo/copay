@@ -28,6 +28,7 @@
   },
   "resolutions": {
     "angular": "1.5.3",
-    "ionic": "298ad4b645"
+    "ionic": "298ad4b645",
+    "bytebuffer": "5.0.1"
   }
 }
