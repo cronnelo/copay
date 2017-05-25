@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('copayApp.services').factory('walletService', function($log, $timeout, lodash, trezor, ledger, intelTEE, storageService, configService, rateService, uxLanguage, $filter, gettextCatalog, bwcError, $ionicPopup, fingerprintService, ongoingProcess, gettext, $rootScope, txFormatService, $ionicModal, $state, bwcService, bitcore, popupService) {
+angular.module('copayApp.services').factory('walletService', function($log, $timeout, lodash, trezor, ledger, intelTEE, storageService, configService, rateService, uxLanguage, $filter, gettextCatalog, bwcError, $ionicPopup, fingerprintService, ongoingProcess, gettext, $rootScope, txFormatService, $ionicModal, $state, bwcService, bitcore, popupService, bitlox, $ionicLoading, CUSTOMNETWORKS) {
   // `wallet` is a decorated version of client.
 
   var root = {};
@@ -209,6 +209,7 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
       cache.unitToSatoshi = config.settings.unitToSatoshi;
       cache.satToUnit = 1 / cache.unitToSatoshi;
       cache.unitName = config.settings.unitName;
+      if(CUSTOMNETWORKS[wallet.network]) { cache.unitName = CUSTOMNETWORKS[wallet.network].symbol; }
 
       //STR
       cache.totalBalanceStr = txFormatService.formatAmount(cache.totalBalanceSat) + ' ' + cache.unitName;
@@ -404,12 +405,12 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
     var fixTxsUnit = function(txs) {
       if (!txs || !txs[0] || !txs[0].amountStr) return;
 
-      var cacheUnit = txs[0].amountStr.split(' ')[1];
+      var cacheUnit = ''; //txs[0].amountStr.split(' ')[1];
 
       if (cacheUnit == config.unitName)
         return;
 
-      var name = ' ' + config.unitName;
+      var name = ' ';// + config.unitName;
 
       $log.debug('Fixing Tx Cache Unit to:' + name)
       lodash.each(txs, function(tx) {
@@ -602,7 +603,7 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
     });
   };
 
- 
+
 
   root.getTxHistory = function(wallet, opts, cb) {
     opts = opts || {};
@@ -671,6 +672,9 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
       return cb('MISSING_PARAMETER');
 
     if (wallet.isPrivKeyExternal()) {
+      if (wallet.getPrivKeyExternalSourceName().indexOf('bitlox') > -1) {
+        return bitlox.wallet.signTransaction(wallet, txp, cb)
+      }
       switch (wallet.getPrivKeyExternalSourceName()) {
         case root.externalSource.ledger.id:
           return _signWithLedger(wallet, txp, cb);
@@ -1033,10 +1037,24 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
 
         ongoingProcess.set('signingTx', true, customStatusHandler);
         root.signTx(wallet, publishedTxp, password, function(err, signedTxp) {
+
           ongoingProcess.set('signingTx', false, customStatusHandler);
+          if (wallet.isPrivKeyExternal()) {
+            var externalSource = wallet.getPrivKeyExternalSourceName()
+            if(externalSource.indexOf('bitlox') === 0) {
+              ongoingProcess.set('broadcastingTx', false, customStatusHandler); // just tells the UI we are done
+
+              $ionicLoading.hide()
+              root.invalidateCache(wallet);       
+              cb(null, signedTxp)       
+              return root.removeTx(wallet, txp, function() {
+
+              })
+            }
+          }
+
+
           root.invalidateCache(wallet);
-
-
           if (err) {
             $log.warn('sign error:' + err);
             var msg = err && err.message ?
@@ -1050,6 +1068,7 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
           if (signedTxp.status == 'accepted') {
             ongoingProcess.set('broadcastingTx', true, customStatusHandler);
             root.broadcastTx(wallet, signedTxp, function(err, broadcastedTxp) {
+              $ionicLoading.hide();
               ongoingProcess.set('broadcastingTx', false, customStatusHandler);
               if (err) return cb(bwcError.msg(err));
 
@@ -1057,6 +1076,7 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
               return cb(null, broadcastedTxp);
             });
           } else {
+            $ionicLoading.hide();
             $rootScope.$emit('Local/TxAction', wallet.id);
             return cb(null, signedTxp);
           }
