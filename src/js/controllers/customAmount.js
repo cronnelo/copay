@@ -11,6 +11,7 @@ angular.module('copayApp.controllers').controller('customAmountController', func
     $scope.amountStr = txFormatService.formatAmountStr($scope.amount);
     $scope.altAmountStr = txFormatService.formatAlternativeStr($scope.amount);
     $scope.wallet = profileService.getWallet($stateParams.walletId);
+    $scope.network = $scope.wallet.network;
   });
 
   $scope.finish = function() {
