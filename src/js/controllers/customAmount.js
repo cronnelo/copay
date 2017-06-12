@@ -12,6 +12,7 @@ angular.module('copayApp.controllers').controller('customAmountController', func
     $scope.altAmountStr = txFormatService.formatAlternativeStr($scope.amount);
     $scope.wallet = profileService.getWallet($stateParams.walletId);
     $scope.network = $scope.wallet.network;
+    if($scope.network === "livenet") {$scope.network = "bitcoin";}
   });
 
   $scope.finish = function() {
