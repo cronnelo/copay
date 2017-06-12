@@ -65,7 +65,6 @@ angular.module('copayApp.services').factory('configService', function(appConfigS
     emailNotifications: {
       enabled: false,
     }
-    ]
   };
 
   var configCache = null;
