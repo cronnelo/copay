@@ -1054,7 +1054,7 @@ msgid "Get local cash anywhere you go, from any Visa<sup>&reg;</sup> compatible 
 msgstr "Retirez de l'argent partout où vous allez, depuis n'importe quel distributeur compatible Visa<sup>&reg;</sup>. Des frais bancaires de distributeur peuvent s'appliquer."
 
 #: www/views/onboarding/collectEmail.html:15
-msgid "Get news and updates from BitPay"
+msgid "Get news and updates"
 msgstr "Obtenir les actualités et mises à jour de BitPay"
 
 #: www/views/onboarding/welcome.html:8
