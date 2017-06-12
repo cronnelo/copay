@@ -1642,7 +1642,7 @@ msgid "Open GitHub Project"
 msgstr "打开 GitHub 项目"
 
 #: src/js/controllers/tx-details.js:162
-msgid "Open Insight"
+msgid "Open Block Explorer"
 msgstr "开放的洞察力"
 
 #: www/views/tab-scan.html:22
@@ -2650,7 +2650,7 @@ msgid "View Terms of Service"
 msgstr "查看服务条款"
 
 #: src/js/controllers/tx-details.js:161
-msgid "View Transaction on Insight"
+msgid "View Transaction on Block Explorer"
 msgstr "查看交易记录的洞察"
 
 #: src/js/controllers/tab-home.js:144

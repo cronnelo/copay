@@ -1642,7 +1642,7 @@ msgid "Open GitHub Project"
 msgstr "Otwórz projekt GitHub"
 
 #: src/js/controllers/tx-details.js:162
-msgid "Open Insight"
+msgid "Open Block Explorer"
 msgstr "Otwórz Insight"
 
 #: www/views/tab-scan.html:22
@@ -2650,7 +2650,7 @@ msgid "View Terms of Service"
 msgstr "Zobacz zasady użytkowania"
 
 #: src/js/controllers/tx-details.js:161
-msgid "View Transaction on Insight"
+msgid "View Transaction on Block Explorer"
 msgstr "Zobacz transakcje na Insight"
 
 #: src/js/controllers/tab-home.js:144

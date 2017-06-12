@@ -1644,7 +1644,7 @@ msgid "Open GitHub Project"
 msgstr "GitHub のプロジェクトを開く"
 
 #: src/js/controllers/tx-details.js:162
-msgid "Open Insight"
+msgid "Open Block Explorer"
 msgstr "Insightを開く"
 
 #: www/views/tab-scan.html:22
@@ -2656,7 +2656,7 @@ msgid "View Terms of Service"
 msgstr "サービス利用規約を表示"
 
 #: src/js/controllers/tx-details.js:161
-msgid "View Transaction on Insight"
+msgid "View Transaction on Block Explorer"
 msgstr "Insightにて取引を表示"
 
 #: src/js/controllers/tab-home.js:144
