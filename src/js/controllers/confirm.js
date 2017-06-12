@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('copayApp.controllers').controller('confirmController', function($rootScope, $scope, $interval, $filter, $timeout, $ionicScrollDelegate, gettextCatalog, walletService, platformInfo, lodash, configService, rateService, $stateParams, $window, $state, $log, profileService, bitcore, txFormatService, ongoingProcess, $ionicModal, popupService, $ionicHistory, $ionicConfig, payproService, feeService, bwcError) {
+angular.module('copayApp.controllers').controller('confirmController', function($rootScope, $scope, $interval, $filter, $timeout, $ionicScrollDelegate, gettextCatalog, walletService, platformInfo, lodash, configService, rateService, $stateParams, $window, $state, $log, profileService, bitcore, txFormatService, ongoingProcess, $ionicModal, popupService, $ionicHistory, $ionicConfig, payproService, feeService, bwcError, CUSTOMNETWORKS) {
   var cachedTxp = {};
   var toAmount;
   var isChromeApp = platformInfo.isChromeApp;
@@ -43,6 +43,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
     var feeLevel = config.settings && config.settings.feeLevel ? config.settings.feeLevel : 'normal';
     $scope.feeLevel = feeService.feeOpts[feeLevel];
     $scope.network = (new bitcore.Address($scope.toAddress)).network.name;
+
     resetValues();
     setwallets();
     applyButtonText();
@@ -156,7 +157,11 @@ angular.module('copayApp.controllers').controller('confirmController', function(
     toAmount = parseInt(toAmount);
     $scope.amountStr = txFormatService.formatAmountStr(toAmount);
     $scope.displayAmount = getDisplayAmount($scope.amountStr);
-    $scope.displayUnit = getDisplayUnit($scope.amountStr);
+    // $scope.displayUnit = getDisplayUnit($scope.amountStr);
+    $scope.displayUnit = "BTC";
+    if(CUSTOMNETWORKS[$scope.network]) {
+      $scope.displayUnit = CUSTOMNETWORKS[$scope.network].symbol;
+    }
     txFormatService.formatAlternativeStr(toAmount, function(v) {
       $scope.alternativeAmountStr = v;
     });
