@@ -344,6 +344,7 @@ angular.module('copayApp.services')
       } else if (opts.extendedPublicKey) {
         try {
           walletClient.seedFromExtendedPublicKey(opts.extendedPublicKey, opts.externalSource, opts.entropySource, {
+            network: opts.networkName,
             account: opts.account || 0,
             derivationStrategy: opts.derivationStrategy || 'BIP44',
           });
