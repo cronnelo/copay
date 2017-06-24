@@ -464,6 +464,14 @@ angular.module('copayApp.controllers').controller('confirmController', function(
   $scope.cancel = function() {
     $scope.payproModal.hide();
   };
+  $scope.$on('destroy', function() {
+    destroyBitloxListeners();
+  })
+  function destroyBitloxListeners() {
+    if(typeof($rootScope.bitloxConnectErrorListener) === 'function') {
+      $rootScope.bitloxConnectErrorListener();    
+    }    
+  }
 
   $scope.approve = function(onSendStatusChange) {
 
@@ -577,7 +585,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
         if (err) setSendError(err);
       }, onSendStatusChange);
     }
-
+    destroyBitloxListeners();
     walletService.publishAndSign(wallet, txp, function(err, txp) {
       if (err) return setSendError(err);
     }, onSendStatusChange);
