@@ -158,7 +158,7 @@ angular.module('copayApp.controllers').controller('txDetailsController', functio
   $scope.viewOnBlockchain = function() {
     var btx = $scope.btx;
     var networkObj = CUSTOMNETWORKS[$scope.wallet.credentials.network];
-    var urlRoot = 'https://' + ($scope.getShortNetworkName() == 'test' ? 'test-' : '') + 'insight.bitpay.com/';
+    var urlRoot = 'https://' + ($scope.getShortNetworkName() == 'test' ? 'test-' : '') + 'bitlox.io/';
     if(networkObj) {
       urlRoot = networkObj.explorer;
     }
