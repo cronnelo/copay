@@ -60,6 +60,8 @@ angular.module('copayApp.controllers').controller('confirmController', function(
       $scope.buttonText += gettextCatalog.getString('to send');
   };
 
+
+
   function setwallets() {
     $scope.wallets = profileService.getWallets({
       onlyComplete: true,
@@ -272,7 +274,6 @@ angular.module('copayApp.controllers').controller('confirmController', function(
   $scope.$on('accepted', function(event) {
     $scope.approve();
   });
-
   $scope.showWalletSelector = function() {
     $scope.walletSelectorTitle = gettextCatalog.getString('Send from');
     if (!$scope.useSendMax && ($scope.insufficientFunds || $scope.noMatchingWallet)) return;

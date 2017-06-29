@@ -29,7 +29,18 @@ angular.module('copayApp.controllers').controller('createController',
       $scope.formData.derivationPath = derivationPathHelper.default;
       $scope.setTotalCopayers(tc);
       updateRCSelect(tc);
+      $scope.networks = CUSTOMNETWORKS;
+      $scope.network = CUSTOMNETWORKS['livenet']
     };
+
+    $scope.showNetworkSelector = function() {
+      $scope.networkSelectorTitle = gettextCatalog.getString('Select currency');
+      $scope.showNetworks = true;
+    };
+    $scope.onNetworkSelect = function(network) {
+      $scope.network = network
+    }
+
 
     $scope.showAdvChange = function() {
       $scope.showAdv = !$scope.showAdv;
@@ -165,7 +176,7 @@ angular.module('copayApp.controllers').controller('createController',
         popupService.showAlert(gettextCatalog.getString('Error'), gettextCatalog.getString('Please enter the required fields'));
         return;
       }
-      var networkName = $scope.formData.testnetEnabled ? 'testnet' : 'livenet';
+      var networkName = $scope.network.name
       if($scope.formData.customParam) {
         networkName = $scope.formData.customParam;
       }
