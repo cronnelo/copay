@@ -85,8 +85,10 @@ angular.module('copayApp.controllers').controller('confirmController', function(
 
     lodash.each($scope.wallets, function(w) {
       walletService.getStatus(w, {}, function(err, status) {
-        if (err || !status) {
+        if (err) {
           $log.error(err);
+        } else if(!status) {
+          $log.error('no status')
         } else {
           walletsUpdated++;
           w.status = status;
