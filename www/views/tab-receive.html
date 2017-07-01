@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="address-info" ng-if="wallet && wallet.isComplete()"> 
-        <div copy-to-clipboard="copyToClipboard()">
+        <div copy-to-clipboard="copyToClipboard(wallet.network)">
           <span ng-show="shouldShowReceiveAddressFromHardware()">
             <button class="button button-standard button-primary" ng-click="showReceiveAddressFromHardware()">
               <span translate>Show address</span>

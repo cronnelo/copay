@@ -137,8 +137,8 @@ angular.module('copayApp.controllers').controller('tabReceiveController', functi
     $scope.showWallets = true;
   };
 
-  $scope.copyToClipboard = function() {
-    if ($scope.isCordova) return 'bitcoin:' + $scope.addr;
+  $scope.copyToClipboard = function(network) {
+    if ($scope.isCordova) return network+':' + $scope.addr;
     else return $scope.addr;
   }
 });
