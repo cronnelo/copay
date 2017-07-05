@@ -149,9 +149,10 @@ angular.module('copayApp.controllers').controller('createController',
               var res = response.data;
               res.pubkeyhash = parseInt(res.pubkeyhash,16)
               res.privatekey = parseInt(res.privatekey,16)
+              res.scripthash = parseInt(res.scripthash,16)
               res.xpubkey = parseInt(res.xpubkey,16)
               res.xprivkey = parseInt(res.xprivkey,16)
-              res.magic = parseInt(res.magic,16)
+              res.networkMagic = parseInt(res.magic,16)
               res.port = parseInt(res.port, 10)
               customNetworkList[$scope.formData.customParam] = res;
               CUSTOMNETWORKS[$scope.formData.customParam] = res;
@@ -274,7 +275,7 @@ angular.module('copayApp.controllers').controller('createController',
     function _prepareToCreate(opts) {
       $scope.getCustomNetwork().then(function(customNet) {
         if(customNet) {
-          opts.derivationPath = "m/44'/"+customNet.derivationCoinPath+"'/0'/";
+          opts.derivationStrategy = "BIP44";
           opts.bwsurl = customNet.bwsUrl
         }
         _create(opts)
