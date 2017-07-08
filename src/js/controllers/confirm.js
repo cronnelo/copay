@@ -576,6 +576,10 @@ angular.module('copayApp.controllers').controller('confirmController', function(
     $ionicHistory.clearHistory();
     $state.go('tabs.send').then(function() {
       $state.transitionTo('tabs.home');
+      $timeout(function() {
+        console.log('k')
+        $rootScope.$broadcast('Local/TxAction', $scope.wallet.id);
+      },5000);
     });
   };
 
@@ -591,6 +595,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
     destroyBitloxListeners();
     walletService.publishAndSign(wallet, txp, function(err, txp) {
       if (err) return setSendError(err);
+
     }, onSendStatusChange);
   };
 });
