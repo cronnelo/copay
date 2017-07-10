@@ -574,12 +574,10 @@ angular.module('copayApp.controllers').controller('confirmController', function(
       historyRoot: true
     });
     $ionicHistory.clearHistory();
+    console.log('k')
+    $rootScope.$broadcast('Local/TxAction', $scope.wallet.id);    
     $state.go('tabs.send').then(function() {
       $state.transitionTo('tabs.home');
-      $timeout(function() {
-        console.log('k')
-        $rootScope.$broadcast('Local/TxAction', $scope.wallet.id);
-      },5000);
     });
   };
 
