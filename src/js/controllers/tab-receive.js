@@ -138,6 +138,9 @@ angular.module('copayApp.controllers').controller('tabReceiveController', functi
   };
 
   $scope.copyToClipboard = function(network) {
+    if(network === 'livenet') {
+      network = 'bitcoin';
+    }
     if ($scope.isCordova) return network+':' + $scope.addr;
     else return $scope.addr;
   }
