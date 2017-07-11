@@ -32,6 +32,7 @@ angular.module('copayApp.controllers').controller('amountController', function($
     $scope.showAlternativeAmount = false; //!!$scope.nextStep;
     $scope.toColor = data.stateParams.toColor;
     $scope.walletId = data.stateParams.walletId;
+    $scope.wallet = data.stateParams.wallet;
     $scope.showSendMax = false;
 
     $scope.customAmount = data.stateParams.customAmount;
