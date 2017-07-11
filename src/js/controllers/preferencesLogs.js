@@ -11,7 +11,7 @@ angular.module('copayApp.controllers').controller('preferencesLogs',
       $scope.logs = historicLog.get();
 
       $scope.prepare = function() {
-        var log = 'Copay Session Logs\n Be careful, this could contain sensitive private data\n\n';
+        var log = 'BitLox Session Logs\n Be careful, this could contain sensitive private data\n\n';
         log += '\n\n';
         log += $scope.logs.map(function(v) {
           return v.msg;
@@ -25,7 +25,7 @@ angular.module('copayApp.controllers').controller('preferencesLogs',
 
         window.plugins.socialsharing.shareViaEmail(
           body,
-          'Copay Logs',
+          'BitLox Logs',
           null, // TO: must be null or an array
           null, // CC: must be null or an array
           null, // BCC: must be null or an array
