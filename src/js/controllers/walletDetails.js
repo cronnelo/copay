@@ -308,8 +308,8 @@ angular.module('copayApp.controllers').controller('walletDetailsController', fun
     }
 
     var amountTop = ((amountScale - 0.7) / 0.7) * top;
-    if (amountTop < -10) {
-      amountTop = -10;
+    if (amountTop < 0) {
+      amountTop = 0;
     }
     if (amountTop > top) {
       amountTop = top;
