@@ -30,13 +30,10 @@
         <div class="item">
           <span class="label" translate>To</span>
           <span class="payment-proposal-to" ng-if="!recipientType">
-            
-            
+            <div copy-to-clipboard="toAddress" ng-if="!paypro" class="ellipsis">
 <!--             <img class="recipient-address" src="img/aureus.svg" ng-show="wallet.network === 'aureus'"/>
             <img class="recipient-address" src="img/deuscoin.svg" ng-show="wallet.network === 'deuscoin'"/>
-            <img class="recipient-address" src="img/icon-bitcoin.svg" ng-show="wallet.network === 'livenet'"/> -->
-
-            <div copy-to-clipboard="toAddress" ng-if="!paypro" class="ellipsis">
+            <img class="recipient-address" src="img/icon-bitcoin.svg" ng-show="wallet.network === 'livenet'"/> -->            
               <contact ng-if="!toName" address="{{toAddress}}"></contact>
               <span class="m15l size-14" ng-if="toName">{{toName}}</span>
             </div>
@@ -51,8 +48,7 @@
             <span ng-if="tx.hasMultiplesOutputs" translate>Multiple recipients</span> -->
           </span>
           <div class="wallet" ng-if="recipientType == 'wallet'">
-
-            <i class="icon big-icon-svg" wallet-icon data-wallet="wallet">
+            <i class="icon big-icon-svg" wallet-icon data-network="network"></i>
             <div copy-to-clipboard="toAddress" class="ellipsis">
               <contact ng-if="!toName" address="{{toAddress}}"></contact>
               <span ng-if="toName" class="wallet-name">{{toName}}</span>
