@@ -32,7 +32,9 @@
           <span class="payment-proposal-to" ng-if="!recipientType">
             
             
-            <span></span>
+<!--             <img class="recipient-address" src="img/aureus.svg" ng-show="wallet.network === 'aureus'"/>
+            <img class="recipient-address" src="img/deuscoin.svg" ng-show="wallet.network === 'deuscoin'"/>
+            <img class="recipient-address" src="img/icon-bitcoin.svg" ng-show="wallet.network === 'livenet'"/> -->
 
             <div copy-to-clipboard="toAddress" ng-if="!paypro" class="ellipsis">
               <contact ng-if="!toName" address="{{toAddress}}"></contact>
@@ -49,9 +51,8 @@
             <span ng-if="tx.hasMultiplesOutputs" translate>Multiple recipients</span> -->
           </span>
           <div class="wallet" ng-if="recipientType == 'wallet'">
-            <i class="icon big-icon-svg">
-              <img src="img/icon-wallet.svg" ng-style="{'background-color': toColor}" class="bg"/>
-            </i>
+
+            <i class="icon big-icon-svg" wallet-icon data-wallet="wallet">
             <div copy-to-clipboard="toAddress" class="ellipsis">
               <contact ng-if="!toName" address="{{toAddress}}"></contact>
               <span ng-if="toName" class="wallet-name">{{toName}}</span>
