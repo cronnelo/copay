@@ -303,7 +303,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
       defaultText: $scope.description
     };
 
-    popupService.showPrompt(null, message, opts, function(res) {
+    popupService.showPrompt("Memo", message, opts, function(res) {
       if (typeof res != 'undefined') $scope.description = res;
       $timeout(function() {
         $scope.$apply();
