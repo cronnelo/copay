@@ -1,6 +1,9 @@
 #view-confirm {
   background-color: #ffffff;
   @extend .deflash-blue;
+  img.recipient-address {
+    width: 20px;
+  }
   .icon-amazon {
     background-image: url("../img/icon-amazon.svg");
   }

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('copayApp.services').factory('feeService', function($log, $stateParams, bwcService, walletService, configService, gettext, lodash, txFormatService, gettextCatalog) {
+angular.module('copayApp.services').factory('feeService', function($log, $stateParams, bwcService, walletService, configService, gettext, lodash, txFormatService, gettextCatalog, CUSTOMNETWORKS) {
   var root = {};
 
   // Constant fee options to translate
@@ -20,10 +20,10 @@ angular.module('copayApp.services').factory('feeService', function($log, $stateP
     network = network || 'livenet';
     var feeLevel = root.getCurrentFeeLevel();
 
-    root.getFeeLevels(function(err, levels) {
+    root.getFeeLevels(network, function(err, levels) {
       if (err) return cb(err);
 
-      var feeLevelValue = lodash.find(levels[network], {
+      var feeLevelValue = lodash.find(levels['livenet'], { //hardcode livenet here
         level: feeLevel
       });
 
@@ -42,8 +42,9 @@ angular.module('copayApp.services').factory('feeService', function($log, $stateP
     });
   };
 
-  root.getFeeLevels = function(cb) {
-    var walletClient = bwcService.getClient();
+  root.getFeeLevels = function(network, cb) {
+    network = network || 'livenet';
+    var walletClient = bwcService.getClient(null, {bwsurl:CUSTOMNETWORKS[network].bwsUrl});
     var unitName = configService.getSync().wallet.settings.unitName;
 
     walletClient.getFeeLevels('livenet', function(errLivenet, levelsLivenet) {

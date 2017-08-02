@@ -37,19 +37,19 @@
         $scope.getEntropy = function(data) {
           api.getEntropy(1024).then(function(data) {
 
-            console.warn("ENTROPY SUCCESS "+data.payload.entropy)
+            $log.warn("ENTROPY SUCCESS "+data.payload.entropy)
           }).catch(function(e) {
-            console.warn("ENTROPY FAILURE")
-            console.warn(e)
+            $log.warn("ENTROPY FAILURE")
+            $log.warn(e)
           });
         }
         $scope.ping = function(data) {
           api.ping({greeting:"wbalbadubs"}).then(function(data) {
 
-            console.warn("PING SUCCESS "+data.payload.echoed_greeting + " " + data.payload.echoed_session_id)
+            $log.warn("PING SUCCESS "+data.payload.echoed_greeting + " " + data.payload.echoed_session_id)
           }).catch(function(e) {
-            console.warn("PING FAILURE")
-            console.warn(e)
+            $log.warn("PING FAILURE")
+            $log.warn(e)
           });
         }
         $scope.refreshBitlox = function($event) {
@@ -65,7 +65,7 @@
           $ionicLoading.show({
             template: 'Connecting to BitLox, Please Wait...'
           });
-          // console.log('connecting to '+address)
+          // $log.debug('connecting to '+address)
 
           api.connect(address).then(function() {
           }, function(err) {
@@ -153,7 +153,7 @@
             var b = bwcService.getBitcore();
             var x = b.HDPublicKey(wallet.xpub);
             opts.entropySource = x.publicKey.toString(); //"40c13cfdbafeccc47b4685d6e7f6a27c";
-            opts.account = wallet.number;
+            // opts.account = wallet.number;
             opts.networkName = 'livenet';
             opts.m = 1;
             opts.n = 1;
@@ -162,35 +162,45 @@
             opts.network = 'livenet'
             opts.bwsurl = 'https://bws.bitlox.com/bws/api'
 
-            // console.warn("START IMPORTING")
+            $log.debug("START IMPORTING")
             profileService.createWallet(opts, function(err, walletId) {
-              $ionicLoading.hide()
-              // console.warn("DONE IMPORTING")
+
+              // $log.debug("DONE IMPORTING")
               if (err) {
-                console.error(err)
+                $log.error(err)
+
 
                 profileService.importExtendedPublicKey(opts, function(err2, walletId) {
 
-                  // console.warn("DONE IMPORTING")
+                  // $log.warn("DONE IMPORTING")
                   if (err2) {
-                    console.error(err2)
+                    $log.error(err2)
                     popupService.showAlert(gettextCatalog.getString('Error'), err2);
+                    $ionicLoading.hide();
                     return;
                   }
-
-                  $scope.updateDeviceQr(walletId, function() {
-                    $ionicLoading.hide()
-                    $ionicHistory.goBack(-3);
-                  })
-
+                  $timeout(function() {
+                    walletService.startScan(walletId);
+                    $timeout(function() {
+                      $scope.updateDeviceQr(walletId, function() {
+                        $ionicLoading.hide()
+                        $ionicHistory.goBack(-3);
+                      })
+                    },5000)
+                  },5000);
 
                 });
                 return;
               }
-              $scope.updateDeviceQr(walletId, function() {
-                $ionicLoading.hide()
-                $ionicHistory.goBack(-3);
-              })
+              $timeout(function() {
+                walletService.startScan(walletId);
+                $timeout(function() {
+                  $scope.updateDeviceQr(walletId, function() {
+                    $ionicLoading.hide()
+                    $ionicHistory.goBack(-3);
+                  })
+                },5000)
+              },5000);
 
               
 
@@ -203,13 +213,14 @@
 
         $scope.updateDeviceQr = function(walletId, cb) {
           walletService.getMainAddresses(walletId, {reverse:true}, function(err, addresses) {
-            if(addresses.length > 0) {
-              var sp = addresses[0].path.split('/')
-              var p = parseInt(sp.pop(),10);
+            return cb();
+            // if(addresses.length > 0) {
+            //   var sp = addresses[0].path.split('/')
+            //   var p = parseInt(sp.pop(),10);
                 
-              api.setQrCode(p+1);              
-            }
-            cb();
+            //   api.setQrCode(p+1);              
+            // }
+            // cb();
           });
         }
         $scope.$watch('api.getBleReady()', function(newVal) {
@@ -220,7 +231,7 @@
         $scope.$watch('api.getStatus()', function(hidstatus) {
 
 
-          // console.warn("New device status: " + hidstatus)
+          $log.debug("New device status: " + hidstatus)
           switch(hidstatus) {
               case api.STATUS_CONNECTED:
                   $scope.bitlox.connectAttempted = true;
@@ -265,7 +276,7 @@
                   $scope.bitlox.connected = false;
 
                   if($scope.wallet.status && $scope.wallet.status !== api.STATUS_DISCONNECTED) {
-                    console.log("disconnected error")
+                    $log.debug("disconnected error")
                     $scope.wallet.status = hidstatus;
                     if($scope.timer) {
                         $ionicLoading.hide();
@@ -333,25 +344,25 @@
             $scope.loadingXpub = true;
             $ionicLoading.show({
                   template: 'Opening Wallet. Check your BitLox...'
-                });            // console.debug("loading wallet", wallet.number);
+                });            // $log.debug("loading wallet", wallet.number);
             $scope.openingWallet = wallet.number;
             wallet.open()
                 .then(function() {
                     $scope.openWallet = wallet;
-                    console.log("WALLET LOADED")
-                    console.log(wallet.xpub)
+                    $log.debug("WALLET LOADED")
+                    $log.debug(wallet.xpub)
                     _importExtendedPublicKey(wallet)
                 }).catch(function(err) {
-                    console.log("OPEN WALLET ERROR", err)
+                    $log.debug("OPEN WALLET ERROR", err)
                     $ionicLoading.hide();
                     popupService.showAlert(gettextCatalog.getString('Error'), err);
                 })
                 .finally(function(status) {
-                    console.debug("open notify", status);
+                    $log.debug("open notify", status);
                     if (status === bitloxWallet.NOTIFY_XPUB_LOADED) {
                         $scope.loadingXpub = false;
                     }
-                    console.debug("done loading wallet", wallet.number);
+                    $log.debug("done loading wallet", wallet.number);
                     $scope.openingWallet = -99;    
                 });
           });
@@ -428,12 +439,19 @@
             $scope.openWallet = null;
             $scope.timer = false;
 
-            $ionicLoading.show({template: "Finding BitLox, please wait...",duration:3000})
-            $timeout(function() {
+            
+            $scope.timeout = $timeout(function() {
                 $scope.timer = true;
+                $ionicLoading.hide();
             },3000);            
-            if(platformInfo.isChromeApp) {
+            // if($state.current.url === '/attach-bitlox' || $state.current.url === '/create-bitlox') {
+            //   $ionicLoading.show({template: "Finding BitLox, please wait...", duration:3000})
+            // } else {
+            // }
+            $ionicLoading.show({template: "Finding BitLox, please wait..."})
 
+            if(platformInfo.isChromeApp) {
+            
                 // api.disconnect().then(function() {
                     $timeout(function() {
                         api.device().then(function() {
@@ -443,14 +461,16 @@
                         })
                     },1000);
                 // })
-            } else {
+            } else {            
                 if(api.getStatus() === api.STATUS_IDLE) {
                     $scope.readWallets();
                 }                
             }
         }
 
-
+        $scope.$on('destroy', function() {
+          $timeout.cancel($scope.timeout)
+        })
 
         $scope.reset();
 

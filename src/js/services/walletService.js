@@ -269,12 +269,12 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
     };
 
     function _getStatus(initStatusHash, tries, cb) {
-      if (isStatusCached() && !opts.force) {
-        $log.debug('Wallet status cache hit:' + wallet.id);
-        cacheStatus(wallet.cachedStatus);
-        processPendingTxps(wallet.cachedStatus);
-        return cb(null, wallet.cachedStatus);
-      };
+      // if (isStatusCached() && !opts.force) {
+      //   $log.debug('Wallet status cache hit:' + wallet.id);
+      //   cacheStatus(wallet.cachedStatus);
+      //   processPendingTxps(wallet.cachedStatus);
+      //   return cb(null, wallet.cachedStatus);
+      // };
 
       tries = tries || 0;
 
@@ -1054,11 +1054,14 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
             if(externalSource.indexOf('bitlox') === 0) {
               ongoingProcess.set('broadcastingTx', false, customStatusHandler); // just tells the UI we are done
 
-              $ionicLoading.hide()
-              root.invalidateCache(wallet);       
-              cb(null, signedTxp)       
+              
+              root.invalidateCache(wallet);
+              
+              
               return root.removeTx(wallet, txp, function() {
-
+                $ionicLoading.hide()
+                // $rootScope.$emit('Local/TxAction', wallet.id);
+                return cb(null, signedTxp)       
               })
             }
           }
@@ -1074,12 +1077,12 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
               ongoingProcess.set('broadcastingTx', false, customStatusHandler);
               if (err) return cb(bwcError.msg(err));
 
-              $rootScope.$emit('Local/TxAction', wallet.id);
+              // $rootScope.$emit('Local/TxAction', wallet.id);
               return cb(null, broadcastedTxp);
             });
           } else {
             $ionicLoading.hide();
-            $rootScope.$emit('Local/TxAction', wallet.id);
+            // $rootScope.$emit('Local/TxAction', wallet.id);
             return cb(null, signedTxp);
           }
         });

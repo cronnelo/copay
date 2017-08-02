@@ -7,8 +7,8 @@
     <div ng-if="hasFunds">
       <div class="item item-heading send-heading" translate>Recipient</div>
       <div class="item item-icon-left item-icon-right input">
-        <i class="icon icon-svg left"><img src="img/icon-bitcoin-symbol.svg"></i>
-        <input type="text" placeholder="{{'Search or enter bitcoin address' | translate}}" ng-model="formData.search" ng-change="findContact(formData.search)" ng-model-onblur>
+        <i class="icon icon-svg left"><!-- <img src="img/icon-bitcoin-symbol.svg" --></i>
+        <input type="text" placeholder="{{'Search or enter address' | translate}}" ng-model="formData.search" ng-change="findContact(formData.search)" ng-model-onblur>
         <i class="icon icon-svg qr" on-tap="openScanner()"><img src="img/scan-ico.svg"/></i>
       </div>
     </div>
@@ -18,19 +18,19 @@
         <div class="item item-icon-right item-heading"></div>
         <div>
           <i class="icon zero-state-icon">
-            <img src="img/tab-icons/ico-send-selected.svg"/>
+            <img src="img/tab-icons/icon-send-selected.svg"/>
           </i>
         </div>
         <div class="title" translate>
-          Start sending bitcoin
+          Start sending coins
         </div>
         <div class="subtitle">
-          <span ng-show="hasWallets" translate>To get started, buy bitcoin or share your address. You can receive bitcoin from any wallet or service.</span>
-          <span ng-show="!hasWallets" translate>To get started, you'll need to create a bitcoin wallet and get some bitcoin.</span>
+          <span ng-show="hasWallets" translate>To get started, buy coins or share your address. You can receive coins from any wallet or service.</span>
+          <span ng-show="!hasWallets" translate>To get started, you'll need to create a wallet and get some coins.</span>
           <div class="padding">
             <!-- <button class="button button-standard button-primary" ng-click="buyBitcoin()" ng-show="hasWallets" translate>Buy Bitcoin</button> -->
-            <button class="button button-standard button-primary" ng-click="createWallet()" ng-show="!hasWallets" translate>Create bitcoin wallet</button>
-            <button class="button button-standard button-secondary" ui-sref="tabs.receive" ng-show="hasWallets" translate>Show bitcoin address</button>
+            <button class="button button-standard button-primary" ng-click="createWallet()" ng-show="!hasWallets" translate>Create wallet</button>
+            <button class="button button-standard button-secondary" ui-sref="tabs.receive" ng-show="hasWallets" translate>Show coin address</button>
           </div>
         </div>
       </div>
@@ -64,9 +64,7 @@
       </div>
       <div class="list">
         <a class="item item-icon-left item-icon-right" ng-repeat="item in list" ng-if="hasWallets && item.recipientType == 'wallet'" ng-click="goToAmount(item)">
-          <i class="icon big-icon-svg" ng-if="item.recipientType == 'wallet'">
-            <img src="img/icon-wallet.svg" ng-class="{'wallet-background-color-default': !item.color}" ng-style="{'background-color': item.color}" class="bg"/>
-          </i>
+          <i class="icon big-icon-svg" ng-if="item.recipientType == 'wallet'" wallet-icon data-wallet="item"></i>
           {{item.name}}
           <i class="icon bp-arrow-right"></i>
         </a>

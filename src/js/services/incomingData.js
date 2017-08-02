@@ -84,9 +84,22 @@ angular.module('copayApp.services').factory('incomingData', function($log, $stat
     data = sanitizeUri(data);
 
     var isNetworkValid = false;
+    var network = 'livenet'
+    var networkName = 'Bitcoin';
+    $log.log(data)
+        $log.log(data)
+            $log.log(data)
+                $log.log(data)
+                    $log.log(data)
+                        $log.log(data)
+                            $log.log(data)
+                                $log.log(data)
     for(var i in CUSTOMNETWORKS) {
-      if(bitcore.Address.isValid(data), i.name) {
+      $log.log(CUSTOMNETWORKS[i].name)
+      if(bitcore.Address.isValid(data, CUSTOMNETWORKS[i].name)) {
         isNetworkValid = true
+        network = CUSTOMNETWORKS[i].name
+        networkName = CUSTOMNETWORKS[i].alias
       }
     }
     // BIP21
@@ -94,6 +107,7 @@ angular.module('copayApp.services').factory('incomingData', function($log, $stat
       var parsed = new bitcore.URI(data);
 
       var addr = parsed.address ? parsed.address.toString() : '';
+      $log.log(addr)
       var message = parsed.message;
 
       var amount = parsed.amount ? parsed.amount : '';
@@ -129,7 +143,9 @@ angular.module('copayApp.services').factory('incomingData', function($log, $stat
       if ($state.includes('tabs.scan')) {
         root.showMenu({
           data: data,
-          type: 'bitcoinAddress'
+          type: 'bitcoinAddress',
+          network: network,
+          networkName: networkName
         });
       } else {
         goToAmountPage(data);
@@ -200,7 +216,7 @@ angular.module('copayApp.services').factory('incomingData', function($log, $stat
       return true;
 
       // Join
-    } else if (data && data.exec(/^copay:[0-9A-HJ-NP-Za-km-z]{70,80}$/)) {
+    } else if (data && (/^copay:[0-9A-HJ-NP-Za-km-z]{70,80}$/).exec(data)) {
       $state.go('tabs.home', {}, {
         'reload': true,
         'notify': $state.current.name == 'tabs.home' ? false : true

@@ -1,5 +1,8 @@
 #view-amount {
   @extend .deflash-blue;
+    img.recipient-address {
+      width: 20px;
+    }  
   .recipient-label {
     font-size: 14px;
     padding-bottom: 0;
@@ -34,6 +37,7 @@
   }
   @media(max-width: 320px) {
     .bitcoin-address {
+      font-size: 12px;
       & > span:last-child {
         margin-left: -2px;
       }

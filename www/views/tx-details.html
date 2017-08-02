@@ -40,8 +40,7 @@
         <div class="item" ng-if="btx.action === 'sent'">
           <span class="label" translate>To</span>
           <span class="payment-proposal-to">
-            <img ng-if="!cardId" src="img/icon-bitcoin-small.svg">
-            <img ng-if="cardId" src="img/icon-card.svg" width="34">
+            <img src="img/icon-card.svg" width="34">
             <div copy-to-clipboard="btx.addressTo" class="ellipsis">
               <contact ng-if="!toName" address="{{btx.addressTo}}" class="ellipsis" style="display: block;"></contact>
               <span class="m15l size-14" ng-if="toName">{{toName}}</span>
@@ -114,7 +113,7 @@
             <div class="timeline-content">
               <div class="timeline-content__icon">
                 <div class="rejected" ng-if="a.type === 'reject'">!</div>
-                <img src="img/icon-broadcasted.svg" ng-if="a.type === 'broadcasted'">
+                <img class="icon" src="img/icon-broadcasted.svg" ng-if="a.type === 'broadcasted'">
                 <div ng-if="a.type !== 'reject' && a.type !== 'broadcasted'">
                   {{actionList.length - $index}}
                 </div>

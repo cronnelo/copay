@@ -29,14 +29,14 @@
         <span>{{'Send Feedback' | translate}}</span>
         <i class="icon bp-arrow-right"></i>
       </a> -->
-      <a ng-if="isCordova" class="item item-icon-left item-icon-right" ui-sref="tabs.shareApp({score: 4, skipped: true, fromSettings: true})">
+<!--       <a ng-if="isCordova" class="item item-icon-left item-icon-right" ui-sref="tabs.shareApp({score: 4, skipped: true, fromSettings: true})">
         <i class="icon big-icon-svg">
           <img src="img/icon-heart.svg" class="bg"/>
         </i>
         <span translate>Share {{appName}}</span>
         <i class="icon bp-arrow-right"></i>
       </a>
-
+ -->
       <div class="item item-divider">{{'Preferences' | translate}}</div>
 
       <a class="item item-icon-left item-icon-right" ui-sref="tabs.notifications">
@@ -82,7 +82,7 @@
         <i class="icon big-icon-svg">
           <img src="img/icon-network.svg" class="bg"/>
         </i>
-        <span class="setting-title">{{'Bitcoin Network Fee Policy' | translate}}</span>
+        <span class="setting-title">{{'Network Fee Policy' | translate}}</span>
         <span class="setting-value">
           {{feeOpts[currentFeeLevel]|translate}}
         </span>
@@ -104,9 +104,7 @@
       <a class="item item-icon-left item-icon-right" href
            ui-sref="tabs.preferences({'walletId': item.id})"
            ng-repeat="item in wallets track by $index">
-         <i class="icon big-icon-svg circle">
-          <img src="img/icon-wallet.svg" ng-class="{'wallet-background-color-default': !item.color}" ng-style="{'background-color': item.color}" class="bg"/>
-        </i>
+         <i class="icon big-icon-svg circle" wallet-icon data-wallet="item"></i>
         <span>
           {{item.name || item.id}}
           <span class="size-12 text-light" ng-show="item.n > 1">
@@ -142,13 +140,13 @@
 
       <div class="item item-divider"></div>
 
-      <a class="item item-icon-right item-icon-left" href ui-sref="tabs.advanced">
+<!--       <a class="item item-icon-right item-icon-left" href ui-sref="tabs.advanced">
         <i class="icon big-icon-svg">
           <img src="img/icon-advanced.svg" class="bg"/>
         </i>
         <span>{{'Advanced' | translate}}</span>
         <i class="icon bp-arrow-right"></i>
-      </a>
+      </a> -->
       <a class="item item-icon-left item-icon-right" href ui-sref="tabs.about">
         <i class="icon big-icon-svg">
           <img src="img/icon-about.svg" class="bg"/>

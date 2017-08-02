@@ -266,6 +266,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
           $log.error(err);
           return;
         }
+
         $scope.notifications = notifications;
         $scope.notificationsN = total;
         $timeout(function() {
@@ -273,7 +274,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
           $scope.$apply();
         }, 10);
       });
-    };
+    };  
 
     $scope.hideHomeTip = function() {
       storageService.setHomeTipAccepted('accepted', function() {
@@ -283,7 +284,15 @@ angular.module('copayApp.controllers').controller('tabHomeController',
         })
       });
     };
-
+    $scope.openBitlox = function() {
+      var url = 'https://bitlox.com';
+      var optIn = true;
+      var title = gettextCatalog.getString('BitLox');
+      var message = gettextCatalog.getString('Do you want to visit BitLox.com?');
+      var okText = gettextCatalog.getString('Yes');
+      var cancelText = gettextCatalog.getString('Cancel');
+      externalLinkService.open(url, optIn, title, message, okText, cancelText);
+    }
 
     $scope.onRefresh = function() {
       $timeout(function() {

@@ -75,6 +75,9 @@ angular.module('copayApp.controllers').controller('tabSendController', function(
         walletList.push({
           color: v.color,
           name: v.name,
+          network: v.network,
+          isPrivKeyExternalString: v.isPrivKeyExternal(),
+          getPrivKeyExternalSourceNameString: v.getPrivKeyExternalSourceName(),
           recipientType: 'wallet',
           getAddress: function(cb) {
             walletService.getAddress(v, false, cb);
@@ -163,7 +166,8 @@ angular.module('copayApp.controllers').controller('tabSendController', function(
           toAddress: addr,
           toName: item.name,
           toEmail: item.email,
-          toColor: item.color
+          toColor: item.color,
+          wallet: item
         })
       });
     });

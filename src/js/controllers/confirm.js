@@ -303,7 +303,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
       defaultText: $scope.description
     };
 
-    popupService.showPrompt(null, message, opts, function(res) {
+    popupService.showPrompt("Memo", message, opts, function(res) {
       if (typeof res != 'undefined') $scope.description = res;
       $timeout(function() {
         $scope.$apply();
@@ -574,6 +574,8 @@ angular.module('copayApp.controllers').controller('confirmController', function(
       historyRoot: true
     });
     $ionicHistory.clearHistory();
+    console.log('k')
+    $rootScope.$broadcast('Local/TxAction', $scope.wallet.id);    
     $state.go('tabs.send').then(function() {
       $state.transitionTo('tabs.home');
     });
@@ -591,6 +593,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
     destroyBitloxListeners();
     walletService.publishAndSign(wallet, txp, function(err, txp) {
       if (err) return setSendError(err);
+
     }, onSendStatusChange);
   };
 });

@@ -5,15 +5,22 @@ angular.module('copayApp.directives')
     return {
       restrict: 'A',
       templateUrl: 'views/includes/walletIcon.html',
-      scope: {wallet: '='},
+      scope: {wallet: '=', network: '='},
 
       link: function(scope, element, attrs) {
         
         scope.bitlox = false;
-        if(scope.wallet.isPrivKeyExternal() && scope.wallet.getPrivKeyExternalSourceName().indexOf('bitlox') > -1) {
+        var v = scope.wallet;
+        if(scope.wallet && typeof(scope.wallet.isPrivKeyExternal) === 'function' && scope.wallet.isPrivKeyExternal() && scope.wallet.getPrivKeyExternalSourceName().indexOf('bitlox') > -1) {
           scope.bitlox = true;
-        }
+        } else if (scope.wallet && scope.wallet.isPrivKeyExternalString && scope.wallet.getPrivKeyExternalSourceNameString.indexOf('bitlox') > -1) {
+          scope.bitlox = true
+        } 
 
+        if (!scope.wallet && scope.network) {
+          scope.wallet = {network: scope.network}
+        }
+        // console.log(scope.wallet,scope.network)
       }
     };
   });
