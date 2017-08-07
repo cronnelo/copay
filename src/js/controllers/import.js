@@ -13,12 +13,12 @@ angular.module('copayApp.controllers').controller('importController',
       $scope.isCordova = platformInfo.isCordova;
       $scope.formData = {};
       $scope.formData.bwsurl = defaults.bws.url;
-      $scope.formData.derivationPath = derivationPathHelper.getDefault('livenet');
+      $scope.formData.derivationPath = derivationPathHelper.getDefault(defaults.defaultNetwork);
       $scope.formData.account = 1;
       $scope.importErr = false;
       $scope.isCopay = appConfigService.name == 'copay';
       $scope.networks = CUSTOMNETWORKS;
-      $scope.network = CUSTOMNETWORKS['livenet']
+      $scope.network = CUSTOMNETWORKS[defaults.defaultNetwork]
 
       if ($stateParams.code)
         $scope.processWalletInfo($stateParams.code);
@@ -296,7 +296,7 @@ angular.module('copayApp.controllers').controller('importController',
     };
 
     $scope.importTrezor = function(account, isMultisig) {
-      trezor.getInfoForNewWallet(isMultisig, account, 'livenet', function(err, lopts) {
+      trezor.getInfoForNewWallet(isMultisig, account, defaults.defaultNetwork, function(err, lopts) {
         ongoingProcess.clear();
         if (err) {
           popupService.showAlert(gettextCatalog.getString('Error'), err);
@@ -352,7 +352,7 @@ angular.module('copayApp.controllers').controller('importController',
     };
 
     $scope.importLedger = function(account) {
-      ledger.getInfoForNewWallet(true, account, 'livenet', function(err, lopts) {
+      ledger.getInfoForNewWallet(true, account, defaults.defaultNetwork, function(err, lopts) {
         ongoingProcess.clear();
         if (err) {
           popupService.showAlert(gettextCatalog.getString('Error'), err);
