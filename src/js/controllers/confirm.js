@@ -545,7 +545,6 @@ angular.module('copayApp.controllers').controller('confirmController', function(
         (processName == 'sendingTx' && !$scope.wallet.canSign() && !$scope.wallet.isPrivKeyExternal())
       ) && !isOn) {
       $scope.sendStatus = 'success';
-    console.log($scope.sendStatus)
       $timeout(function() {
         $scope.$digest();
       }, 100);
@@ -574,7 +573,6 @@ angular.module('copayApp.controllers').controller('confirmController', function(
       historyRoot: true
     });
     $ionicHistory.clearHistory();
-    console.log('k')
     $rootScope.$broadcast('Local/TxAction', $scope.wallet.id);    
     $state.go('tabs.send').then(function() {
       $state.transitionTo('tabs.home');
