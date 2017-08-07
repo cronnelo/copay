@@ -2,7 +2,7 @@
 
 angular.module('copayApp.services').factory('feeService', function($log, $stateParams, bwcService, walletService, configService, gettext, lodash, txFormatService, gettextCatalog, CUSTOMNETWORKS) {
   var root = {};
-
+  var defaults = configService.getDefaults()
   // Constant fee options to translate
   root.feeOpts = {
     urgent: gettext('Urgent'),
@@ -17,13 +17,13 @@ angular.module('copayApp.services').factory('feeService', function($log, $stateP
   };
 
   root.getCurrentFeeValue = function(network, cb) {
-    network = network || 'livenet';
+    network = network || defaults.defaultNetwork;
     var feeLevel = root.getCurrentFeeLevel();
 
     root.getFeeLevels(network, function(err, levels) {
       if (err) return cb(err);
 
-      var feeLevelValue = lodash.find(levels['livenet'], { //hardcode livenet here
+      var feeLevelValue = lodash.find(levels[defaults.defaultNetwork], { //hardcode livenet here
         level: feeLevel
       });
 
@@ -43,7 +43,7 @@ angular.module('copayApp.services').factory('feeService', function($log, $stateP
   };
 
   root.getFeeLevels = function(network, cb) {
-    network = network || 'livenet';
+    network = network || defaults.defaultNetwork;
     var walletClient = bwcService.getClient(null, {bwsurl:CUSTOMNETWORKS[network].bwsUrl});
     var unitName = configService.getSync().wallet.settings.unitName;
 
@@ -56,11 +56,16 @@ angular.module('copayApp.services').factory('feeService', function($log, $stateP
             level.feePerKBUnit = txFormatService.formatAmount(level.feePerKB) + ' ' + unitName;
           });
         }
-
-        return cb(null, {
-          'livenet': levelsLivenet,
-          'testnet': levelsTestnet
+        walletClient.getFeeLevels(defaults.networkName, function(errDefaultnet, levelsDefaultnet) {
+          var retObj = {
+            'livenet': levelsLivenet,
+            'testnet': levelsTestnet
+          };
+          retObj[defaults.networkName] = levelsDefaultnet
+          
+          return cb(null, retObj);
         });
+
       });
     });
   };

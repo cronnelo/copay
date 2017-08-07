@@ -11,7 +11,7 @@ angular.module('copayApp.services')
     var root = {};
     var errors = bwcService.getErrors();
     var usePushNotifications = isCordova && !isWP;
-
+    var defaults = configService.getDefaults();
     var UPDATE_PERIOD = 15;
 
     root.profile = null;
@@ -318,9 +318,10 @@ angular.module('copayApp.services')
     };
 
     var seedWallet = function(opts, cb) {
-      opts = opts || {};
+      if(!opts || !opts.bwsurl) { opts = { bwsurl: defaults.bws.url } }
+
       var walletClient = bwcService.getClient(null, opts);
-      var network = opts.networkName || 'livenet';
+      var network = opts.networkName || defaults.defaultNetwork;
       console.log(opts)
 
       if (opts.mnemonic) {
@@ -417,7 +418,9 @@ angular.module('copayApp.services')
 
     // joins and stores a wallet
     root.joinWallet = function(opts, cb) {
-      var walletClient = bwcService.getClient();
+      if(!opts || !opts.bwsurl) { opts = { bwsurl: defaults.bws.url } }
+
+      var walletClient = bwcService.getClient(null, opts);
       $log.debug('Joining Wallet:', opts);
 
       try {
@@ -509,7 +512,7 @@ angular.module('copayApp.services')
       root.bindWalletClient(client);
 
       var saveBwsUrl = function(cb) {
-        var defaults = configService.getDefaults();
+        
         var bwsFor = {};
         bwsFor[walletId] = opts.bwsurl || defaults.bws.url;
 
@@ -683,7 +686,7 @@ angular.module('copayApp.services')
       var opts = {};
       opts.m = 1;
       opts.n = 1;
-      opts.networkName = 'livenet';
+      opts.networkName = defaults.defaultNetwork;
       root.createWallet(opts, cb);
     };
 

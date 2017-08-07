@@ -209,6 +209,10 @@ angular.module('copayApp.controllers').controller('tabHomeController',
           bitcore.Networks.add(CUSTOMNETWORKS[$scope.wallets[i].network])
         }
       }
+      for (var i in CUSTOMNETWORKS ) {
+        bitcore.Networks.add(CUSTOMNETWORKS[i])
+      }
+      
       storageService.getCustomNetworks(function(err, networkListRaw) {
         if(!networkListRaw) {
           return;
