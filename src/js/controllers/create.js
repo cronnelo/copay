@@ -31,6 +31,7 @@ angular.module('copayApp.controllers').controller('createController',
       updateRCSelect(tc);
       $scope.networks = CUSTOMNETWORKS;
       $scope.network = CUSTOMNETWORKS[defaults.defaultNetwork.name]
+      console.log($scope.network)
     };
 
     $scope.showNetworkSelector = function() {
