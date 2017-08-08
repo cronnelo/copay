@@ -17,13 +17,13 @@ angular.module('copayApp.services').factory('feeService', function($log, $stateP
   };
 
   root.getCurrentFeeValue = function(network, cb) {
-    network = network || defaults.defaultNetwork;
+    network = network || defaults.defaultNetwork.name;
     var feeLevel = root.getCurrentFeeLevel();
 
     root.getFeeLevels(network, function(err, levels) {
       if (err) return cb(err);
 
-      var feeLevelValue = lodash.find(levels[defaults.defaultNetwork], { //hardcode livenet here
+      var feeLevelValue = lodash.find(levels[defaults.defaultNetwork.name], { //hardcode livenet here
         level: feeLevel
       });
 
@@ -43,7 +43,7 @@ angular.module('copayApp.services').factory('feeService', function($log, $stateP
   };
 
   root.getFeeLevels = function(network, cb) {
-    network = network || defaults.defaultNetwork;
+    network = network || defaults.defaultNetwork.name;
     var walletClient = bwcService.getClient(null, {bwsurl:CUSTOMNETWORKS[network].bwsUrl});
     var unitName = configService.getSync().wallet.settings.unitName;
 
