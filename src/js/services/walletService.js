@@ -771,7 +771,7 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
 
     //prefs.email  (may come from arguments)
     prefs.language = uxLanguage.getCurrentLanguage();
-    prefs.unit = config.unitCode;
+    prefs.unit = CUSTOMNETWORKS[clients[0].network].code;//config.unitCode;
 
     updateRemotePreferencesFor(lodash.clone(clients), prefs, function(err) {
       if (err) return cb(err);
