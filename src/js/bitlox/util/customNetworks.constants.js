@@ -16,6 +16,7 @@
             "xpubkey": 0x0488b21e,
             "xprivkey": 0x0488ade4,
             "bwsUrl": "https://bws.deuscoin.org/bws/api",
+            "ratesUrl": "https://api.deuscoin.org/rates",
             "port": 19697,
             "networkMagic": 0x9ee8bc5a,
             "explorer": "https://explorer.deuscoin.org/"
