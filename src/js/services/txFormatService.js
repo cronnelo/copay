@@ -22,10 +22,10 @@ angular.module('copayApp.services').factory('txFormatService', function($filter,
     return root.formatAmount(satoshis);// + ' ' + config.unitName;
   };
 
-  root.formatToUSD = function(satoshis, cb) {
+  root.formatToUSD = function(satoshis, network, cb) {
     if (isNaN(satoshis)) return;
     var val = function() {
-      var v1 = rateService.toFiat(satoshis, 'USD');
+      var v1 = rateService.toFiat(satoshis, 'USD', network);
       if (!v1) return null;
 
       return v1.toFixed(2);
@@ -42,12 +42,12 @@ angular.module('copayApp.services').factory('txFormatService', function($filter,
     };
   };
 
-  root.formatAlternativeStr = function(satoshis, cb) {
+  root.formatAlternativeStr = function(satoshis, network, cb) {
     if (isNaN(satoshis)) return;
     var config = configService.getSync().wallet.settings;
 
     var val = function() {
-      var v1 = parseFloat((rateService.toFiat(satoshis, config.alternativeIsoCode)).toFixed(2));
+      var v1 = parseFloat((rateService.toFiat(satoshis, config.alternativeIsoCode, network)).toFixed(2));
       v1 = $filter('formatFiatAmount')(v1);
       if (!v1) return null;
 
@@ -86,7 +86,7 @@ angular.module('copayApp.services').factory('txFormatService', function($filter,
         }
         tx.amount = lodash.reduce(tx.outputs, function(total, o) {
           o.amountStr = root.formatAmountStr(o.amount) + " " + unitSymbol;
-          o.alternativeAmountStr = root.formatAlternativeStr(o.amount);
+          o.alternativeAmountStr = root.formatAlternativeStr(o.amount, networkObj);
           return total + o.amount;
         }, 0);
       }
@@ -94,7 +94,7 @@ angular.module('copayApp.services').factory('txFormatService', function($filter,
     }
 
     tx.amountStr = root.formatAmountStr(tx.amount) + " " + unitSymbol;
-    tx.alternativeAmountStr = root.formatAlternativeStr(tx.amount);
+    tx.alternativeAmountStr = root.formatAlternativeStr(tx.amount, networkObj);
     tx.feeStr = root.formatAmountStr(tx.fee || tx.fees) + " " + unitSymbol;
 
     return tx;

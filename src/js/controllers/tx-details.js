@@ -105,7 +105,7 @@ angular.module('copayApp.controllers').controller('txDetailsController', functio
         return popupService.showAlert(gettextCatalog.getString('Error'), gettextCatalog.getString('Transaction not available at this time'));
       }
       $scope.btx = txFormatService.processTx(tx, $scope.wallet.credentials.network);
-      txFormatService.formatAlternativeStr(tx.fees, function(v) {
+      txFormatService.formatAlternativeStr(tx.fees, CUSTOMNETWORKS[$scope.wallet.credentials.network], function(v) {
         $scope.feeFiatStr = v;
       });
 

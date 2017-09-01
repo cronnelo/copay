@@ -26,6 +26,7 @@
             alias: 'Bitcoin',
             code: 'btc',
             symbol: 'BTC',
+            "ratesUrl": "https://bitpay.com/api/rates",
             derivationCoinPath: '0',
             pubkeyhash: 0x00,
             privatekey: 0x80,

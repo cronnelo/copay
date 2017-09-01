@@ -166,7 +166,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
     if(CUSTOMNETWORKS[$scope.network]) {
       $scope.displayUnit = CUSTOMNETWORKS[$scope.network].symbol;
     }
-    txFormatService.formatAlternativeStr(toAmount, function(v) {
+    txFormatService.formatAlternativeStr(toAmount, CUSTOMNETWORKS[$scope.network], function(v) {
       $scope.alternativeAmountStr = v;
     });
   };
@@ -265,7 +265,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
     $scope.displayUnit = getDisplayUnit($scope.amountStr);
     $scope.fee = txFormatService.formatAmountStr(data.fee);
     toAmount = parseFloat((data.amount * satToUnit).toFixed(unitDecimals));
-    txFormatService.formatAlternativeStr(data.amount, function(v) {
+    txFormatService.formatAlternativeStr(data.amount, CUSTOMNETWORKS[$scope.network], function(v) {
       $scope.alternativeAmountStr = v;
     });
     $timeout(function() {
@@ -389,7 +389,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
 
   function apply(txp) {
     $scope.fee = txFormatService.formatAmountStr(txp.fee);
-    txFormatService.formatAlternativeStr(txp.fee, function(v) {
+    txFormatService.formatAlternativeStr(txp.fee, CUSTOMNETWORKS[$scope.network], function(v) {
       $scope.feeFiat = v;
     });
     $scope.txp = txp;
@@ -501,7 +501,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
       var spendingPassEnabled = walletService.isEncrypted(wallet);
       var touchIdEnabled = config.touchIdFor && config.touchIdFor[wallet.id];
       var isCordova = $scope.isCordova;
-      var bigAmount = parseFloat(txFormatService.formatToUSD(txp.amount)) > 20;
+      var bigAmount = parseFloat(txFormatService.formatToUSD(txp.amount, CUSTOMNETWORKS[wallet.network])) > 20;
       var message = gettextCatalog.getString('Sending {{amountStr}} from your {{name}} wallet', {
         amountStr: $scope.amountStr,
         name: wallet.name
