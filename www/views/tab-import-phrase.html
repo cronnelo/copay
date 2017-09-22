@@ -26,14 +26,20 @@
         <qr-scanner class="qr-icon size-24" on-scan="processWalletInfo(data)"></qr-scanner>
       </div>
     </div>
+
     <div class="item item-divider"></div>
-    <a class="item item-icon-left item-big-icon-left item-icon-right wallet" ng-hide="customParam" ng-click="showNetworkSelector()">
-      <span class="label" translate>Currency</span>
-      <i class="icon big-icon-svg" wallet-icon data-wallet="network">
-      </i>
-      <div>{{network.alias}}</div>
-      <i class="icon bp-arrow-right"></i>
-    </a>    
+
+    <a class="item" ng-hide="customParam" ng-click="showNetworkSelector()">
+      <span class="input-label" translate>Currency</span>
+      <div class="form-table -compact">
+        <i class="icon big-icon-svg" wallet-icon data-wallet="network"></i>
+        <div>{{network.alias}}</div>
+      </div>
+      <div class="item-icon-right">
+        <i class="icon bp-arrow-right"></i>
+      </div>
+    </a>
+
     <div class="item item-divider"></div>
 
     <a class="item" ng-click="showAdvChange()">
