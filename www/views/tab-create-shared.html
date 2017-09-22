@@ -49,12 +49,15 @@
         </label>
 
         <div class="item item-divider"></div>
-        <a class="item item-icon-left item-big-icon-left item-icon-right wallet" ng-hide="formData.customParam" ng-click="showNetworkSelector()">
+        <a class="item" ng-hide="formData.customParam" ng-click="showNetworkSelector()">
           <span class="input-label" translate>Currency</span>
-          <i class="icon big-icon-svg" wallet-icon data-wallet="network">
-          </i>
-          <div>{{network.alias}}</div>
-          <i class="icon bp-arrow-right"></i>
+          <div class="form-table -compact">
+            <i class="icon big-icon-svg" wallet-icon data-wallet="network"></i>
+            <div>{{network.alias}}</div>
+          </div>
+          <div class="item-icon-right">
+            <i class="icon bp-arrow-right"></i>
+          </div>
         </a>
 
          <div class="item item-divider"></div>
