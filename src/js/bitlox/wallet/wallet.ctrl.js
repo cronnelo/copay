@@ -167,17 +167,14 @@
 
             $log.debug("START IMPORTING")
             profileService.createWallet(opts, function(err, walletId) {
-
               // $log.debug("DONE IMPORTING")
               if (err) {
                 $log.error(err)
 
 
                 profileService.importExtendedPublicKey(opts, function(err2, walletId) {
-
                   // $log.warn("DONE IMPORTING")
                   if (err2) {
-                    $log.error(err2)
                     popupService.showAlert(gettextCatalog.getString('Error'), err2);
                     $ionicLoading.hide();
                     return;
@@ -195,20 +192,18 @@
 
                 });
                 return;
-              }
-              $timeout(function() {
-                walletService.updateRemotePreferences(walletId, {network: opts.network});
-                walletService.startScan(walletId);
+              } else {
                 $timeout(function() {
-                  $scope.updateDeviceQr(walletId, function() {
-                    $ionicLoading.hide()
-                    $ionicHistory.goBack(-3);
-                  })
-                },5000)
-              },5000);
-
-              
-
+                  walletService.updateRemotePreferences(walletId, {network: opts.network});
+                  walletService.startScan(walletId);
+                  $timeout(function() {
+                    $scope.updateDeviceQr(walletId, function() {
+                      $ionicLoading.hide()
+                      $ionicHistory.goBack(-3);
+                    })
+                  },5000)
+                },5000);
+              }
             });
           }).catch(function(e) {
             $log.debug("error getting device UUID", e)
