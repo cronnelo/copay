@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('copayApp.controllers').controller('tabHomeController',
-  function($rootScope, $timeout, $scope, $state, $stateParams, $ionicModal, $ionicScrollDelegate, $window, gettextCatalog, lodash, popupService, ongoingProcess, externalLinkService, latestReleaseService, profileService, walletService, configService, $log, platformInfo, storageService, txpModalService, appConfigService, startupService, addressbookService, feedbackService, bwcError, nextStepsService, buyAndSellService, homeIntegrationsService, bitpayCardService, pushNotificationsService, timeService, bitcore, CUSTOMNETWORKS) {
+  function($rootScope, $timeout, $scope, $state, $stateParams, $ionicModal, $ionicScrollDelegate, $window, gettextCatalog, lodash, popupService, ongoingProcess, externalLinkService, latestReleaseService, profileService, walletService, configService, $log, platformInfo, storageService, txpModalService, appConfigService, startupService, addressbookService, feedbackService, bwcError, nextStepsService, buyAndSellService, homeIntegrationsService, bitpayCardService, pushNotificationsService, timeService, bitcore, customNetworks) {
 
     var wallet;
     var listeners = [];
@@ -46,26 +46,40 @@ angular.module('copayApp.controllers').controller('tabHomeController',
       }
       $scope.wallets = profileService.getWallets();
       $scope.defaults = configService.getDefaults();
-      configService.get(function(err, config) {
-        var defaultNetwork = lodash.clone(config.defaultNetwork)
-        // console.log(config.defaultNetwork.privatekey, typeof(config.defaultNetwork.privatekey))
-        defaultNetwork.pubkeyhash = parseInt(defaultNetwork.pubkeyhash,16)
-        defaultNetwork.privatekey = parseInt(defaultNetwork.privatekey,16)
-        defaultNetwork.scripthash = parseInt(defaultNetwork.scripthash,16)
-        defaultNetwork.xpubkey = parseInt(defaultNetwork.xpubkey,16)
-        defaultNetwork.xprivkey = parseInt(defaultNetwork.xprivkey,16)
-        defaultNetwork.networkMagic = parseInt(defaultNetwork.networkMagic,16)
-        CUSTOMNETWORKS[defaultNetwork.name] = defaultNetwork;
-        bitcore.Networks.add(defaultNetwork)
-        // console.log(bitcore.Networks.get(defaultNetwork.name))
-        storageService.setCustomNetworks(JSON.stringify(CUSTOMNETWORKS));
-        for(var i in $scope.wallets) {
-          if(CUSTOMNETWORKS[$scope.wallets[i].network] && !bitcore.Networks.get($scope.wallets[i].network)) {
-            bitcore.Networks.add(CUSTOMNETWORKS[$scope.wallets[i].network])
+      customNetworks.getAll().then(function(CUSTOMNETWORKS) {
+        // console.log('custom networks', CUSTOMNETWORKS)
+        configService.get(function(err, config) {
+          var defaultNetwork = lodash.clone(config.defaultNetwork)
+          defaultNetwork.pubkeyhash = parseInt(defaultNetwork.pubkeyhash,16)
+          defaultNetwork.privatekey = parseInt(defaultNetwork.privatekey,16)
+          defaultNetwork.scripthash = parseInt(defaultNetwork.scripthash,16)
+          defaultNetwork.xpubkey = parseInt(defaultNetwork.xpubkey,16)
+          defaultNetwork.xprivkey = parseInt(defaultNetwork.xprivkey,16)
+          defaultNetwork.networkMagic = parseInt(defaultNetwork.networkMagic,16)
+          if(!bitcore.Networks.get(defaultNetwork.name)) {
+            bitcore.Networks.add(defaultNetwork)
+            // console.log('added default network', bitcore.Networks.get(defaultNetwork.name))
           }
-        }
-      });
+          var walletNetworks = {};
 
+          for(var i=0;i<$scope.wallets.length;i++) {
+            if(!$scope.wallets[i].network) { $scope.wallets[i].network = 'livenet'; } // for legacy bitlox wallets
+            walletNetworks[$scope.wallets[i].network] = $scope.wallets[i].network
+          }
+          for(var x in walletNetworks) {
+            if(!bitcore.Networks.get(walletNetworks[x])) {
+              // console.log('adding network', walletNetworks[x])
+              customNetworks.getCustomNetwork(walletNetworks[x]).then(function(fetchedNetwork) {
+                if(!bitcore.Networks.get(fetchedNetwork.name)) {
+                  bitcore.Networks.add(fetchedNetwork)
+                }
+              }).catch(function(err) {
+                console.warn("could not get network " + walletNetworks[i])
+              });
+            }
+          }
+        });
+      })
       storageService.getFeedbackInfo(function(error, info) {
 
         if ($scope.isWindowsPhoneApp) {

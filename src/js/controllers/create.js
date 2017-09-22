@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('copayApp.controllers').controller('createController',
-  function($scope, $rootScope, $timeout, $log, lodash, $state, $ionicScrollDelegate, $ionicHistory, profileService, configService, gettextCatalog, ledger, trezor, intelTEE, derivationPathHelper, ongoingProcess, walletService, storageService, popupService, appConfigService, pushNotificationsService, $http, $q, bitcore, CUSTOMNETWORKS, customNetworkService, rateService) {
+  function($scope, $rootScope, $timeout, $log, lodash, $state, $ionicScrollDelegate, $ionicHistory, profileService, configService, gettextCatalog, ledger, trezor, intelTEE, derivationPathHelper, ongoingProcess, walletService, storageService, popupService, appConfigService, pushNotificationsService, $http, $q, bitcore, customNetworks, rateService, platformInfo) {
 
     /* For compressed keys, m*73 + n*34 <= 496 */
     var COPAYER_PAIR_LIMITS = {
@@ -18,6 +18,7 @@ angular.module('copayApp.controllers').controller('createController',
       11: 1,
       12: 1,
     };
+    $scope.platformInfo = platformInfo
 
     $scope.$on("$ionicView.beforeEnter", function(event, data) {
       $scope.formData = {};
@@ -31,9 +32,10 @@ angular.module('copayApp.controllers').controller('createController',
       $scope.setTotalCopayers(tc);
       updateRCSelect(tc);
       resetPasswordFields();
-      $scope.networks = CUSTOMNETWORKS;
-      $scope.network = CUSTOMNETWORKS[defaults.defaultNetwork.name]
-      console.log($scope.network)
+      customNetworks.getAll().then(function(CUSTOMNETWORKS) {
+        $scope.networks = CUSTOMNETWORKS;
+        $scope.network = CUSTOMNETWORKS[defaults.defaultNetwork.name]        
+      })
     });
 
     $scope.showNetworkSelector = function() {
@@ -244,7 +246,7 @@ angular.module('copayApp.controllers').controller('createController',
     };
 
     function _prepareToCreate(opts) {
-      customNetworkService.getCustomNetwork(opts.networkName).then(function(customNet) {
+      customNetworks.getCustomNetwork(opts.networkName).then(function(customNet) {
         if(customNet) {
           opts.derivationStrategy = "BIP44";
           opts.bwsurl = customNet.bwsUrl
@@ -269,7 +271,6 @@ angular.module('copayApp.controllers').controller('createController',
             popupService.showAlert(gettextCatalog.getString('Error'), err);
             return;
           }
-          console.log(client)
 
           walletService.updateRemotePreferences(client);
           pushNotificationsService.updateSubscription(client);

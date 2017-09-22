@@ -1,22 +1,24 @@
 'use strict';
 
-angular.module('copayApp.services').factory('derivationPathHelper', ['lodash', 'CUSTOMNETWORKS', function(lodash, CUSTOMNETWORKS) {
+angular.module('copayApp.services').factory('derivationPathHelper', ['lodash', 'customNetworks', function(lodash, customNetworks) {
   var root = {};
 
   root.default = "m/44'/0'/0'";
   root.defaultTestnet = "m/44'/1'/0'";
 
   root.getDefault = function(networkName) {
+    var CUSTOMNETWORKS = customNetworks.getStatic()
     for (var i in CUSTOMNETWORKS) {
       if(i === networkName) {
         return "m/44'/"+CUSTOMNETWORKS[i].derivationCoinPath+"'/0'";
       }
     }
-    return null;
+    return null;      
   }
 
 
   root.parse = function(str) {
+    var CUSTOMNETWORKS = customNetworks.getStatic()
     var arr = str.split('/');
 
     var ret = {};
@@ -43,6 +45,7 @@ angular.module('copayApp.services').factory('derivationPathHelper', ['lodash', '
     };
 
     ret.networkName = '';
+
     for(var i in CUSTOMNETWORKS) {
       if(CUSTOMNETWORKS[i].derivationCoinPath+"'" === arr[2]) {
         ret.networkName = CUSTOMNETWORKS[i].name

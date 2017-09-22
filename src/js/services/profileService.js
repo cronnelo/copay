@@ -650,6 +650,7 @@ angular.module('copayApp.services')
       walletClient.importFromExtendedPublicKey(opts.extendedPublicKey, opts.externalSource, opts.entropySource, {
         account: opts.account || 0,
         derivationStrategy: opts.derivationStrategy || 'BIP44',
+        network: opts.network
       }, function(err) {
         if (err) {
 
