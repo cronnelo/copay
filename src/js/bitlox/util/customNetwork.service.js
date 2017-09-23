@@ -55,7 +55,7 @@ if((!ionic.Platform.isIOS() && appConfigService.packageName === 'bitlox') || app
     "explorer": "https://explorer.deuscoin.org/"
   }
 }
-if((!ionic.Platform.isIOS() && appConfigService.appName === 'bitlox') || appConfigService.packageName === 'aureus') {
+if((!ionic.Platform.isIOS() && appConfigService.packageName === 'bitlox') || appConfigService.packageName === 'aureus') {
   this.customNetworks.aureus = {
     "network": "aureus",
     "name": "aureus",
