@@ -1143,7 +1143,7 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
           ongoingProcess.set('signingTx', false, customStatusHandler);
           if (err) {
             $ionicLoading.hide();
-            $log.warn('sign error:' + err);
+            $log.warn('sign error:', err);
             var msg = err && err.message ?
               err.message :
               gettextCatalog.getString('The payment was created but could not be completed. Please try again from home screen');
