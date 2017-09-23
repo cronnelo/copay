@@ -68,17 +68,19 @@ angular.module('copayApp.services').factory('feeService', function($log, $timeou
     var retObj = {};        
     for (var c in CUSTOMNETWORKS) {
       // console.log(CUSTOMNETWORKS[c])
-      count++
       var thiswall = bwcService.getClient(null, {bwsurl:CUSTOMNETWORKS[c].bwsUrl});
-      thiswall.getFeeLevels(CUSTOMNETWORKS[c].name, function(errThis, levelsThis) { // getFeeLevels(CUSTOMNETWORKS[c].name
+      // console.log(thiswall)
+      thiswall.getFeeLevels(CUSTOMNETWORKS[c].name, function(errThis, levelsThis) { // getFeeLevels(CUSTOMNETWORKS[c].name        
+        count++
         // console.log(CUSTOMNETWORKS[levelsThis.network].bwsUrl,levelsThis)
         if (errThis) {
           return cb(gettextCatalog.getString('Could not get dynamic fee'));
         }        
         retObj[levelsThis.network] = levelsThis
         cache.data = retObj;
-        if(count === length) { 
+        if(count === length) {
           cache.updateTs = Date.now();
+          // console.warn(retObj)
           return cb(null, retObj); 
         }
       });
