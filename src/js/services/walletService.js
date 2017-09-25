@@ -219,7 +219,7 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
           $timeout(function() {
             cacheBalance()
           },3000)
-          catch.unitName = ''; 
+          cache.unitName = ''; 
         }
 
         //STR
