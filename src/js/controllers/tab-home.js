@@ -63,7 +63,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
           var walletNetworks = {};
 
           for(var i=0;i<$scope.wallets.length;i++) {
-            if(!$scope.wallets[i].network) { $scope.wallets[i].network = 'livenet'; } // for legacy bitlox wallets
+            // if(!$scope.wallets[i].network) { $scope.wallets[i].network = 'livenet'; } // for legacy bitlox wallets
             walletNetworks[$scope.wallets[i].network] = $scope.wallets[i].network
           }
           for(var x in walletNetworks) {
