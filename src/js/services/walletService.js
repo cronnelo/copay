@@ -215,7 +215,12 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
       cache.unitName = config.settings.unitName;
       customNetworks.getAll().then(function(CUSTOMNETWORKS) {
         if(CUSTOMNETWORKS[wallet.network]) { cache.unitName = CUSTOMNETWORKS[wallet.network].symbol; }
-
+        else { 
+          $timeout(function() {
+            cacheBalance()
+          },3000)
+          catch.unitName = ''; 
+        }
 
         //STR
         cache.totalBalanceStr = txFormatService.formatAmount(cache.totalBalanceSat) + ' ' + cache.unitName;
