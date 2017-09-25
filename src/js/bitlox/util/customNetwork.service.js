@@ -35,54 +35,56 @@ this.customNetworks = {
     ]
   }
 }
-if((!ionic.Platform.isIOS() && appConfigService.packageName === 'bitlox') || appConfigService.packageName === 'deuscoin') {
-  this.customNetworks.deuscoin = {
-    "network": "deuscoin",
-    "name": "deuscoin",
-    "alias": "Deuscoin",
-    "code": "deus",
-    "symbol": "DEUS",
-    "derivationCoinPath": 0,
-    "ratesUrl": "https://bws.deuscoin.org:8443/rates",
-    "pubkeyhash": 0x1e,
-    "privatekey": 0x80,
-    "scripthash": 0x23,
-    "xpubkey": 0x0488b21e,
-    "xprivkey": 0x0488ade4,
-    "bwsUrl": "https://deus.dlc.net/bws/api",
-    "port": 19697,
-    "networkMagic": 0x9ee8bc5a,
-    "explorer": "https://explorer.deuscoin.org/"
-  }
-}
-if((!ionic.Platform.isIOS() && appConfigService.packageName === 'bitlox') || appConfigService.packageName === 'aureus') {
-  this.customNetworks.aureus = {
-    "network": "aureus",
-    "name": "aureus",
-    "alias": "Aureus",
-    "code": "aurs",
-    "symbol": "AURS",
-    "derivationCoinPath": 0,
-    "ratesUrl": "https://seed.aureus.cc/rates",
-    "pubkeyhash": 0x17,
-    "privatekey": 0x80,
-    "scripthash": 0x1C,
-    "xpubkey": 0x0488b21e,
-    "xprivkey": 0x0488ade4,
-    "bwsUrl": "https://aurs.dlc.net/bws/api",
-    "port": "9697",
-    "networkMagic": 0x6ee58c2a,
-    "explorer": "https://explorer.aureus.cc/"        
-  }
-}
+// if((!ionic.Platform.isIOS() && appConfigService.packageName === 'bitlox') || appConfigService.packageName === 'deuscoin') {
+//   this.customNetworks.deuscoin = {
+//     "network": "deuscoin",
+//     "name": "deuscoin",
+//     "alias": "Deuscoin",
+//     "code": "deus",
+//     "symbol": "DEUS",
+//     "derivationCoinPath": 0,
+//     "ratesUrl": "https://bws.deuscoin.org:8443/rates",
+//     "pubkeyhash": 0x1e,
+//     "privatekey": 0x80,
+//     "scripthash": 0x23,
+//     "xpubkey": 0x0488b21e,
+//     "xprivkey": 0x0488ade4,
+//     "bwsUrl": "https://deus.dlc.net/bws/api",
+//     "port": 19697,
+//     "networkMagic": 0x9ee8bc5a,
+//     "explorer": "https://explorer.deuscoin.org/"
+//   }
+// }
+// if((!ionic.Platform.isIOS() && appConfigService.packageName === 'bitlox') || appConfigService.packageName === 'aureus') {
+//   this.customNetworks.aureus = {
+//     "network": "aureus",
+//     "name": "aureus",
+//     "alias": "Aureus",
+//     "code": "aurs",
+//     "symbol": "AURS",
+//     "derivationCoinPath": 0,
+//     "ratesUrl": "https://seed.aureus.cc/rates",
+//     "pubkeyhash": 0x17,
+//     "privatekey": 0x80,
+//     "scripthash": 0x1C,
+//     "xpubkey": 0x0488b21e,
+//     "xprivkey": 0x0488ade4,
+//     "bwsUrl": "https://aurs.dlc.net/bws/api",
+//     "port": "9697",
+//     "networkMagic": 0x6ee58c2a,
+//     "explorer": "https://explorer.aureus.cc/"        
+//   }
+// }
 this.getStatic = function() {
   return this.customNetworks;
 }
 this.getAll = function() {
   var resourcePromise = $q.defer();
+                  // storageService.setCustomNetworks("{}");
   var self = this
   storageService.getCustomNetworks(function(err, networkListRaw) {
     if(networkListRaw) {
+      console.log('networkListRaw',networkListRaw)
       var networkList = JSON.parse(networkListRaw)
       for (var n in networkList) {
          self.customNetworks[networkList[n].name] = networkList[n]
@@ -120,7 +122,7 @@ this.getCustomNetwork = function(customParam) {
               res.xprivkey = parseInt(res.xprivkey,16)
               res.networkMagic = parseInt(res.networkMagic,16)
               res.port = parseInt(res.port, 10)
-              // console.log('parsed network from server', res)
+              console.log('parsed network from server', res)
               self.customNetworks[customParam] = res;
               storageService.getCustomNetworks(function(err, customNetworkListRaw) {
                 var customNetworkList = {}
