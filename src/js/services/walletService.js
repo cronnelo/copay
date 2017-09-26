@@ -216,9 +216,7 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
       customNetworks.getAll().then(function(CUSTOMNETWORKS) {
         if(CUSTOMNETWORKS[wallet.network]) { cache.unitName = CUSTOMNETWORKS[wallet.network].symbol; }
         else { 
-          $timeout(function() {
-            cacheBalance()
-          },3000)
+          $log.log("Unable to find network in customnetworks", wallet.network, CUSTOMNETWORKS)
           cache.unitName = ''; 
         }
 
