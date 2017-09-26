@@ -54,6 +54,7 @@ if((!ionic.Platform.isIOS() && appConfigService.packageName === 'bitlox') || app
     "networkMagic": 0x9ee8bc5a,
     "explorer": "https://explorer.deuscoin.org/"
   }
+  bitcore.Networks.add(this.customNetworks.deuscoin)
 }
 if((!ionic.Platform.isIOS() && appConfigService.packageName === 'bitlox') || appConfigService.packageName === 'aureus') {
   this.customNetworks.aureus = {
@@ -74,6 +75,7 @@ if((!ionic.Platform.isIOS() && appConfigService.packageName === 'bitlox') || app
     "networkMagic": 0x6ee58c2a,
     "explorer": "https://explorer.aureus.cc/"        
   }
+  bitcore.Networks.add(this.customNetworks.aureus)
 }
 this.getStatic = function() {
   return this.customNetworks;
@@ -99,6 +101,7 @@ this.getAll = function() {
     } else {
       // $log.warn("NO NETWORK LIST RAW", networkListRaw)
     }
+    // $log.warn(self.customNetworks)
     resourcePromise.resolve(self.customNetworks)
   })
 
