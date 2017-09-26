@@ -87,7 +87,10 @@ this.getAll = function() {
       console.log('networkListRaw',networkListRaw)
       var networkList = JSON.parse(networkListRaw)
       for (var n in networkList) {
-         self.customNetworks[networkList[n].name] = networkList[n]
+        self.customNetworks[networkList[n].name] = networkList[n]
+        if(!bitcore.Networks.get(networkList[n].name)) {
+          bitcore.Networks.add(networkList[n])
+        }
       }      
     }
     resourcePromise.resolve(self.customNetworks)
@@ -145,7 +148,18 @@ this.getCustomNetwork = function(customParam) {
   }
   return def.promise;
 }
-this.getAll()
+this.getAll().then(function() {
+
+  console.warn("NETWORKS LOADED")
+  console.warn("NETWORKS LOADED")
+  console.warn("NETWORKS LOADED")
+  console.warn("NETWORKS LOADED")
+  console.warn("NETWORKS LOADED")
+  console.warn("NETWORKS LOADED")
+  console.warn("NETWORKS LOADED")
+  console.warn("NETWORKS LOADED")
+  console.warn("NETWORKS LOADED")
+})
 
 }])})(window.angular);
 
