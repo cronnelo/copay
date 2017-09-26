@@ -64,7 +64,7 @@
 
         <div ng-if="!updateStatusError && !wallet.balanceHidden && showBalanceButton" ng-style="{'opacity': altAmountOpacity, 'transform': amountScale}">
           <button class="button button-standard button-primary amount__button-balance size-14" ng-click="openBalanceModal()">
-            <img src="/img/check-circled.png" class="confirmed-check">
+            <i ng-if="!isIOS" class="icon ion-ios-checkmark-outline"></i>
             <strong>
               {{status.spendableBalanceStr}}
             </strong>
@@ -124,7 +124,7 @@
 
           <div ng-if="!wallet.balanceHidden && showBalanceButton" ng-style="{'opacity': altAmountOpacity, 'transform': amountScale}">
             <button class="button button-standard button-primary amount__button-balance size-14" ng-click="openBalanceModal()">
-              <i class="icon ion-ios-checkmark-outline"></i>
+              <i ng-if="!isIOS" class="icon ion-ios-checkmark-outline"></i>
               <strong>
                 {{status.spendableBalanceStr}}
               </strong>
