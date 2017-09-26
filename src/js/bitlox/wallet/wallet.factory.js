@@ -234,7 +234,9 @@
 
               return api.listWallets()
               .then(function(res) {
-
+                $ionicLoading.show({
+                  template: 'Opening Wallet. Please Wait...'
+                });
                 if(!res || res.type === api.TYPE_ERROR) {
                   return cb(new Error('BitLox wallet connection error'))
                 }

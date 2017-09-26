@@ -12,7 +12,7 @@
   <img class="wallet-details__tx-icon" src="img/icon-confirming.svg" width="40" ng-if="isUnconfirmed(btx)">
   <span ng-if="!isUnconfirmed(btx)">
     <img class="wallet-details__tx-icon" src="img/icon-tx-received-outline.svg" width="40" ng-if="btx.action == 'received'">
-    <img class="wallet-details__tx-icon" src="img/icon-tx-sent-outline.svg" width="40" ng-if="btx.action == 'sent'">
+    <img class="wallet-details__tx-icon" src="img/icon-tx-sent-outline-red.svg" width="40" ng-if="btx.action == 'sent'">
     <img class="wallet-details__tx-icon" src="img/icon-tx-moved-outline.svg" width="40" ng-if="btx.action == 'moved'">
   </span>
 
@@ -26,7 +26,7 @@
           <i class="icon"><img src="img/icon-warning.png" width="20px"></i>
           <span class="comment" translate>Low fees</span>
         </div>
-        <div class="low-fees" ng-if="btx.lowAmount">
+        <div class="low-fees" ng-if="btx.lowAmount && wallet.credentials.network === 'livenet'">
           <i class="icon"><img src="img/icon-warning.png" width="20px"></i>
           <span class="comment" translate>Amount too low to spend</span>
         </div>

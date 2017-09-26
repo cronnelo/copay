@@ -83,7 +83,7 @@
           <ion-toggle class="has-comment" ng-model="encrypt" toggle-class="toggle-positive" ng-change="resizeView()" ng-show="formData.seedSource.id == 'new' || formData.seedSource.id == 'set'">
             <span class="toggle-label" translate>Add a password</span>
           </ion-toggle>
-          <div class="comment">
+          <div class="comment text-italic">
             <span ng-show="formData.seedSource.id == 'new'" translate>Add an optional password to secure the recovery phrase</span>
             <span ng-show="formData.seedSource.id == 'set'" translate>The recovery phrase could require a password to be imported</span>
           </div>

@@ -62,7 +62,7 @@
           </div>
         </div>
 
-        <div ng-if="!wallet.balanceHidden && showBalanceButton" ng-style="{'opacity': altAmountOpacity, 'transform': amountScale}">
+        <div ng-if="!updateStatusError && !wallet.balanceHidden && showBalanceButton" ng-style="{'opacity': altAmountOpacity, 'transform': amountScale}">
           <button class="button button-standard button-primary amount__button-balance size-14" ng-click="openBalanceModal()">
             <i class="icon ion-ios-checkmark-outline"></i>
             <strong>
@@ -159,7 +159,7 @@
     </a>
 
 
-    <a class="wallet-not-backed-up-warning" ng-if="lowUtxosWarning" ui-sref="tabs.wallet.addresses({walletId:wallet.id,from: 'tabs.wallet'})" translate>
+    <a class="wallet-not-backed-up-warning" ng-if="lowUtxosWarning && wallet.network === 'livenet'" ui-sref="tabs.wallet.addresses({walletId:wallet.id,from: 'tabs.wallet'})" translate>
       Spending this balance will need significant Bitcoin network fees
     </a>
 

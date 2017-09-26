@@ -464,7 +464,8 @@ angular.module('copayApp').config(function(historicLogProvider, $provide, $logPr
         url: '/termsOfUse',
         views: {
           'tab-settings@tabs': {
-            templateUrl: 'views/termsOfUse.html'
+            templateUrl: 'views/termsOfUse.html',
+            controller: "termsController"
           }
         }
       })
@@ -704,7 +705,7 @@ angular.module('copayApp').config(function(historicLogProvider, $provide, $logPr
       })
 
       .state('tabs.paymentRequest.amount', {
-        url: '/amount',
+        url: '/amount/:toAddress',
         views: {
           'tab-receive@tabs': {
             controller: 'amountController',

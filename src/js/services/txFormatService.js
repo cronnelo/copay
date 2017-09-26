@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('copayApp.services').factory('txFormatService', function($filter, profileService, bwcService, rateService, configService, lodash, CUSTOMNETWORKS) {
+angular.module('copayApp.services').factory('txFormatService', function($filter, profileService, bwcService, rateService, configService, lodash, customNetworks) {
   var root = {};
 
   root.Utils = bwcService.getUtils();
@@ -90,8 +90,10 @@ angular.module('copayApp.services').factory('txFormatService', function($filter,
     if (!tx || tx.action == 'invalid')
       return tx;
 
-    var networkObj = CUSTOMNETWORKS[network];
-    var unitSymbol = "BTC";
+    var CUSTOMNETWORKS = customNetworks.getStatic()
+
+      var networkObj = CUSTOMNETWORKS[network];
+      var unitSymbol = "BTC";
     if(networkObj) {
       unitSymbol = networkObj.symbol;
     }
@@ -194,9 +196,9 @@ angular.module('copayApp.services').factory('txFormatService', function($filter,
     var amountUnitStr;
     var amountSat;
     var alternativeIsoCode = config.alternativeIsoCode;
-
+    var constUnits = bwcService.getConstants().UNITS
     // If fiat currency
-    if (currency != 'bits' && currency != 'BTC' && currency != 'sat') {
+    if (!lodash.indexOf(Object.keys(constUnits), currency) && currency != 'sat') {
       amountUnitStr = $filter('formatFiatAmount')(amount) + ' ' + currency;
       amountSat = rateService.fromFiat(amount, currency).toFixed(0);
     } else if (currency == 'sat') {
@@ -204,13 +206,12 @@ angular.module('copayApp.services').factory('txFormatService', function($filter,
       amountUnitStr = root.formatAmountStr(amountSat);
       // convert sat to BTC
       amount = (amountSat * satToBtc).toFixed(8);
-      currency = 'BTC';
+      currency = '';
     } else {
       amountSat = parseInt((amount * unitToSatoshi).toFixed(0));
       amountUnitStr = root.formatAmountStr(amountSat);
       // convert unit to BTC
       amount = (amountSat * satToBtc).toFixed(8);
-      currency = ''; //'BTC';
     }
 
     return {

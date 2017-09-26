@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('copayApp.services').factory('walletService', function($log, $timeout, lodash, trezor, ledger, intelTEE, storageService, configService, rateService, uxLanguage, $filter, gettextCatalog, bwcError, $ionicPopup, fingerprintService, ongoingProcess, gettext, $rootScope, txFormatService, $ionicModal, $state, bwcService, bitcore, popupService, bitlox, $ionicLoading, CUSTOMNETWORKS) {
+angular.module('copayApp.services').factory('walletService', function($log, $timeout, lodash, trezor, ledger, intelTEE, storageService, configService, rateService, uxLanguage, $filter, gettextCatalog, bwcError, $ionicPopup, fingerprintService, ongoingProcess, gettext, $rootScope, txFormatService, $ionicModal, $state, bwcService, bitcore, popupService, bitlox, $ionicLoading, customNetworks) {
 
   // Ratio low amount warning (fee/amount) in incoming TX 
   var LOW_AMOUNT_RATIO = 0.15; 
@@ -213,46 +213,52 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
       cache.unitToSatoshi = config.settings.unitToSatoshi;
       cache.satToUnit = 1 / cache.unitToSatoshi;
       cache.unitName = config.settings.unitName;
-      if(CUSTOMNETWORKS[wallet.network]) { cache.unitName = CUSTOMNETWORKS[wallet.network].symbol; }
-
-      //STR
-      cache.totalBalanceStr = txFormatService.formatAmount(cache.totalBalanceSat) + ' ' + cache.unitName;
-      cache.lockedBalanceStr = txFormatService.formatAmount(cache.lockedBalanceSat) + ' ' + cache.unitName;
-      cache.availableBalanceStr = txFormatService.formatAmount(cache.availableBalanceSat) + ' ' + cache.unitName;
-      cache.spendableBalanceStr = txFormatService.formatAmount(cache.spendableAmount) + ' ' + cache.unitName;
-      cache.pendingBalanceStr = txFormatService.formatAmount(cache.pendingAmount) + ' ' + cache.unitName;
-
-      cache.alternativeName = config.settings.alternativeName;
-      cache.alternativeIsoCode = config.settings.alternativeIsoCode;
-
-      // Check address
-      root.isAddressUsed(wallet, balance.byAddress, function(err, used) {
-        if (used) {
-          $log.debug('Address used. Creating new');
-          // Force new address
-          root.getAddress(wallet, true, function(err, addr) {
-            $log.debug('New address: ', addr);
-          });
+      customNetworks.getAll().then(function(CUSTOMNETWORKS) {
+        if(CUSTOMNETWORKS[wallet.network]) { cache.unitName = CUSTOMNETWORKS[wallet.network].symbol; }
+        else { 
+          $log.log("Unable to find network in customnetworks", wallet.network, JSON.stringify(CUSTOMNETWORKS))
+          cache.unitName = ''; 
         }
-      });
 
-      rateService.whenAvailable(function() {
+        //STR
+        cache.totalBalanceStr = txFormatService.formatAmount(cache.totalBalanceSat) + ' ' + cache.unitName;
+        cache.lockedBalanceStr = txFormatService.formatAmount(cache.lockedBalanceSat) + ' ' + cache.unitName;
+        cache.availableBalanceStr = txFormatService.formatAmount(cache.availableBalanceSat) + ' ' + cache.unitName;
+        cache.spendableBalanceStr = txFormatService.formatAmount(cache.spendableAmount) + ' ' + cache.unitName;
+        cache.pendingBalanceStr = txFormatService.formatAmount(cache.pendingAmount) + ' ' + cache.unitName;
 
-        var totalBalanceAlternative = rateService.toFiat(cache.totalBalanceSat, cache.alternativeIsoCode, CUSTOMNETWORKS[wallet.network]);
-        var pendingBalanceAlternative = rateService.toFiat(cache.pendingAmount, cache.alternativeIsoCode, CUSTOMNETWORKS[wallet.network]);
-        var lockedBalanceAlternative = rateService.toFiat(cache.lockedBalanceSat, cache.alternativeIsoCode, CUSTOMNETWORKS[wallet.network]);
-        var spendableBalanceAlternative = rateService.toFiat(cache.spendableAmount, cache.alternativeIsoCode, CUSTOMNETWORKS[wallet.network]);
-        var alternativeConversionRate = rateService.toFiat(100000000, cache.alternativeIsoCode, CUSTOMNETWORKS[wallet.network]);
+        cache.alternativeName = config.settings.alternativeName;
+        cache.alternativeIsoCode = config.settings.alternativeIsoCode;
 
-        cache.totalBalanceAlternative = $filter('formatFiatAmount')(totalBalanceAlternative);
-        cache.pendingBalanceAlternative = $filter('formatFiatAmount')(pendingBalanceAlternative);
-        cache.lockedBalanceAlternative = $filter('formatFiatAmount')(lockedBalanceAlternative);
-        cache.spendableBalanceAlternative = $filter('formatFiatAmount')(spendableBalanceAlternative);
-        cache.alternativeConversionRate = $filter('formatFiatAmount')(alternativeConversionRate);
+        // Check address
+        root.isAddressUsed(wallet, balance.byAddress, function(err, used) {
+          if (used) {
+            $log.debug('Address used. Creating new');
+            // Force new address
+            root.getAddress(wallet, true, function(err, addr) {
+              $log.debug('New address: ', addr);
+            });
+          }
+        });
 
-        cache.alternativeBalanceAvailable = true;
-        cache.isRateAvailable = true;
-      });
+        rateService.whenAvailable(function() {
+
+          var totalBalanceAlternative = rateService.toFiat(cache.totalBalanceSat, cache.alternativeIsoCode, CUSTOMNETWORKS[wallet.network]);
+          var pendingBalanceAlternative = rateService.toFiat(cache.pendingAmount, cache.alternativeIsoCode, CUSTOMNETWORKS[wallet.network]);
+          var lockedBalanceAlternative = rateService.toFiat(cache.lockedBalanceSat, cache.alternativeIsoCode, CUSTOMNETWORKS[wallet.network]);
+          var spendableBalanceAlternative = rateService.toFiat(cache.spendableAmount, cache.alternativeIsoCode, CUSTOMNETWORKS[wallet.network]);
+          var alternativeConversionRate = rateService.toFiat(100000000, cache.alternativeIsoCode, CUSTOMNETWORKS[wallet.network]);
+
+          cache.totalBalanceAlternative = $filter('formatFiatAmount')(totalBalanceAlternative);
+          cache.pendingBalanceAlternative = $filter('formatFiatAmount')(pendingBalanceAlternative);
+          cache.lockedBalanceAlternative = $filter('formatFiatAmount')(lockedBalanceAlternative);
+          cache.spendableBalanceAlternative = $filter('formatFiatAmount')(spendableBalanceAlternative);
+          cache.alternativeConversionRate = $filter('formatFiatAmount')(alternativeConversionRate);
+
+          cache.alternativeBalanceAvailable = true;
+          cache.isRateAvailable = true;
+        });
+      })
     };
 
     function isStatusCached() {
@@ -784,28 +790,31 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
       });
     };
 
-    // Update this JIC.
-    var config = configService.getSync();
-    var walletSettings = config.wallet.settings;
+    customNetworks.getAll().then(function(CUSTOMNETWORKS) {
 
-    //prefs.email  (may come from arguments)
-    prefs.email = config.emailNotifications.email;
-    prefs.language = uxLanguage.getCurrentLanguage();
+      // Update this JIC.
+      var config = configService.getSync();
+      var walletSettings = config.wallet.settings;
 
-    prefs.unit = CUSTOMNETWORKS[clients[0].network].code;//config.unitCode;
+      //prefs.email  (may come from arguments)
+      prefs.email = config.emailNotifications.email;
+      prefs.language = uxLanguage.getCurrentLanguage();
 
-    updateRemotePreferencesFor(lodash.clone(clients), prefs, function(err) {
-      if (err) return cb(err);
+      prefs.unit = CUSTOMNETWORKS[clients[0].network].code;//config.unitCode;
 
-      $log.debug('Remote preferences saved for' + lodash.map(clients, function(x) {
-        return x.credentials.walletId;
-      }).join(','));
+      updateRemotePreferencesFor(lodash.clone(clients), prefs, function(err) {
+        if (err) return cb(err);
 
-      lodash.each(clients, function(c) {
-        c.preferences = lodash.assign(prefs, c.preferences);
+        $log.debug('Remote preferences saved for' + lodash.map(clients, function(x) {
+          return x.credentials.walletId;
+        }).join(','));
+
+        lodash.each(clients, function(c) {
+          c.preferences = lodash.assign(prefs, c.preferences);
+        });
+        return cb();
       });
-      return cb();
-    });
+    })
   };
 
   root.recreate = function(wallet, cb) {
@@ -1137,7 +1146,7 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
           ongoingProcess.set('signingTx', false, customStatusHandler);
           if (err) {
             $ionicLoading.hide();
-            $log.warn('sign error:' + err);
+            $log.warn('sign error:', err);
             var msg = err && err.message ?
               err.message :
               gettextCatalog.getString('The payment was created but could not be completed. Please try again from home screen');
