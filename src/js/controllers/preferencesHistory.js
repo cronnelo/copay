@@ -144,10 +144,9 @@ angular.module('copayApp.controllers').controller('preferencesHistory',
 
         if (err) {
           $log.error(err);
-          return;
+        } else {
+          $log.info('Transaction history cleared for :' + $scope.wallet.id);          
         }
-
-        $log.info('Transaction history cleared for :' + $scope.wallet.id);
 
         $ionicHistory.removeBackView();
         $timeout(function() {
