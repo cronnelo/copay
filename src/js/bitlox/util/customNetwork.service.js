@@ -3,9 +3,9 @@
 'use strict';
 angular.module('app.util')
 .service('customNetworks',
-['$q', '$http', 'appConfigService', 'storageService', 'bitcore',
+['$q', '$http', 'appConfigService', 'storageService', 'bitcore', '$log',
 
-function Bitlox($q, $http, appConfigService, storageService, bitcore) {
+function Bitlox($q, $http, appConfigService, storageService, bitcore, $log) {
 
 this.customNetworks = {          
   livenet: {
@@ -84,7 +84,7 @@ this.getAll = function() {
   var self = this
   storageService.getCustomNetworks(function(err, networkListRaw) {
     if(networkListRaw) {
-      console.log('networkListRaw',networkListRaw)
+      $log.log('networkListRaw',networkListRaw)
       var networkList = JSON.parse(networkListRaw)
       for (var n in networkList) {
         self.customNetworks[networkList[n].name] = networkList[n]
@@ -107,14 +107,14 @@ this.getCustomNetwork = function(customParam) {
       // check apple approved list on iOS, and the full list of whatever we can support for Android
       var customNet = CUSTOMNETWORKS[customParam]
       if(customNet) {
-        // console.log('found in local cache')
+        // $log.log('found in local cache')
         def.resolve(customNet)
       } else {
         // try getting it from bitlox website
         $http.get("https://btm.bitlox.com/coin/"+networkName+".php").then(function(response){
-          // console.log('got network from server', response)
+          // $log.log('got network from server', response)
           if(!response) {
-            // console.log('no response from server')
+            // $log.log('no response from server')
             def.reject();
           }
           var res = response.data;
@@ -125,7 +125,7 @@ this.getCustomNetwork = function(customParam) {
           res.xprivkey = parseInt(res.xprivkey,16)
           res.networkMagic = parseInt(res.networkMagic,16)
           res.port = parseInt(res.port, 10)
-          console.log('parsed network from server', res)
+          $log.log('parsed network from server', res)
           self.customNetworks[customParam] = res;
           storageService.getCustomNetworks(function(err, customNetworkListRaw) {
             var customNetworkList = {}
@@ -138,7 +138,7 @@ this.getCustomNetwork = function(customParam) {
             def.resolve(res)
           })
         }, function(err) {
-          // console.warn('server network error', err)
+          // $log.warn('server network error', err)
           def.reject();
         })              
       }
@@ -149,16 +149,8 @@ this.getCustomNetwork = function(customParam) {
   return def.promise;
 }
 this.getAll().then(function() {
-
-  console.warn("NETWORKS LOADED")
-  console.warn("NETWORKS LOADED")
-  console.warn("NETWORKS LOADED")
-  console.warn("NETWORKS LOADED")
-  console.warn("NETWORKS LOADED")
-  console.warn("NETWORKS LOADED")
-  console.warn("NETWORKS LOADED")
-  console.warn("NETWORKS LOADED")
-  console.warn("NETWORKS LOADED")
+  $log.warn("NETWORKS LOADED", this.customNetworks)
+  $log.warn(bitcore.Networks.get('aureus'))
 })
 
 }])})(window.angular);
