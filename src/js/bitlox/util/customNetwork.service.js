@@ -148,8 +148,8 @@ this.getCustomNetwork = function(customParam) {
   }
   return def.promise;
 }
-this.getAll().then(function() {
-  $log.warn("NETWORKS LOADED", this.customNetworks)
+this.getAll().then(function(net) {
+  $log.warn("NETWORKS LOADED", net)
   $log.warn(bitcore.Networks.get('aureus'))
 })
 
