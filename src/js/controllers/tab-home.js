@@ -46,40 +46,35 @@ angular.module('copayApp.controllers').controller('tabHomeController',
       }
       $scope.wallets = profileService.getWallets();
       $scope.defaults = configService.getDefaults();
-      customNetworks.getAll().then(function(CUSTOMNETWORKS) {
-        // console.log('custom networks', CUSTOMNETWORKS)
-        configService.get(function(err, config) {
-          var defaultNetwork = lodash.clone(config.defaultNetwork)
-          defaultNetwork.pubkeyhash = parseInt(defaultNetwork.pubkeyhash,16)
-          defaultNetwork.privatekey = parseInt(defaultNetwork.privatekey,16)
-          defaultNetwork.scripthash = parseInt(defaultNetwork.scripthash,16)
-          defaultNetwork.xpubkey = parseInt(defaultNetwork.xpubkey,16)
-          defaultNetwork.xprivkey = parseInt(defaultNetwork.xprivkey,16)
-          defaultNetwork.networkMagic = parseInt(defaultNetwork.networkMagic,16)
-          if(!bitcore.Networks.get(defaultNetwork.name)) {
-            bitcore.Networks.add(defaultNetwork)
-            // console.log('added default network', bitcore.Networks.get(defaultNetwork.name))
-          }
-          var walletNetworks = {};
-
-          for(var i=0;i<$scope.wallets.length;i++) {
-            // if(!$scope.wallets[i].network) { $scope.wallets[i].network = 'livenet'; } // for legacy bitlox wallets
-            walletNetworks[$scope.wallets[i].network] = $scope.wallets[i].network
-          }
-          for(var x in walletNetworks) {
-            if(!bitcore.Networks.get(walletNetworks[x])) {
-              // console.log('adding network', walletNetworks[x])
-              customNetworks.getCustomNetwork(walletNetworks[x]).then(function(fetchedNetwork) {
-                if(!bitcore.Networks.get(fetchedNetwork.name)) {
-                  bitcore.Networks.add(fetchedNetwork)
-                }
-              }).catch(function(err) {
-                console.warn("could not get network " + walletNetworks[i])
-              });
+      var defaultNetwork = lodash.clone(defaults.defaultNetwork)
+      console.log(defaultNetwork)
+      if(!bitcore.Networks.get(defaultNetwork.name)) {
+        defaultNetwork.pubkeyhash = parseInt(defaultNetwork.pubkeyhash,16)
+        defaultNetwork.privatekey = parseInt(defaultNetwork.privatekey,16)
+        defaultNetwork.scripthash = parseInt(defaultNetwork.scripthash,16)
+        defaultNetwork.xpubkey = parseInt(defaultNetwork.xpubkey,16)
+        defaultNetwork.xprivkey = parseInt(defaultNetwork.xprivkey,16)
+        defaultNetwork.networkMagic = parseInt(defaultNetwork.networkMagic,16)
+        bitcore.Networks.add(defaultNetwork)
+        console.log('added default network', defaultNetwork, bitcore.Networks.get(defaultNetwork.name))
+      }
+      var walletNetworks = {};
+      for(var i=0;i<$scope.wallets.length;i++) {
+        // if(!$scope.wallets[i].network) { $scope.wallets[i].network = 'livenet'; } // for legacy bitlox wallets
+        walletNetworks[$scope.wallets[i].network] = $scope.wallets[i].network
+      }
+      for(var x in walletNetworks) {
+        if(!bitcore.Networks.get(walletNetworks[x])) {
+          // console.log('adding network', walletNetworks[x])
+          customNetworks.getCustomNetwork(walletNetworks[x]).then(function(fetchedNetwork) {
+            if(!bitcore.Networks.get(fetchedNetwork.name)) {
+              bitcore.Networks.add(fetchedNetwork)
             }
-          }
-        });
-      })
+          }).catch(function(err) {
+            console.warn("could not get network " + walletNetworks[i])
+          });
+        }
+      }
       storageService.getFeedbackInfo(function(error, info) {
 
         if ($scope.isWindowsPhoneApp) {
