@@ -311,7 +311,7 @@ msgstr "Cópia de segurança necessária"
 
 #: src/js/controllers/lockSetup.js:87
 msgid "Backup all livenet wallets before using this function"
-msgstr "Faça backup de todas as carteiras do livenet antes de usar esta função"
+msgstr "Faça backup de todas as carteiras antes de usar esta função"
 
 #: www/views/preferences.html:36
 #: www/views/tab-settings.html:120

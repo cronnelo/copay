@@ -263,7 +263,7 @@ msgstr "Backup Needed"
 
 #: src/js/controllers/lockSetup.js:50
 msgid "Backup all livenet wallets before using this function"
-msgstr "Backup all livenet wallets before using this function"
+msgstr "Backup all wallets before using this function"
 
 #: www/views/preferences.html:41
 #: www/views/tab-settings.html:120
