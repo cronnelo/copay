@@ -66,13 +66,11 @@ angular.module('copayApp.controllers').controller('tabHomeController',
       for(var x in walletNetworks) {
         if(!bitcore.Networks.get(walletNetworks[x])) {
           $log.log('adding network', walletNetworks[x])
-          customNetworks.getCustomNetwork(walletNetworks[x]).then(function(fetchedNetwork) {
-            if(!bitcore.Networks.get(fetchedNetwork.name)) {
-              bitcore.Networks.add(fetchedNetwork)
-            }
-          }).catch(function(err) {
-            $log.log("could not get network " + walletNetworks[i])
-          });
+          var CUSTOMNETWORKS = customNetworks.getStatic()
+          var fetchedNetwork = CUSTOMNETWORKS[walletNetworks[x]]
+          if(!bitcore.Networks.get(fetchedNetwork.name)) {
+            bitcore.Networks.add(fetchedNetwork)
+          }
         }
       }
       storageService.getFeedbackInfo(function(error, info) {
