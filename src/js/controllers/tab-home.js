@@ -46,8 +46,8 @@ angular.module('copayApp.controllers').controller('tabHomeController',
       }
       $scope.wallets = profileService.getWallets();
       $scope.defaults = configService.getDefaults();
-      var defaultNetwork = lodash.clone(defaults.defaultNetwork)
-      console.log(defaultNetwork)
+      var defaultNetwork = lodash.clone($scope.defaults.defaultNetwork)
+      $log.log("DEFAULT NETWORK SETTINGS",defaultNetwork)
       if(!bitcore.Networks.get(defaultNetwork.name)) {
         defaultNetwork.pubkeyhash = parseInt(defaultNetwork.pubkeyhash,16)
         defaultNetwork.privatekey = parseInt(defaultNetwork.privatekey,16)
@@ -56,7 +56,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
         defaultNetwork.xprivkey = parseInt(defaultNetwork.xprivkey,16)
         defaultNetwork.networkMagic = parseInt(defaultNetwork.networkMagic,16)
         bitcore.Networks.add(defaultNetwork)
-        console.log('added default network', defaultNetwork, bitcore.Networks.get(defaultNetwork.name))
+        $log.log('added default network', defaultNetwork, bitcore.Networks.get(defaultNetwork.name))
       }
       var walletNetworks = {};
       for(var i=0;i<$scope.wallets.length;i++) {
@@ -65,13 +65,13 @@ angular.module('copayApp.controllers').controller('tabHomeController',
       }
       for(var x in walletNetworks) {
         if(!bitcore.Networks.get(walletNetworks[x])) {
-          // console.log('adding network', walletNetworks[x])
+          $log.log('adding network', walletNetworks[x])
           customNetworks.getCustomNetwork(walletNetworks[x]).then(function(fetchedNetwork) {
             if(!bitcore.Networks.get(fetchedNetwork.name)) {
               bitcore.Networks.add(fetchedNetwork)
             }
           }).catch(function(err) {
-            console.warn("could not get network " + walletNetworks[i])
+            $log.log("could not get network " + walletNetworks[i])
           });
         }
       }
@@ -295,7 +295,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
           $scope.$apply();
         }, 10);
       });
-    };  
+    };
 
     $scope.hideHomeTip = function() {
       storageService.setHomeTipAccepted('accepted', function() {
