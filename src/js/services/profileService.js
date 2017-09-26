@@ -679,8 +679,11 @@ angular.module('copayApp.services')
           if (err) return cb(err);
           root.bindProfile(p, function(err) {
             // ignore NONAGREEDDISCLAIMER
-            if (err && err.toString().match('NONAGREEDDISCLAIMER')) return cb();
-            return cb(err);
+
+            customNetworks.getAll().then(function() {            
+              if (err && err.toString().match('NONAGREEDDISCLAIMER')) return cb();
+              return cb(err);
+            })
           });
         });
       });

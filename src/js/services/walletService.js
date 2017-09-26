@@ -215,7 +215,10 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
       cache.unitName = config.settings.unitName;
       customNetworks.getAll().then(function(CUSTOMNETWORKS) {
         if(CUSTOMNETWORKS[wallet.network]) { cache.unitName = CUSTOMNETWORKS[wallet.network].symbol; }
-
+        else { 
+          $log.log("Unable to find network in customnetworks", wallet.network, JSON.stringify(CUSTOMNETWORKS))
+          cache.unitName = ''; 
+        }
 
         //STR
         cache.totalBalanceStr = txFormatService.formatAmount(cache.totalBalanceSat) + ' ' + cache.unitName;
@@ -1143,7 +1146,7 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
           ongoingProcess.set('signingTx', false, customStatusHandler);
           if (err) {
             $ionicLoading.hide();
-            $log.warn('sign error:' + err);
+            $log.warn('sign error:', err);
             var msg = err && err.message ?
               err.message :
               gettextCatalog.getString('The payment was created but could not be completed. Please try again from home screen');

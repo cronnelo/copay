@@ -3,9 +3,9 @@
 'use strict';
 angular.module('app.util')
 .service('customNetworks',
-['$q', '$http', 'appConfigService', 'storageService', 'bitcore',
+['$q', '$http', 'appConfigService', 'storageService', 'bitcore', '$log',
 
-function Bitlox($q, $http, appConfigService, storageService, bitcore) {
+function Bitlox($q, $http, appConfigService, storageService, bitcore, $log) {
 
 this.customNetworks = {          
   livenet: {
@@ -55,7 +55,7 @@ if((!ionic.Platform.isIOS() && appConfigService.packageName === 'bitlox') || app
     "explorer": "https://explorer.deuscoin.org/"
   }
 }
-if((!ionic.Platform.isIOS() && appConfigService.appName === 'bitlox') || appConfigService.packageName === 'aureus') {
+if((!ionic.Platform.isIOS() && appConfigService.packageName === 'bitlox') || appConfigService.packageName === 'aureus') {
   this.customNetworks.aureus = {
     "network": "aureus",
     "name": "aureus",
@@ -80,13 +80,24 @@ this.getStatic = function() {
 }
 this.getAll = function() {
   var resourcePromise = $q.defer();
+                  // storageService.setCustomNetworks("{}");
   var self = this
   storageService.getCustomNetworks(function(err, networkListRaw) {
+    if(err) {
+      // $log.log('storage service error while retrieving custom networks', err, JSON.stringify(err))
+      resourcePromise.reject()
+    }
     if(networkListRaw) {
+      // $log.log('networkListRaw',networkListRaw)
       var networkList = JSON.parse(networkListRaw)
       for (var n in networkList) {
-         self.customNetworks[networkList[n].name] = networkList[n]
+        self.customNetworks[networkList[n].name] = networkList[n]
+        if(!bitcore.Networks.get(networkList[n].name)) {
+          bitcore.Networks.add(networkList[n])
+        }
       }      
+    } else {
+      // $log.warn("NO NETWORK LIST RAW", networkListRaw)
     }
     resourcePromise.resolve(self.customNetworks)
   })
@@ -94,56 +105,56 @@ this.getAll = function() {
   return resourcePromise.promise    
 }
 this.getCustomNetwork = function(customParam) {
-      var def = $q.defer();
-      var self = this
-      if(customParam) {
-        var networkName = customParam
-        this.getAll().then(function(CUSTOMNETWORKS) {
-          // check apple approved list on iOS, and the full list of whatever we can support for Android
-          var customNet = CUSTOMNETWORKS[customParam]
-          if(customNet) {
-            // console.log('found in local cache')
-            def.resolve(customNet)
-          } else {
-            // try getting it from bitlox website
-            $http.get("https://btm.bitlox.com/coin/"+networkName+".php").then(function(response){
-              // console.log('got network from server', response)
-              if(!response) {
-                // console.log('no response from server')
-                def.reject();
-              }
-              var res = response.data;
-              res.pubkeyhash = parseInt(res.pubkeyhash,16)
-              res.privatekey = parseInt(res.privatekey,16)
-              res.scripthash = parseInt(res.scripthash,16)
-              res.xpubkey = parseInt(res.xpubkey,16)
-              res.xprivkey = parseInt(res.xprivkey,16)
-              res.networkMagic = parseInt(res.networkMagic,16)
-              res.port = parseInt(res.port, 10)
-              // console.log('parsed network from server', res)
-              self.customNetworks[customParam] = res;
-              storageService.getCustomNetworks(function(err, customNetworkListRaw) {
-                var customNetworkList = {}
-                if(customNetworkListRaw) {
-                  customNetworkList = JSON.parse(customNetworkListRaw)
-                  customNetworkList[customParam] = res;
-                  storageService.setCustomNetworks(JSON.stringify(customNetworkList));
-                }
-                if(!bitcore.Networks.get(res.name)) { bitcore.Networks.add(res) }
-                def.resolve(res)
-              })
-            }, function(err) {
-              // console.warn('server network error', err)
-              def.reject();
-            })              
-          }
-        })        
+  var def = $q.defer();
+  var self = this
+  if(customParam) {
+    var networkName = customParam
+    this.getAll().then(function(CUSTOMNETWORKS) {
+      // check apple approved list on iOS, and the full list of whatever we can support for Android
+      var customNet = CUSTOMNETWORKS[customParam]
+      if(customNet) {
+        // $log.log('found in local cache')
+        def.resolve(customNet)
       } else {
-        return $q.resolve();
+        // try getting it from bitlox website
+        $http.get("https://btm.bitlox.com/coin/"+networkName+".php").then(function(response){
+          // $log.log('got network from server', response)
+          if(!response) {
+            // $log.log('no response from server')
+            def.reject();
+          }
+          var res = response.data;
+          res.pubkeyhash = parseInt(res.pubkeyhash,16)
+          res.privatekey = parseInt(res.privatekey,16)
+          res.scripthash = parseInt(res.scripthash,16)
+          res.xpubkey = parseInt(res.xpubkey,16)
+          res.xprivkey = parseInt(res.xprivkey,16)
+          res.networkMagic = parseInt(res.networkMagic,16)
+          res.port = parseInt(res.port, 10)
+          $log.log('parsed network from server', res)
+          self.customNetworks[customParam] = res;
+          storageService.getCustomNetworks(function(err, customNetworkListRaw) {
+            var customNetworkList = {}
+            if(customNetworkListRaw) {
+              customNetworkList = JSON.parse(customNetworkListRaw)
+            }
+            customNetworkList[customParam] = res;
+            storageService.setCustomNetworks(JSON.stringify(customNetworkList));
+            if(!bitcore.Networks.get(res.name)) { bitcore.Networks.add(res) }
+            def.resolve(res)
+          })
+        }, function(err) {
+          // $log.warn('server network error', err)
+          def.reject();
+        })              
       }
-      return def.promise;
+    })        
+  } else {
+    return $q.resolve();
+  }
+  return def.promise;
+}
 
-    }
 
 }])})(window.angular);
 
