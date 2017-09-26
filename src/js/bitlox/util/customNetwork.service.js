@@ -84,11 +84,11 @@ this.getAll = function() {
   var self = this
   storageService.getCustomNetworks(function(err, networkListRaw) {
     if(err) {
-      $log.log('storage service error while retrieving custom networks', err, JSON.stringify(err))
+      // $log.log('storage service error while retrieving custom networks', err, JSON.stringify(err))
       resourcePromise.reject()
     }
     if(networkListRaw) {
-      $log.log('networkListRaw',networkListRaw)
+      // $log.log('networkListRaw',networkListRaw)
       var networkList = JSON.parse(networkListRaw)
       for (var n in networkList) {
         self.customNetworks[networkList[n].name] = networkList[n]
@@ -97,7 +97,7 @@ this.getAll = function() {
         }
       }      
     } else {
-      $log.warn("NO NETWORK LIST RAW", networkListRaw)
+      // $log.warn("NO NETWORK LIST RAW", networkListRaw)
     }
     resourcePromise.resolve(self.customNetworks)
   })
@@ -137,9 +137,9 @@ this.getCustomNetwork = function(customParam) {
             var customNetworkList = {}
             if(customNetworkListRaw) {
               customNetworkList = JSON.parse(customNetworkListRaw)
-              customNetworkList[customParam] = res;
-              storageService.setCustomNetworks(JSON.stringify(customNetworkList));
             }
+            customNetworkList[customParam] = res;
+            storageService.setCustomNetworks(JSON.stringify(customNetworkList));
             if(!bitcore.Networks.get(res.name)) { bitcore.Networks.add(res) }
             def.resolve(res)
           })
