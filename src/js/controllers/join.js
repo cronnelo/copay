@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('copayApp.controllers').controller('joinController',
-  function($scope, $rootScope, $timeout, $state, $ionicHistory, $ionicScrollDelegate, profileService, configService, storageService, applicationService, gettextCatalog, lodash, ledger, trezor, intelTEE, derivationPathHelper, ongoingProcess, walletService, $log, $stateParams, popupService, appConfigService) {
+  function($scope, $rootScope, $timeout, $state, $ionicHistory, $ionicScrollDelegate, profileService, configService, storageService, applicationService, gettextCatalog, lodash, ledger, trezor, intelTEE, derivationPathHelper, ongoingProcess, walletService, $log, $stateParams, popupService, appConfigService, customNetworks) {
     $scope.formData = {};
     
     $scope.$on("$ionicView.beforeEnter", function(event, data) {
@@ -13,8 +13,25 @@ angular.module('copayApp.controllers').controller('joinController',
       $scope.formData.secret = null;
       resetPasswordFields();
       updateSeedSourceSelect();
+      customNetworks.getAll().then(function(CUSTOMNETWORKS) {
+        $scope.networks = CUSTOMNETWORKS;
+        $scope.network = CUSTOMNETWORKS[defaults.defaultNetwork.name]        
+      })      
     });
+    $scope.$on('$ionicView.enter', function(event,data) {
+      $scope.showNetworkSelector()
+    })
 
+    $scope.showNetworkSelector = function() {
+      $scope.networkSelectorTitle = gettextCatalog.getString('Select currency');
+      $scope.showNetworks = true;
+    };
+    $scope.onNetworkSelect = function(network) {
+      $scope.network = network
+      $scope.formData.derivationPath = derivationPathHelper.getDefault(network.name);
+      $scope.formData.bwsurl = network.bwsUrl;
+      $scope.showNetworks = false;
+    }
     $scope.showAdvChange = function() {
       $scope.showAdv = !$scope.showAdv;
       $scope.encrypt = null;
@@ -104,7 +121,9 @@ angular.module('copayApp.controllers').controller('joinController',
       var opts = {
         secret: $scope.formData.secret,
         myName: $scope.formData.myName,
-        bwsurl: $scope.formData.bwsurl
+        bwsurl: $scope.formData.bwsurl,
+        networkName: $scope.network.name,
+        network: $scope.network.name
       }
 
       var setSeed = $scope.formData.seedSource.id == 'set';
@@ -123,7 +142,7 @@ angular.module('copayApp.controllers').controller('joinController',
           return;
         }
         opts.account = pathData.account;
-        opts.networkName = pathData.networkName;
+        // opts.networkName = pathData.networkName;
         opts.derivationStrategy = pathData.derivationStrategy;
       } else {
         opts.passphrase = $scope.formData.createPassphrase;
