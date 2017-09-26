@@ -83,6 +83,10 @@ this.getAll = function() {
                   // storageService.setCustomNetworks("{}");
   var self = this
   storageService.getCustomNetworks(function(err, networkListRaw) {
+    if(err) {
+      $log.log('storage service error while retrieving custom networks', err, JSON.stringify(err))
+      resourcePromise.reject()
+    }
     if(networkListRaw) {
       $log.log('networkListRaw',networkListRaw)
       var networkList = JSON.parse(networkListRaw)
