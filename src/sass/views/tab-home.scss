@@ -57,6 +57,12 @@
         }
       }
     }
+
+    .item-complex {
+      & > .item-content {
+        padding: 0 54px 0 74px;
+      }
+    }
   }
   .wallet-details__item.item {
     padding-top: 0;

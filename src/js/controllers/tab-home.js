@@ -18,6 +18,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
     $scope.isNW = platformInfo.isNW;
     $scope.showRateCard = {};
     $scope.defaults = {};
+    $scope.showReorder = false;
 
     $scope.$on("$ionicView.afterEnter", function() {
       startupService.ready();
@@ -227,6 +228,15 @@ angular.module('copayApp.controllers').controller('tabHomeController',
       $state.go('tabs.wallet', {
         walletId: wallet.credentials.walletId
       });
+    };
+
+    $scope.reorderWallet = function(wallet, fromIndex, toIndex) {
+      $scope.wallets.splice(fromIndex, 1);
+      $scope.wallets.splice(toIndex, 0, wallet);
+    };
+
+    $scope.toggleReorder = function() {
+      $scope.showReorder = !$scope.showReorder;
     };
 
     var updateTxps = function() {
