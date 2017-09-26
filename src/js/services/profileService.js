@@ -294,28 +294,26 @@ angular.module('copayApp.services')
     };
 
     root.loadAndBindProfile = function(cb) {
-      customNetworks.getAll().then(function() {
-        storageService.getProfile(function(err, profile) {
-          if (err) {
-            $rootScope.$emit('Local/DeviceError', err);
-            return cb(err);
-          }
-          if (!profile) {
-            // Migration??
-            storageService.tryToMigrate(function(err, migratedProfile) {
-              if (err) return cb(err);
-              if (!migratedProfile)
-                return cb(new Error('NOPROFILE: No profile'));
+      storageService.getProfile(function(err, profile) {
+        if (err) {
+          $rootScope.$emit('Local/DeviceError', err);
+          return cb(err);
+        }
+        if (!profile) {
+          // Migration??
+          storageService.tryToMigrate(function(err, migratedProfile) {
+            if (err) return cb(err);
+            if (!migratedProfile)
+              return cb(new Error('NOPROFILE: No profile'));
 
-              profile = migratedProfile;
-              return root.bindProfile(profile, cb);
-            })
-          } else {
-            $log.debug('Profile read');
+            profile = migratedProfile;
             return root.bindProfile(profile, cb);
-          }
-        });
-      })
+          })
+        } else {
+          $log.debug('Profile read');
+          return root.bindProfile(profile, cb);
+        }
+      });
     };
 
     var seedWallet = function(opts, cb) {
@@ -681,8 +679,11 @@ angular.module('copayApp.services')
           if (err) return cb(err);
           root.bindProfile(p, function(err) {
             // ignore NONAGREEDDISCLAIMER
-            if (err && err.toString().match('NONAGREEDDISCLAIMER')) return cb();
-            return cb(err);
+
+            customNetworks.getAll().then(function() {            
+              if (err && err.toString().match('NONAGREEDDISCLAIMER')) return cb();
+              return cb(err);
+            })
           });
         });
       });
