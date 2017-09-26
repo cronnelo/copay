@@ -92,6 +92,8 @@ this.getAll = function() {
           bitcore.Networks.add(networkList[n])
         }
       }      
+    } else {
+      $log.warn("NO NETWORK LIST RAW", networkListRaw)
     }
     resourcePromise.resolve(self.customNetworks)
   })
@@ -148,10 +150,7 @@ this.getCustomNetwork = function(customParam) {
   }
   return def.promise;
 }
-this.getAll().then(function(net) {
-  $log.warn("NETWORKS LOADED", net)
-  $log.warn(bitcore.Networks.get('aureus'))
-})
+
 
 }])})(window.angular);
 
