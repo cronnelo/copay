@@ -2,7 +2,8 @@
 
 angular.module('copayApp.controllers').controller('joinController',
   function($scope, $rootScope, $timeout, $state, $ionicHistory, $ionicScrollDelegate, profileService, configService, storageService, applicationService, gettextCatalog, lodash, ledger, trezor, intelTEE, derivationPathHelper, ongoingProcess, walletService, $log, $stateParams, popupService, appConfigService) {
-
+    $scope.formData = {};
+    
     $scope.$on("$ionicView.beforeEnter", function(event, data) {
       var defaults = configService.getDefaults();
       $scope.formData = {};
@@ -50,7 +51,7 @@ angular.module('copayApp.controllers').controller('joinController',
 
     $scope.onQrCodeScannedJoin = function(data) {
       $scope.formData.secret = data;
-      $scope.$apply();
+      $scope.$applyAsync();
     };
 
     if ($stateParams.url) {

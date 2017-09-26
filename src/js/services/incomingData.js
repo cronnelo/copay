@@ -43,7 +43,10 @@ angular.module('copayApp.services').factory('incomingData', function($log, $stat
       } catch (err) {
         return false;
       }
-      return true;
+      if(bitcore.PrivateKey.isValid(privateKey, defaults.defaultNetwork.name) && data.length >= 26) {
+        return true
+      }
+      return false;
     }
 
     function goSend(addr, amount, message) {
@@ -227,11 +230,6 @@ angular.module('copayApp.services').factory('incomingData', function($log, $stat
         });
       });
       return true;
-    } else if (data && (data.substring(0, 2) == '6P' || checkPrivateKey(data))) {
-      root.showMenu({
-        data: data,
-        type: 'privateKey'
-      });
     } else if (data && ((data.substring(0, 2) == '1|') || (data.substring(0, 2) == '2|') || (data.substring(0, 2) == '3|'))) {
       $state.go('tabs.home').then(function() {
         $state.transitionTo('tabs.add.import', {
@@ -240,6 +238,11 @@ angular.module('copayApp.services').factory('incomingData', function($log, $stat
       });
       return true;
 
+    } else if (data && (data.substring(0, 2) == '6P' || checkPrivateKey(data))) {
+      root.showMenu({
+        data: data,
+        type: 'privateKey'
+      });
     } else {
       if ($state.includes('tabs.scan')) {
         root.showMenu({
