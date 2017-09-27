@@ -6,6 +6,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
     var wallet;
     var listeners = [];
     var notifications = [];
+    var orderedWallets = [];
 
     $scope.externalServices = {};
     $scope.openTxpModal = txpModalService.open;
@@ -45,7 +46,25 @@ angular.module('copayApp.controllers').controller('tabHomeController',
           }
         });
       }
-      $scope.wallets = profileService.getWallets();
+
+      storageService.getOrderedWallet(function(error, _orderedWallets) {
+        var wallets = profileService.getWallets();
+
+        orderedWallets = _orderedWallets
+                       ? JSON.parse(_orderedWallets)
+                       : createOrderedWallets(wallets);
+
+        lodash.forEach(orderedWallets, function(wallet, index) {
+          var walletIndex = lodash.findIndex(wallets, function(o) {
+            return o.name === wallet;
+          });
+
+          wallets.splice(index, 0, wallets.splice(walletIndex, 1)[0]);
+        });
+
+        $scope.wallets = wallets;
+      });
+
       $scope.defaults = configService.getDefaults();
       customNetworks.getAll().then(function(CUSTOMNETWORKS) {
         // console.log('custom networks', CUSTOMNETWORKS)
@@ -233,11 +252,21 @@ angular.module('copayApp.controllers').controller('tabHomeController',
     $scope.reorderWallet = function(wallet, fromIndex, toIndex) {
       $scope.wallets.splice(fromIndex, 1);
       $scope.wallets.splice(toIndex, 0, wallet);
+
+      orderedWallets = createOrderedWallets($scope.wallets);
+
+      storageService.setOrderedWallet(JSON.stringify(orderedWallets), function () {});
     };
 
     $scope.toggleReorder = function() {
       $scope.showReorder = !$scope.showReorder;
     };
+
+    function createOrderedWallets(wallets) {
+      return wallets.map(function(wallet) {
+        return wallet.name;
+      });
+    }
 
     var updateTxps = function() {
       profileService.getTxps({
