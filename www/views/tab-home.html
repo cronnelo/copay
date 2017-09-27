@@ -67,7 +67,6 @@
     <div class="list card">
       <div class="item item-icon-right item-heading">
         <span translate>Wallets</span>
-        <span class="right text-light" ng-click="toggleReorder()">Reorder</span>
         <a ui-sref="tabs.add" ng-if="wallets[0]">
           <i class="icon ion-ios-plus-empty list-add-button"></i>
         </a>
@@ -85,7 +84,8 @@
           <ion-item
             class="item item-sub item-icon-left item-icon-right wallet"
             ng-repeat="wallet in wallets track by $index"
-            ng-click="openWallet(wallet)">
+            ng-click="openWallet(wallet)"
+            on-hold="toggleReorder()" >
             <i class="icon big-icon-svg" wallet-icon data-wallet="wallet"></i>
             <span>{{wallet.name || wallet.id}}</span>
             <p>
