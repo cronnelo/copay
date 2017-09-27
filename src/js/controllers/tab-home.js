@@ -229,6 +229,10 @@ angular.module('copayApp.controllers').controller('tabHomeController',
       $scope.showReorder = !$scope.showReorder;
     };
 
+    $scope.closeReorder = function() {
+      $scope.showReorder = false;
+    };
+
     function createOrderedWallets(wallets) {
       return wallets.map(function(wallet) {
         return wallet.name;
