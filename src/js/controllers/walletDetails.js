@@ -336,7 +336,9 @@ angular.module('copayApp.controllers').controller('walletDetailsController', fun
     $window.requestAnimationFrame(function() {
       $scope.amountHeight = amountHeight + 'px';
       $scope.contentMargin = contentMargin + 'px';
-      $scope.amountScale = 'scale3d(' + s + ',' + s + ',' + s + ') translateY(' + t + 'px)';
+
+      $scope.amountScale = 'translateY(' + t + 'px)';
+      // $scope.amountScale = 'scale3d(' + s + ',' + s + ',' + s + ') translateY(' + t + 'px)';
       $scope.$digest();
       getScrollPosition();
     });
