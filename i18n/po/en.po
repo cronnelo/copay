@@ -2056,7 +2056,7 @@ msgstr "Search Transactions"
 
 #: www/views/tab-send.html:11
 msgid "Search or enter bitcoin address"
-msgstr "Search or enter cryptocurrency address"
+msgstr "Search or enter address"
 
 #: www/views/modals/search.html:16
 msgid "Search transactions"

@@ -95,3 +95,7 @@ $v-tab-scan-selected-icon:                           url('../img/app/tab-icons/i
 $v-tab-send-selected-icon:                           url('../img/app/tab-icons/ico-send-selected.svg');
 
 $v-logo-height: 100%;
+#tab-home .tab-home__logo {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
