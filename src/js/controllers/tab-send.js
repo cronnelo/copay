@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('copayApp.controllers').controller('tabSendController', function($scope, $rootScope, $log, $timeout, $ionicScrollDelegate, addressbookService, profileService, lodash, $state, walletService, incomingData, popupService, platformInfo, bwcError, gettextCatalog, scannerService) {
+angular.module('copayApp.controllers').controller('tabSendController', function($scope, $rootScope, $log, $timeout, $ionicScrollDelegate, addressbookService, profileService, lodash, $state, walletService, incomingData, popupService, platformInfo, bwcError, gettextCatalog, scannerService, storageService) {
 
   var originalList;
   var CONTACTS_SHOW_LIMIT;
@@ -9,11 +9,33 @@ angular.module('copayApp.controllers').controller('tabSendController', function(
 
 
   var hasWallets = function() {
-    $scope.wallets = profileService.getWallets({
-      onlyComplete: true
-    });
-    $scope.hasWallets = lodash.isEmpty($scope.wallets) ? false : true;
+      storageService.getOrderedWallet(function(error, orderedWallets) {
+        var wallets = profileService.getWallets({
+          onlyComplete: true
+        });
+
+        orderedWallets = orderedWallets
+                       ? JSON.parse(orderedWallets)
+                       : createOrderedWallets(wallets);
+
+        lodash.forEach(orderedWallets, function(wallet, index) {
+          var walletIndex = lodash.findIndex(wallets, function(o) {
+            return o.name === wallet;
+          });
+
+          wallets.splice(index, 0, wallets.splice(walletIndex, 1)[0]);
+        });
+
+        $scope.wallets = wallets;
+        $scope.hasWallets = !lodash.isEmpty($scope.wallets);
+      });
   };
+
+  function createOrderedWallets(wallets) {
+    return wallets.map(function(wallet) {
+      return wallet.name;
+    });
+  }
 
   // THIS is ONLY to show the 'buy bitcoins' message
   // does not has any other function.
