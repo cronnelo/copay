@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('copayApp.directives')
-  .directive('copyToClipboard', function(platformInfo, nodeWebkitService, gettextCatalog, ionicToast, clipboard) {
+  .directive('copyToClipboard', function(platformInfo, nodeWebkitService, gettextCatalog, ionicToast, clipboard, $log) {
     return {
       restrict: 'A',
       scope: {
@@ -19,9 +19,13 @@ angular.module('copayApp.directives')
         elem.bind('click', function() {
           var data = scope.copyToClipboard;
           if (!data) return;
-
-          if (isCordova) {
-            cordova.plugins.clipboard.copy(data);
+          if(platformInfo.isAndroid) { 
+            clipboard.copyText(data);
+          } else if (isCordova) {
+            cordova.plugins.clipboard.copy(data, 
+              function() { $log.log('successfully copied to board')}, 
+              function(err) { $log.log(err); $log.log('copy to board error')}
+            );
           } else if (isNW) {
             nodeWebkitService.writeToClipboard(data);
           } else if (clipboard.supported) {

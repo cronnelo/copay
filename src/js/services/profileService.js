@@ -416,7 +416,10 @@ angular.module('copayApp.services')
 
     // joins and stores a wallet
     root.joinWallet = function(opts, cb) {
-      if(!opts || !opts.bwsurl) { opts = { bwsurl: defaults.bws.url } }
+      if(!opts) {
+        opts = {}
+      }
+      if(!opts.bwsurl) { opts.bwsurl = defaults.bws.url }
 
       var walletClient = bwcService.getClient(null, opts);
       $log.debug('Joining Wallet:', opts);
@@ -679,8 +682,11 @@ angular.module('copayApp.services')
           if (err) return cb(err);
           root.bindProfile(p, function(err) {
             // ignore NONAGREEDDISCLAIMER
-            if (err && err.toString().match('NONAGREEDDISCLAIMER')) return cb();
-            return cb(err);
+
+            customNetworks.getAll().then(function() {            
+              if (err && err.toString().match('NONAGREEDDISCLAIMER')) return cb();
+              return cb(err);
+            })
           });
         });
       });

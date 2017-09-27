@@ -215,7 +215,10 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
       cache.unitName = config.settings.unitName;
       customNetworks.getAll().then(function(CUSTOMNETWORKS) {
         if(CUSTOMNETWORKS[wallet.network]) { cache.unitName = CUSTOMNETWORKS[wallet.network].symbol; }
-
+        else { 
+          $log.log("Unable to find network in customnetworks", wallet.network, JSON.stringify(CUSTOMNETWORKS))
+          cache.unitName = ''; 
+        }
 
         //STR
         cache.totalBalanceStr = txFormatService.formatAmount(cache.totalBalanceSat) + ' ' + cache.unitName;

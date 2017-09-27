@@ -3,3 +3,45 @@
     line-height: 3.1em
   }
 }
+.confirmed-check {
+  width: 20px;
+  margin: -4px 0px;
+}
+.popup {
+  border-radius: 2px !important;
+}
+
+.popup-title {
+  font-weight: bold !important;
+  font-size: 15px !important;
+  margin-bottom: 15px;
+  color: rgb(101, 101, 101);
+}
+
+.popup-sub-title {
+  font-size: 12px !important;
+  color: #6b6b6b !important;
+}
+.amount-label .big-icon-svg img {
+  width: 27px !important;
+  height: 27px;
+  background: #444455;
+  box-shadow: none !important;
+}
+#tab-home .tab-home__logo {
+  padding-top: 7.5px;
+  padding-bottom: 7.5px;
+}
+#txp-details .info .payment-proposal-to, #view-confirm .info .payment-proposal-to {
+  background-color: rgba(203, 203, 203, 0.39) !important;
+}
+.address-label {
+  margin: 0 auto !important;
+  margin-top: 5% !important;
+  background-color: rgba(203, 203, 203, 0.39) !important;
+  border-radius: 2px !important;
+  max-width: 300px !important;
+  color: gray !important;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
