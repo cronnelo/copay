@@ -141,6 +141,11 @@
         position: inherit;
         padding: 0 10px;
         float: right;
+
+        &.big-icon-svg > .bg {
+          width: 24px;
+          height: 24px;
+        }
       }
       contact {
         margin-left: 8px;
