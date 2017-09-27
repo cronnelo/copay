@@ -222,10 +222,15 @@ angular.module('copayApp.controllers').controller('tabHomeController',
       orderedWallets = createOrderedWallets($scope.wallets);
 
       storageService.setOrderedWallet(JSON.stringify(orderedWallets), function () {});
+      $scope.toggleReorder();
     };
 
     $scope.toggleReorder = function() {
       $scope.showReorder = !$scope.showReorder;
+    };
+
+    $scope.closeReorder = function() {
+      $scope.showReorder = false;
     };
 
     function createOrderedWallets(wallets) {
