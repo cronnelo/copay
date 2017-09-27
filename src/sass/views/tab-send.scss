@@ -47,6 +47,9 @@
     background-color: #f2f2f2;
     border-radius: 3px;
     border: none;
+    .search-input {
+      padding-left: 0;
+    }
     .svg#Bitcoin_Symbol {
       width: 14px;
       .st0 {
@@ -54,15 +57,8 @@
       }
     }
     &.focus {
-      background: none;
       .svg#Bitcoin_Symbol {
         display: none;
-      }
-      .search-input {
-        padding-left: 0;
-        &:focus::-webkit-input-placeholder {
-          opacity: 0;
-        }
       }
     }
   }
