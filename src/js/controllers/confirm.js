@@ -240,9 +240,9 @@ angular.module('copayApp.controllers').controller('confirmController', function(
 
       // Amount
       tx.amountStr = txFormatService.formatAmountStr(tx.toAmount);
-      tx.amountValueStr = tx.amountStr.split(' ')[0];
-      tx.amountUnitStr = tx.amountStr.split(' ')[1];
+      tx.amountValueStr = tx.amountStr;
       customNetworks.getAll().then(function(CUSTOMNETWORKS) {
+        tx.amountUnitStr = CUSTOMNETWORKS[$scope.network].symbol;
         txFormatService.formatAlternativeStr(tx.toAmount, CUSTOMNETWORKS[$scope.network], function(v) {
           tx.alternativeAmountStr = v;
         });
