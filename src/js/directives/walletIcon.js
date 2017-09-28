@@ -7,7 +7,8 @@ angular.module('copayApp.directives')
       templateUrl: 'views/includes/walletIcon.html',
       scope: {
         wallet: '=',
-        network: '='
+        network: '=',
+        bgcolor: '='
       },
       link: link
     };
