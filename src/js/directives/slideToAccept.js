@@ -9,12 +9,11 @@ angular.module('copayApp.directives')
       scope: {
         sendStatus: '=slideSendStatus',
         onConfirm: '&slideOnConfirm',
-        isDisabled: '=isDisabled',
-        wallet: '=hasWalletChosen',
-        network: '=network'
+        isDisabled: '=',
+        wallet: '=',
+        network: '='
       },
       link: function(scope, element, attrs) {
-
         var KNOB_WIDTH = 71;
         var MAX_SLIDE_START_PERCENTAGE = 50;
         var FULLY_SLID_PERCENTAGE = 72;
