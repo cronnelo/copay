@@ -46,22 +46,8 @@ angular.module('copayApp.controllers').controller('tabHomeController',
         });
       }
 
-      storageService.getOrderedWallet(function(error, orderedWallets) {
-        var wallets = profileService.getWallets();
-
-        orderedWallets = orderedWallets
-                       ? JSON.parse(orderedWallets)
-                       : createOrderedWallets(wallets);
-
-        lodash.forEach(orderedWallets, function(wallet, index) {
-          var walletIndex = lodash.findIndex(wallets, function(o) {
-            return o.name === wallet;
-          });
-
-          wallets.splice(index, 0, wallets.splice(walletIndex, 1)[0]);
-        });
-
-        $scope.wallets = wallets;
+      profileService.getOrderedWallets(function(orderedWallets) {
+        $scope.wallets = orderedWallets;
       });
 
       $scope.defaults = configService.getDefaults();
@@ -218,7 +204,9 @@ angular.module('copayApp.controllers').controller('tabHomeController',
       $scope.wallets.splice(fromIndex, 1);
       $scope.wallets.splice(toIndex, 0, wallet);
 
-      var orderedWallets = createOrderedWallets($scope.wallets);
+      var orderedWallets = $scope.wallets.map(function(wallet) {
+        return wallet.name;
+      });
 
       storageService.setOrderedWallet(JSON.stringify(orderedWallets), function () {});
       $scope.toggleReorder();
@@ -231,12 +219,6 @@ angular.module('copayApp.controllers').controller('tabHomeController',
     $scope.closeReorder = function() {
       $scope.showReorder = false;
     };
-
-    function createOrderedWallets(wallets) {
-      return wallets.map(function(wallet) {
-        return wallet.name;
-      });
-    }
 
     var updateTxps = function() {
       profileService.getTxps({
