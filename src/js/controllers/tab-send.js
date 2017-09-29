@@ -9,33 +9,11 @@ angular.module('copayApp.controllers').controller('tabSendController', function(
 
 
   var hasWallets = function() {
-      storageService.getOrderedWallet(function(error, orderedWallets) {
-        var wallets = profileService.getWallets({
-          onlyComplete: true
-        });
-
-        orderedWallets = orderedWallets
-                       ? JSON.parse(orderedWallets)
-                       : createOrderedWallets(wallets);
-
-        lodash.forEach(orderedWallets, function(wallet, index) {
-          var walletIndex = lodash.findIndex(wallets, function(o) {
-            return o.name === wallet;
-          });
-
-          wallets.splice(index, 0, wallets.splice(walletIndex, 1)[0]);
-        });
-
-        $scope.wallets = wallets;
-        $scope.hasWallets = !lodash.isEmpty($scope.wallets);
-      });
-  };
-
-  function createOrderedWallets(wallets) {
-    return wallets.map(function(wallet) {
-      return wallet.name;
+    profileService.getOrderedWallets({ onlyComplete: true }, function(orderedWallets) {
+      $scope.wallets = orderedWallets;
+      $scope.hasWallets = !lodash.isEmpty($scope.wallets);
     });
-  }
+  };
 
   // THIS is ONLY to show the 'buy bitcoins' message
   // does not has any other function.
