@@ -1,6 +1,6 @@
 'use strict';
 angular.module('copayApp.services')
-  .factory('profileService', function profileServiceFactory($rootScope, $timeout, $filter, $log, $state, sjcl, lodash, storageService, bwcService, configService, gettextCatalog, bwcError, uxLanguage, platformInfo, appConfigService, customNetworks) {
+  .factory('profileService', function profileServiceFactory($rootScope, $timeout, $filter, $log, $state, sjcl, lodash, storageService, bwcService, configService, gettextCatalog, bwcError, uxLanguage, platformInfo, appConfigService, orderedWallet, customNetworks) {
     var isChromeApp = platformInfo.isChromeApp;
     var isCordova = platformInfo.isCordova;
     var isWindowsPhoneApp = platformInfo.isCordova && platformInfo.isWP;
@@ -810,6 +810,15 @@ angular.module('copayApp.services')
           return x.isComplete();
         }, 'createdOn'
       ]);
+    };
+
+    root.getOrderedWallets = function (opts, callback) {
+      if (arguments.length === 1 && typeof opts === 'function') {
+        callback = opts;
+        opts = null;
+      }
+
+      orderedWallet.arrange(root.getWallets(opts), callback);
     };
 
     root.toggleHideBalanceFlag = function(walletId, cb) {
