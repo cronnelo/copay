@@ -95,15 +95,40 @@ angular.module('copayApp.controllers').controller('tabReceiveController', functi
   };
 
   $scope.$on("$ionicView.beforeEnter", function(event, data) {
-    $scope.wallets = profileService.getWallets();
-    $scope.singleWallet = $scope.wallets.length == 1;
 
-    if (!$scope.wallets[0]) return;
+    storageService.getOrderedWallet(function(error, orderedWallets) {
+      var wallets = profileService.getWallets({
+        onlyComplete: true
+      });
 
-    // select first wallet if no wallet selected previously
-    var selectedWallet = checkSelectedWallet($scope.wallet, $scope.wallets);
-    $scope.onWalletSelect(selectedWallet);
-    
+      orderedWallets = orderedWallets
+                     ? JSON.parse(orderedWallets)
+                     : createOrderedWallets(wallets);
+
+      lodash.forEach(orderedWallets, function(wallet, index) {
+        var walletIndex = lodash.findIndex(wallets, function(o) {
+          return o.name === wallet;
+        });
+
+        wallets.splice(index, 0, wallets.splice(walletIndex, 1)[0]);
+      });
+
+      $scope.wallets = wallets;
+      $scope.singleWallet = $scope.wallets.length == 1;
+
+      if (!$scope.wallets[0]) return;
+
+      // select first wallet if no wallet selected previously
+      var selectedWallet = checkSelectedWallet($scope.wallet, $scope.wallets);
+      $scope.onWalletSelect(selectedWallet);
+
+      function createOrderedWallets(wallets) {
+        return wallets.map(function(wallet) {
+          return wallet.name;
+        });
+      }
+    });
+
     $scope.showShareButton = platformInfo.isCordova ? (platformInfo.isIOS ? 'iOS' : 'Android') : null;
     listeners = [
       $rootScope.$on('bwsEvent', function(e, walletId, type, n) {
