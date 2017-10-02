@@ -86,7 +86,7 @@
         <ion-list show-reorder="showReorder">
           <ion-item
             class="item item-sub item-icon-left item-icon-right wallet"
-            ng-repeat="wallet in wallets track by $index"
+            ng-repeat="wallet in orderedWallets track by $index"
             ng-click="openWallet(wallet); closeReorder()"
             on-hold="toggleReorder()" >
             <i class="icon big-icon-svg" wallet-icon data-wallet="wallet"></i>
