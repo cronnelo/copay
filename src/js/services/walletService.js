@@ -420,14 +420,8 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
     var fixTxsUnit = function(txs) {
       if (!txs || !txs[0] || !txs[0].amountStr) return;
 
-      var cacheUnit = ''; //txs[0].amountStr.split(' ')[1];
-
-      if (cacheUnit == config.unitName)
-        return;
-
-      var name = ' ';// + config.unitName;
-
-      $log.debug('Fixing Tx Cache Unit to:' + name)
+      var CUSTOMNETWORKS = customNetworks.getStatic();
+      var name = ' ' + CUSTOMNETWORKS[wallet.network].symbol;
       lodash.each(txs, function(tx) {
         tx.amountStr = txFormatService.formatAmount(tx.amount) + name;
         tx.feeStr = txFormatService.formatAmount(tx.fees) + name;
