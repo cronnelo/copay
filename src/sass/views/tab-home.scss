@@ -30,8 +30,6 @@
     .item {
       color: #444;
       border-top:none;
-      padding-bottom: 1rem;
-      padding-top:1rem;
       &.item-extra-padding {
         padding-top: 1.5rem;
         padding-bottom: 1.5rem;
@@ -81,7 +79,7 @@
 
     .item-complex {
       & > .item-content {
-        padding: 0 54px 0 74px;
+        padding: 1rem 54px 1rem 74px;
       }
     }
   }
