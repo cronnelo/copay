@@ -47,6 +47,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
         });
       }
 
+      $scope.wallets = profileService.getWallets();
       storageService.getOrderedWallet(function(error, _orderedWallets) {
         var wallets = profileService.getWallets();
 
