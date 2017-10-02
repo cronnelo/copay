@@ -203,10 +203,10 @@ angular.module('copayApp.controllers').controller('tabHomeController',
     };
 
     $scope.reorderWallet = function(wallet, fromIndex, toIndex) {
-      $scope.wallets.splice(fromIndex, 1);
-      $scope.wallets.splice(toIndex, 0, wallet);
+      $scope.orderedWallets.splice(fromIndex, 1);
+      $scope.orderedWallets.splice(toIndex, 0, wallet);
 
-      var orderedWallets = $scope.wallets.map(function(wallet) {
+      var orderedWallets = $scope.orderedWallets.map(function(wallet) {
         return wallet.name;
       });
 
