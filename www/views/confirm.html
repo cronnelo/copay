@@ -16,8 +16,7 @@
           <span translate ng-if="tx.sendMax">Sending maximum amount</span>
         </div>
         <div class="amount-label">
-          <div class="amount">{{tx.amountValueStr || '...'}} <span class="unit">{{tx.amountUnitStr}}</span> <i class="icon big-icon-svg" wallet-icon data-wallet="wallet"></i>
-          </div>
+          <div class="amount">{{tx.amountValueStr || '...'}} <span class="unit">{{tx.amountUnitStr}}</span></div>
           <div class="alternative">{{tx.alternativeAmountStr || '...'}}</div>
         </div>
       </div>
@@ -31,7 +30,11 @@
         <div class="item">
           <span class="label" translate>To</span>
           <span class="payment-proposal-to" ng-if="!recipientType">
-            <i class="icon big-icon-svg" wallet-icon data-wallet="wallet" data-network="network"></i>
+            <i class="icon big-icon-svg"
+              wallet-icon
+              data-wallet="wallet"
+              data-network="network"
+              data-bgcolor="tx.toColor"></i>
             <div copy-to-clipboard="tx.toAddress" ng-if="!tx.paypro" class="ellipsis">
               <contact ng-if="!tx.toName" address="{{tx.toAddress}}"></contact>
               <span class="m15l size-14" ng-if="tx.toName">{{tx.toName}}</span>
@@ -115,6 +118,7 @@
     ng-if="isCordova && !isWindowsPhoneApp && wallet"
     slide-on-confirm="approve(tx, wallet, statusChangeHandler)"
     slide-send-status="sendStatus"
+    wallet="wallet"
     is-disabled="!wallet">
     {{buttonText}}
   </slide-to-accept>
