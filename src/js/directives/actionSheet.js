@@ -8,6 +8,7 @@ angular.module('copayApp.directives')
       transclude: true,
       scope: {
         show: '=actionSheetShow',
+        overlayClick: '&'
       },
       link: function(scope, element, attrs) {
         scope.$watch('show', function() {
@@ -19,10 +20,15 @@ angular.module('copayApp.directives')
             scope.revealMenu = false;
           }
         });
-        scope.hide = function() {
-          scope.show = false;
-          $rootScope.$broadcast('incomingDataMenu.menuHidden');
-        };
+
+        if (scope.overlayClick) {
+          scope.hide = scope.overlayClick;
+        } else {
+          scope.hide = function() {
+            scope.show = false;
+            $rootScope.$broadcast('incomingDataMenu.menuHidden');
+          };
+        }
       }
     };
   });
