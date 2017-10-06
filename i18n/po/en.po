@@ -2238,7 +2238,7 @@ msgstr "Show advanced options"
 
 #: www/views/tab-send.html:33
 msgid "Show bitcoin address"
-msgstr "Show address"
+msgstr "Show receiving address to fund wallet"
 
 #: www/views/tab-send.html:55
 msgid "Show more"
@@ -2509,7 +2509,7 @@ msgstr "To"
 
 #: www/views/tab-send.html:28
 msgid "To get started, buy bitcoin or share your address. You can receive bitcoin from any wallet or service."
-msgstr "To get started, buy cryptocurrency or share your address. You can receive money from any wallet or service."
+msgstr "To get started, fund your wallet using the receive address."
 
 #: www/views/tab-send.html:29
 msgid "To get started, you'll need to create a bitcoin wallet and get some bitcoin."
