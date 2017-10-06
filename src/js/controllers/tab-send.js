@@ -9,10 +9,8 @@ angular.module('copayApp.controllers').controller('tabSendController', function(
 
 
   var hasWallets = function() {
-    profileService.getOrderedWallets({ onlyComplete: true }, function(orderedWallets) {
-      $scope.wallets = orderedWallets;
-      $scope.hasWallets = !lodash.isEmpty($scope.wallets);
-    });
+    $scope.wallets = profileService.getWallets()
+    $scope.hasWallets = !lodash.isEmpty($scope.wallets);    
   };
 
   // THIS is ONLY to show the 'buy bitcoins' message
@@ -59,32 +57,35 @@ angular.module('copayApp.controllers').controller('tabSendController', function(
     $scope.showTransferCard = $scope.hasWallets && $scope.wallets.length > 1;// (networkResult.livenet > 1 || networkResult.testnet > 1);
 
     if ($scope.showTransferCard) {
-      var walletsToTransfer = $scope.wallets;
-      // if (!(networkResult.livenet > 1)) {
-      //   walletsToTransfer = lodash.filter(walletsToTransfer, function(item) {
-      //     return item.network == 'testnet';
-      //   });
-      // }
-      // if (!(networkResult.testnet > 1)) {
-      //   walletsToTransfer = lodash.filter(walletsToTransfer, function(item) {
-      //     return item.network == 'livenet';
-      //   });
-      // }
-      var walletList = [];
-      lodash.each(walletsToTransfer, function(v) {
-        walletList.push({
-          color: v.color,
-          name: v.name,
-          network: v.network,
-          isPrivKeyExternalString: v.isPrivKeyExternal(),
-          getPrivKeyExternalSourceNameString: v.getPrivKeyExternalSourceName(),
-          recipientType: 'wallet',
-          getAddress: function(cb) {
-            walletService.getAddress(v, false, cb);
-          },
+
+      profileService.getOrderedWallets({ onlyComplete: true }, function(orderedWallets) {         
+        var walletsToTransfer = orderedWallets;
+        // if (!(networkResult.livenet > 1)) {
+        //   walletsToTransfer = lodash.filter(walletsToTransfer, function(item) {
+        //     return item.network == 'testnet';
+        //   });
+        // }
+        // if (!(networkResult.testnet > 1)) {
+        //   walletsToTransfer = lodash.filter(walletsToTransfer, function(item) {
+        //     return item.network == 'livenet';
+        //   });
+        // }
+        var walletList = [];
+        lodash.each(walletsToTransfer, function(v) {
+          walletList.push({
+            color: v.color,
+            name: v.name,
+            network: v.network,
+            isPrivKeyExternalString: v.isPrivKeyExternal(),
+            getPrivKeyExternalSourceNameString: v.getPrivKeyExternalSourceName(),
+            recipientType: 'wallet',
+            getAddress: function(cb) {
+              walletService.getAddress(v, false, cb);
+            },
+          });
         });
-      });
-      originalList = originalList.concat(walletList);
+        originalList = originalList.concat(walletList);
+      })
     }
   }
 
