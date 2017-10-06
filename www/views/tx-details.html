@@ -51,9 +51,8 @@
           <span class="label" ng-if="btx.action === 'sent'" translate>From</span>
           <span class="label" ng-if="btx.action !== 'sent'" translate>To</span>
           <div class="wallet">
-            <i class="icon big-icon-svg" wallet-icon data-wallet="wallet">
-            </i>
-            <div>{{wallet.name}}</div>
+            <i class="icon big-icon-svg" wallet-icon data-wallet="wallet"></i>
+            <span class="wallet-name">{{wallet.name}}</span>
           </div>
         </div>     
         <div class="item single-line" ng-if="btx.action != 'received' && isShared">
@@ -91,13 +90,13 @@
           <span translate ng-if="wallet.credentials.network === 'livenet'">
 This transaction amount is too small compared to current Bitcoin network fees. Spending these funds will need a Bitcoin network fee cost comparable to the funds itself. </span>
         </div>
- 
+
         <div class="item single-line">
           <span class="label" translate>TX ID</span>
-          <span class="item-note">
-              {{btx.txid|ellipses}}
-          </span>
-        </div>        
+          <div copy-to-clipboard="btx.txid">
+            <span class="item-note">{{btx.txid|ellipses}}</span>
+          </div>
+        </div>
         <div class="item single-line">
           <span class="label" translate>Confirmations</span>
           <span class="item-note">

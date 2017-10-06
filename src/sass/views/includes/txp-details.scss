@@ -21,7 +21,7 @@
     width: 20px;
   }
   .head {
-    padding: 30px $item-lateral-padding 3rem;
+    padding: 30px $item-lateral-padding;
     border-top: 0;
 
     .sending-label {
@@ -170,6 +170,10 @@
           margin-right: .7rem;
           box-shadow: none;
         }
+      }
+
+      .wallet-name {
+        margin-top: -3px;
       }
     }
 
