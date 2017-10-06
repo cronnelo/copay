@@ -90,13 +90,13 @@
           <span translate ng-if="wallet.credentials.network === 'livenet'">
 This transaction amount is too small compared to current Bitcoin network fees. Spending these funds will need a Bitcoin network fee cost comparable to the funds itself. </span>
         </div>
- 
+
         <div class="item single-line">
           <span class="label" translate>TX ID</span>
-          <span class="item-note">
-              {{btx.txid|ellipses}}
-          </span>
-        </div>        
+          <div copy-to-clipboard="btx.txid">
+            <span class="item-note">{{btx.txid|ellipses}}</span>
+          </div>
+        </div>
         <div class="item single-line">
           <span class="label" translate>Confirmations</span>
           <span class="item-note">
