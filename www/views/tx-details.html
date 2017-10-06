@@ -51,9 +51,8 @@
           <span class="label" ng-if="btx.action === 'sent'" translate>From</span>
           <span class="label" ng-if="btx.action !== 'sent'" translate>To</span>
           <div class="wallet">
-            <i class="icon big-icon-svg" wallet-icon data-wallet="wallet">
-            </i>
-            <div>{{wallet.name}}</div>
+            <i class="icon big-icon-svg" wallet-icon data-wallet="wallet"></i>
+            <span class="wallet-name">{{wallet.name}}</span>
           </div>
         </div>     
         <div class="item single-line" ng-if="btx.action != 'received' && isShared">
