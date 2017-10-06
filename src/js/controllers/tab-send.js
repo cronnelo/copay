@@ -26,20 +26,20 @@ angular.module('copayApp.controllers').controller('tabSendController', function(
     $scope.hasFunds = false;
     var index = 0;
     lodash.each($scope.wallets, function(w) {
-      walletService.getStatus(w, {}, function(err, status) {
-
-        ++index;
+      walletService.getTxHistory(w, {}, function(err, status) {
+        if(status) {
+          $scope.hasFunds = true;
+          $rootScope.everHasFunds = true;
+        }       
         if (err && !status) {
           $log.error(err);
           // error updating the wallet. Probably a network error, do not show
           // the 'buy bitcoins' message.
 
           $scope.hasFunds = true;
-        } else if (status.availableBalanceSat > 0) {
-          $scope.hasFunds = true;
-          $rootScope.everHasFunds = true;
         }
 
+        ++index;
         if (index == $scope.wallets.length) {
           $scope.checkingBalance = false;
           $timeout(function() {
@@ -58,27 +58,28 @@ angular.module('copayApp.controllers').controller('tabSendController', function(
 
       profileService.getOrderedWallets({ onlyComplete: true }, function(orderedWallets) {        
         var walletsToTransfer = orderedWallets;
-        var walletList = [];
+        if(!orderedWallets) { 
+          walletsToTransfer = $scope.wallets;
+          $log.log("orderedWallets missing, using regular wallet list",orderedWallets)
+        } 
+        var walletList = []
         lodash.each(walletsToTransfer, function(v) {
-          walletService.getTxHistory(v,  {}, function(err, result) { 
-            if(result) {
-              $scope.hasFunds = true
-            }
-            walletList.push({
-              color: v.color,
-              name: v.name,
-              network: v.network,
-              isPrivKeyExternalString: v.isPrivKeyExternal(),
-              getPrivKeyExternalSourceNameString: v.getPrivKeyExternalSourceName(),
-              recipientType: 'wallet',
-              getAddress: function(cb) {
-                walletService.getAddress(v, false, cb);
-              },
-            });            
-          })
+          walletList.push({
+            color: v.color,
+            name: v.name,
+            network: v.network,
+            isPrivKeyExternalString: v.isPrivKeyExternal(),
+            getPrivKeyExternalSourceNameString: v.getPrivKeyExternalSourceName(),
+            recipientType: 'wallet',
+            getAddress: function(cb) {
+              walletService.getAddress(v, false, cb);
+            },
+          });            
         });
         originalList = originalList.concat(walletList);
-        if(done) {done()}
+        if(done) {
+          done()
+        }
       })
     }
   }
