@@ -52,37 +52,35 @@ angular.module('copayApp.controllers').controller('tabSendController', function(
 
   var updateWalletsList = function() {
 
-    var networkResult = lodash.countBy($scope.wallets, 'network');
-
-    $scope.showTransferCard = $scope.hasWallets && $scope.wallets.length > 1;// (networkResult.livenet > 1 || networkResult.testnet > 1);
+    $scope.showTransferCard = $scope.hasWallets && $scope.wallets.length > 1;
 
     if ($scope.showTransferCard) {
 
-      profileService.getOrderedWallets({ onlyComplete: true }, function(orderedWallets) {         
-        var walletsToTransfer = orderedWallets;
-        // if (!(networkResult.livenet > 1)) {
-        //   walletsToTransfer = lodash.filter(walletsToTransfer, function(item) {
-        //     return item.network == 'testnet';
-        //   });
-        // }
-        // if (!(networkResult.testnet > 1)) {
-        //   walletsToTransfer = lodash.filter(walletsToTransfer, function(item) {
-        //     return item.network == 'livenet';
-        //   });
-        // }
+      profileService.getOrderedWallets({ onlyComplete: true }, function(orderedWallets) {        
+        $log.log("orderedWallets",orderedWallets)
+        var walletsToTransfer; = orderedWallets;
+        if(!orderedWallets) { 
+          walletsToTransfer = $scope.wallets;
+                  $log.log("orderedWallets missing, using regular wallet list",orderedWallets)
+        } 
         var walletList = [];
         lodash.each(walletsToTransfer, function(v) {
-          walletList.push({
-            color: v.color,
-            name: v.name,
-            network: v.network,
-            isPrivKeyExternalString: v.isPrivKeyExternal(),
-            getPrivKeyExternalSourceNameString: v.getPrivKeyExternalSourceName(),
-            recipientType: 'wallet',
-            getAddress: function(cb) {
-              walletService.getAddress(v, false, cb);
-            },
-          });
+          v.getTxHistory(function(err, result) {
+            if(result) {
+              $scope.hasFunds = true
+            }
+            walletList.push({
+              color: v.color,
+              name: v.name,
+              network: v.network,
+              isPrivKeyExternalString: v.isPrivKeyExternal(),
+              getPrivKeyExternalSourceNameString: v.getPrivKeyExternalSourceName(),
+              recipientType: 'wallet',
+              getAddress: function(cb) {
+                walletService.getAddress(v, false, cb);
+              },
+            });            
+          })
         });
         originalList = originalList.concat(walletList);
       })
