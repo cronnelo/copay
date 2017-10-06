@@ -1,20 +1,23 @@
 'use strict';
 angular.module('copayApp.directives')
-  .directive('validAddress', ['$rootScope', 'bitcore', 'customNetworks',
-    function($rootScope, bitcore, customNetworks) {
+  .directive('validAddress', ['$rootScope', 'bitcore', 'customNetworks', '$q',
+    function($rootScope, bitcore, customNetworks, $q) {
       return {
         require: 'ngModel',
-        link: function(scope, elem, attrs, ctrl) {
+        link: function(scope, elem, attrs, ngModel) {
           var URI = bitcore.URI;
-          var Address = bitcore.Address
-          var validator = function(value) {
-            customNetworks.getAll().then(function(CUSTOMNETWORKS) {
-              
+          var Address = bitcore.Address;
 
+          ngModel.$asyncValidators.isValidAddress = isValidAddress;
+
+          function isValidAddress(value) {
+            var defer = $q.defer();
+
+            customNetworks.getAll().then(function(CUSTOMNETWORKS) {
               // Regular url
               if (/^https?:\/\//.test(value)) {
-                ctrl.$setValidity('validAddress', true);
-                return value;
+                defer.resolve();
+                return;
               }
 
               // Bip21 uri
@@ -25,35 +28,36 @@ angular.module('copayApp.directives')
                 if (isUriValid) {
                   uri = new URI(value);
                   for(var i in CUSTOMNETWORKS) {
-                    if(Address.isValid(value, i.name)) {
-                      isNetworkValid = true
+                    if(Address.isValid(value, i)) {
+                      isNetworkValid = true;
+                      defer.resolve();
+                      break;
                     }
                   }
                 }
-                ctrl.$setValidity('validAddress', isUriValid && isNetworkValid);
-                return value;
-              }
-
-              if (typeof value == 'undefined') {
-                ctrl.$pristine = true;
+                if (!isNetworkValid) {
+                  defer.reject();
+                }
                 return;
               }
 
               // Regular Address
               var isNetworkValid = false;
               for(var i in CUSTOMNETWORKS) {
-                if(Address.isValid(value.toString(), i.name)) {
-                  isNetworkValid = true
+                if(Address.isValid(value.toString(), i)) {
+                  isNetworkValid = true;
+                  defer.resolve();
+                  break;
                 }
               }
-              ctrl.$setValidity('validAddress', isNetworkValid);
-              return value;
-            })
+
+              if (!isNetworkValid) {
+                defer.reject();
+              }
+            });
+
+            return defer.promise;
           };
-
-
-          ctrl.$parsers.unshift(validator);
-          ctrl.$formatters.unshift(validator);
         }
       };
     }
