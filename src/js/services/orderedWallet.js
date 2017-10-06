@@ -2,7 +2,7 @@
 
 angular
   .module('copayApp.services')
-  .factory('orderedWallet', function(storageService, lodash) {
+  .factory('orderedWallet', function($log, storageService, lodash) {
     var service = {
       arrange: arrange
     };
@@ -28,7 +28,7 @@ angular
 
           wallets.splice(index, 0, wallets.splice(walletIndex, 1)[0]);
         });
-
+        // $log.log('wallets',wallets)
         callback(wallets);
       });
     }

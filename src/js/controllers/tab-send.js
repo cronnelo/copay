@@ -50,22 +50,17 @@ angular.module('copayApp.controllers').controller('tabSendController', function(
     });
   };
 
-  var updateWalletsList = function() {
+  var updateWalletsList = function(done) {
 
     $scope.showTransferCard = $scope.hasWallets && $scope.wallets.length > 1;
 
     if ($scope.showTransferCard) {
 
       profileService.getOrderedWallets({ onlyComplete: true }, function(orderedWallets) {        
-        $log.log("orderedWallets",orderedWallets)
-        var walletsToTransfer; = orderedWallets;
-        if(!orderedWallets) { 
-          walletsToTransfer = $scope.wallets;
-                  $log.log("orderedWallets missing, using regular wallet list",orderedWallets)
-        } 
+        var walletsToTransfer = orderedWallets;
         var walletList = [];
         lodash.each(walletsToTransfer, function(v) {
-          v.getTxHistory(function(err, result) {
+          walletService.getTxHistory(v,  {}, function(err, result) { 
             if(result) {
               $scope.hasFunds = true
             }
@@ -83,6 +78,7 @@ angular.module('copayApp.controllers').controller('tabSendController', function(
           })
         });
         originalList = originalList.concat(walletList);
+        if(done) {done()}
       })
     }
   }
@@ -225,9 +221,11 @@ angular.module('copayApp.controllers').controller('tabSendController', function(
       return;
     }
     updateHasFunds();
-    updateWalletsList();
-    updateContactsList(function() {
-      updateList();
-    });
+    updateWalletsList(function() {
+
+      updateContactsList(function() {
+        updateList();
+      });
+    })
   });
 });
