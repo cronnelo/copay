@@ -19,9 +19,14 @@
           </span>
       </div>
       <div class="list card"  ng-if="timer" ng-show="bitlox.isMobile && !bitlox.connected">
-        <a class="item item-remove-animate" ng-click="refreshBitlox($event)">
-          <span  ng-if="api.getNumDevices() < 1">No devices found - </span>Press here to refresh
-        </a>
+        <div class="item item-remove-animate" ng-if="api.getNumDevices() < 1">
+          <span >No devices found</span><br /><br />
+          <button
+            class="button button-standard button-primary p10h"
+            ng-click="refreshBitlox($event)">
+            Scan for Bitlox Hardware wallets
+          </button>
+        </div>
         <a ng-repeat="device in api.getKnownDevices()"
            ng-click="connectBle(device.address, false)"
            style="padding-top: 2rem; padding-bottom: 2rem"
