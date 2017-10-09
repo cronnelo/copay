@@ -51,6 +51,10 @@
     .item-note {
       color: $v-light-gray;
     }
+
+    #address.ng-invalid {
+      color: $v-error-color;
+    }
   }
 }
 #view-address-book {
