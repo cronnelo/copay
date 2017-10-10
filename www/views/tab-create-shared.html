@@ -173,10 +173,12 @@
         </div> <!-- advanced -->
       </div> <!-- list -->
 
-      <button type="submit" class="button button-standard button-primary"
-        ng-disabled="setupForm.$invalid || ((encrypt && !formData.passwordSaved) || encrypt && ((formData.seedSource.id == 'new' && !formData.createPassphrase) || (formData.seedSource.id == 'set' && !formData.passphrase)))">
-        <span translate>Create {{formData.requiredCopayers}}-of-{{formData.totalCopayers}} wallet</span>
-      </button>
+      <div class="padding">
+        <button type="submit" class="button button-standard button-primary"
+          ng-disabled="setupForm.$invalid || ((encrypt && !formData.passwordSaved) || encrypt && ((formData.seedSource.id == 'new' && !formData.createPassphrase) || (formData.seedSource.id == 'set' && !formData.passphrase)))">
+          <span translate>Create {{formData.requiredCopayers}}-of-{{formData.totalCopayers}} wallet</span>
+        </button>
+      </div>
     </form>
   </ion-content>
   <network-selector

@@ -145,10 +145,12 @@
         </div> <!-- advanced -->
       </div> <!-- list -->
 
-      <button type="submit" class="button button-standard button-primary"
-        ng-disabled="setupForm.$invalid || ((encrypt && !formData.passwordSaved) || encrypt && ((formData.seedSource.id == 'new' && !formData.createPassphrase) || (formData.seedSource.id == 'set' && !formData.passphrase)))"
-        translate>Join
-      </button>
+      <div class="padding">
+        <button type="submit" class="button button-standard button-primary"
+          ng-disabled="setupForm.$invalid || ((encrypt && !formData.passwordSaved) || encrypt && ((formData.seedSource.id == 'new' && !formData.createPassphrase) || (formData.seedSource.id == 'set' && !formData.passphrase)))"
+          translate>Join
+        </button>
+      </div>
     </form>
   </ion-content>
 </ion-view>
