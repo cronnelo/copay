@@ -296,8 +296,8 @@ angular.module('copayApp.controllers').controller('walletDetailsController', fun
 
     scrollPos = scrollPos || 0;
     var amountHeight = 210 - scrollPos;
-    if (amountHeight < 80) {
-      amountHeight = 80;
+    if (amountHeight < 110) {
+      amountHeight = 110;
     }
     var contentMargin = amountHeight;
     if (contentMargin > 210) {
