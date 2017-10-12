@@ -19,17 +19,16 @@ angular.module('copayApp.directives')
         elem.bind('click', function() {
           var data = scope.copyToClipboard;
           if (!data) return;
-          if(platformInfo.isAndroid) { 
+//           if(platformInfo.isAndroid) {
+          if(clipboard.supported) {
             clipboard.copyText(data);
           } else if (isCordova) {
-            cordova.plugins.clipboard.copy(data, 
-              function() { $log.log('successfully copied to board')}, 
+            cordova.plugins.clipboard.copy(data,
+              function() { $log.log('successfully copied to board')},
               function(err) { $log.log(err); $log.log('copy to board error')}
             );
           } else if (isNW) {
             nodeWebkitService.writeToClipboard(data);
-          } else if (clipboard.supported) {
-            clipboard.copyText(data);
           } else {
             // No supported
             return;
