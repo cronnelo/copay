@@ -22,7 +22,8 @@ angular.module('copayApp.services').factory('addressbookService', function(bitco
     async.parallel([
       async.apply(storageService.getAddressbook, 'testnet'),
       async.apply(storageService.getAddressbook, 'livenet'),
-      async.apply(storageService.getAddressbook, 'aureus')
+      async.apply(storageService.getAddressbook, 'aureus'),
+      async.apply(storageService.getAddressbook, 'deuscoin')
     ], function(err, rawAddressbook) {
       if (err) return cb('Could not get the Addressbook');
 
