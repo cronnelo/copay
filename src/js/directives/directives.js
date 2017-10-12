@@ -8,54 +8,37 @@ angular.module('copayApp.directives')
           var URI = bitcore.URI;
           var Address = bitcore.Address;
 
-          ngModel.$asyncValidators.isValidAddress = isValidAddress;
+          ngModel.$validators.isValidAddress = isValidAddress;
 
           function isValidAddress(value) {
-            var defer = $q.defer();
             var CUSTOMNETWORKS = customNetworks.getStatic();
+
             // Regular url
             if (/^https?:\/\//.test(value)) {
-              defer.resolve();
-              return;
+              return true;
             }
 
             // Bip21 uri
-            if (/^[A-Za-z]+:[^\/]/.test(value)) {
-              var uri, isAddressValidLivenet, isAddressValidTestnet;
+            if (/^[A-Za-z]i:[^\/]/.test(value)) {
               var isUriValid = URI.isValid(value);
-              var isNetworkValid = false
               if (isUriValid) {
-                uri = new URI(value);
                 for(var i in CUSTOMNETWORKS) {
-                  if(Address.isValid(value, i)) {
-                    isNetworkValid = true;
-                    defer.resolve();
-                    break;
+                  if(Address.isValid(value, i.name)) {
+                    return true;
                   }
                 }
               }
-              if (!isNetworkValid) {
-                defer.reject();
-              }
-              return;
             }
 
             // Regular Address
-            var isNetworkValid = false;
             for(var i in CUSTOMNETWORKS) {
-              if(Address.isValid(value.toString(), i)) {
-                isNetworkValid = true;
-                defer.resolve();
-                break;
+              if(Address.isValid(value.toString(), i.name)) {
+                return true;
               }
             }
 
-            if (!isNetworkValid) {
-              defer.reject();
-            }
-
-            return defer.promise;
-          };
+            return false;
+          }
         }
       };
     }
