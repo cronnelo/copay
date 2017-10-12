@@ -12,49 +12,47 @@ angular.module('copayApp.directives')
 
           function isValidAddress(value) {
             var defer = $q.defer();
+            var CUSTOMNETWORKS = customNetworks.getStatic();
+            // Regular url
+            if (/^https?:\/\//.test(value)) {
+              defer.resolve();
+              return;
+            }
 
-            customNetworks.getAll().then(function(CUSTOMNETWORKS) {
-              // Regular url
-              if (/^https?:\/\//.test(value)) {
-                defer.resolve();
-                return;
-              }
-
-              // Bip21 uri
-              if (/^[A-Za-z]+:[^\/]/.test(value)) {
-                var uri, isAddressValidLivenet, isAddressValidTestnet;
-                var isUriValid = URI.isValid(value);
-                var isNetworkValid = false
-                if (isUriValid) {
-                  uri = new URI(value);
-                  for(var i in CUSTOMNETWORKS) {
-                    if(Address.isValid(value, i)) {
-                      isNetworkValid = true;
-                      defer.resolve();
-                      break;
-                    }
+            // Bip21 uri
+            if (/^[A-Za-z]+:[^\/]/.test(value)) {
+              var uri, isAddressValidLivenet, isAddressValidTestnet;
+              var isUriValid = URI.isValid(value);
+              var isNetworkValid = false
+              if (isUriValid) {
+                uri = new URI(value);
+                for(var i in CUSTOMNETWORKS) {
+                  if(Address.isValid(value, i)) {
+                    isNetworkValid = true;
+                    defer.resolve();
+                    break;
                   }
                 }
-                if (!isNetworkValid) {
-                  defer.reject();
-                }
-                return;
               }
-
-              // Regular Address
-              var isNetworkValid = false;
-              for(var i in CUSTOMNETWORKS) {
-                if(Address.isValid(value.toString(), i)) {
-                  isNetworkValid = true;
-                  defer.resolve();
-                  break;
-                }
-              }
-
               if (!isNetworkValid) {
                 defer.reject();
               }
-            });
+              return;
+            }
+
+            // Regular Address
+            var isNetworkValid = false;
+            for(var i in CUSTOMNETWORKS) {
+              if(Address.isValid(value.toString(), i)) {
+                isNetworkValid = true;
+                defer.resolve();
+                break;
+              }
+            }
+
+            if (!isNetworkValid) {
+              defer.reject();
+            }
 
             return defer.promise;
           };
