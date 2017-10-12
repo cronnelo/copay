@@ -19,18 +19,20 @@ angular.module('copayApp.services').factory('addressbookService', function(bitco
   };
 
   root.list = function(cb) {
-    storageService.getAddressbook('testnet', function(err, ab) {
+    async.parallel([
+      async.apply(storageService.getAddressbook, 'testnet'),
+      async.apply(storageService.getAddressbook, 'livenet'),
+      async.apply(storageService.getAddressbook, 'aureus')
+    ], function(err, rawAddressbook) {
       if (err) return cb('Could not get the Addressbook');
 
-      if (ab) ab = JSON.parse(ab);
-
-      ab = ab || {};
-      storageService.getAddressbook('livenet', function(err, ab2) {
-        if (ab2) ab2 = JSON.parse(ab2);
-
-        ab2 = ab2 || {};
-        return cb(err, lodash.defaults(ab2, ab));
+      var addressbook = rawAddressbook.map(function(ab) {
+        return JSON.parse(ab || '{}');
       });
+
+      addressbook = lodash.defaults.apply(null, addressbook);
+
+      cb(err, addressbook);
     });
   };
 
