@@ -328,7 +328,32 @@ angular.module('copayApp').config(function(historicLogProvider, $provide, $logPr
         url: '/add',
         views: {
           'tab-home@tabs': {
-            templateUrl: 'views/add.html'
+            templateUrl: 'views/add.html',
+            controller: function($scope, $state, $ionicPopup, platformInfo) {
+              $scope.goToAttachBitlox = function() {
+                if (!platformInfo.isAndroid) {
+                  return $state.go('tabs.add.attach-bitlox');
+                }
+
+                $ionicPopup.show({
+                  template: 'Since Android 6.0, Bluetooth requires "coarse" location\
+                  permissions to scan for devices properly. This means that the app\
+                  can see which country/region you are in, NOT your exact location!\
+                  You must allow these location privileges to use the BitLox device,\
+                  but the scan will still work if you have Location Services turned\
+                  off. For increased privacy, ensure your location services are\
+                  turned off while using this app.',
+                  cssClass: 'no-header',
+                  buttons: [{
+                    text: 'Access my BitLox via BLE',
+                    type: 'button-primary',
+                    onTap: function() {
+                      return $state.go('tabs.add.attach-bitlox', { accessBLE: true });
+                    }
+                  }]
+                });
+              };
+            }
           }
         }
       })
@@ -358,6 +383,7 @@ angular.module('copayApp').config(function(historicLogProvider, $provide, $logPr
         views: {
           'tab-home@tabs': {
             templateUrl: 'views/bitlox/tab-attach-bitlox.html',
+            controller: 'WalletCtrl'
           },
         }
       })
