@@ -68,7 +68,7 @@ angular.module('copayApp.services').factory('txFormatService', function($filter,
     var config = configService.getSync().wallet.settings;
 
     var val = function() {
-      var v1 = parseFloat((rateService.toFiat(satoshis, config.alternativeIsoCode, network)).toFixed(2));
+      var v1 = parseFloat((rateService.toFiat(satoshis, config.alternativeIsoCode, network)));
       v1 = $filter('formatFiatAmount')(v1);
       if (!v1) return null;
 
