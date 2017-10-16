@@ -65,6 +65,11 @@
   i.icon>svg#Add_Contact path.st0 {
     stroke: $v-icon-negative-color;
   }
+
+  .ion-ios-search + input {
+    line-height: normal;
+  }
+
   .list {
     .item {
       color: #444;
