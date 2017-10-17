@@ -194,7 +194,6 @@ angular.module('copayApp.controllers').controller('amountController', function($
     var result = evaluate(formatedValue);
     $scope.allowSend = lodash.isNumber(result) && +result > 0;
     if (lodash.isNumber(result)) {
-      debugger;
       $scope.globalResult = isExpression($scope.amount) ? '= ' + processResult(result) : '';
       $scope.amountResult = $filter('formatFiatAmount')(toFiat(result));
       $scope.alternativeResult = txFormatService.formatAmount(fromFiat(result) * unitToSatoshi, true);
