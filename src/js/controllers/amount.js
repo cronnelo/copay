@@ -191,6 +191,7 @@ angular.module('copayApp.controllers').controller('amountController', function($
     var result = evaluate(formatedValue);
     $scope.allowSend = lodash.isNumber(result) && +result > 0;
     if (lodash.isNumber(result)) {
+      debugger;
       $scope.globalResult = isExpression($scope.amount) ? '= ' + processResult(result) : '';
       $scope.amountResult = $filter('formatFiatAmount')(toFiat(result));
       $scope.alternativeResult = txFormatService.formatAmount(fromFiat(result) * unitToSatoshi, true);
@@ -211,14 +212,9 @@ angular.module('copayApp.controllers').controller('amountController', function($
 
   function toFiat(val) {
     var network = customNetworks.getStatic()[$scope.network];
-    var _fiat = rateService.toFiat(val * unitToSatoshi, $scope.alternativeIsoCode, network);
-
-    if (_fiat.toFixed(2) === "0.00" && _fiat > 0) {
-      _fiat = "0.01";
-    }
-
-    return parseFloat(_fiat);
-  };
+    var fiat = rateService.toFiat(val * unitToSatoshi, $scope.alternativeIsoCode, network);
+    return parseFloat(fiat);
+  }
 
   function evaluate(val) {
     var result;
