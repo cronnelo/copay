@@ -43,7 +43,7 @@ angular.module('copayApp.filters', [])
         var value = numberFilter(amount, fractionSize);
 
         if (value === '0.00' && amount > 0) {
-          value = '0.01';
+          value = '< 0.01';
         }
 
         var sep = value.indexOf(formats.DECIMAL_SEP);
