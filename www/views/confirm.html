@@ -86,8 +86,9 @@
             <span>{{tx.txp[wallet.id].alternativeFeeStr || '...'}}&nbsp;
             <span class="fee-rate" ng-if="tx.txp[wallet.id].feeRatePerStr"> &middot;
                 <i class="ion-alert-circled warn" ng-show="tx.txp[wallet.id].feeToHigh"></i> &nbsp;
-                <span class="fee-rate" ng-class="{'warn':tx.txp[wallet.id].feeToHigh}" translate> {{tx.txp[wallet.id].feeRatePerStr}}  of the sending amount </span>
-
+                <span class="fee-rate" ng-class="{'warn':tx.txp[wallet.id].feeToHigh}" translate>
+                  {{tx.txp[wallet.id].feeRatePerStr}}  of the sending amount
+                </span>
             </span>
           </span>
           </span>
