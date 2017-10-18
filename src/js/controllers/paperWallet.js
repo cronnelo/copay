@@ -1,5 +1,5 @@
 angular.module('copayApp.controllers').controller('paperWalletController',
-  function($scope, $timeout, $log, $ionicModal, $ionicHistory, feeService, popupService, gettextCatalog, platformInfo, configService, profileService, $state, bitcore, ongoingProcess, txFormatService, $stateParams, walletService) {
+  function($scope, $timeout, $log, $ionicModal, $ionicHistory, feeService, popupService, gettextCatalog, platformInfo, configService, profileService, $state, bitcore, ongoingProcess, txFormatService, $stateParams, walletService, derivationPathHelper, customNetworks) {
     var defaults = configService.getDefaults()
     function _scanFunds(cb) {
       function getPrivateKey(scannedKey, isPkEncrypted, passphrase, cb) {
@@ -112,6 +112,16 @@ angular.module('copayApp.controllers').controller('paperWalletController',
       $scope.showWallets = true;
     };
 
+    $scope.showNetworkSelector = function() {
+      $scope.networkSelectorTitle = gettextCatalog.getString('Select currency');
+      $scope.showNetworks = true;
+    };
+
+    $scope.onNetworkSelect = function(network) {
+      $scope.network = network;
+      $scope.showNetworks = false;
+    };
+
     $scope.$on("$ionicView.beforeEnter", function(event, data) {
       $scope.scannedKey = (data.stateParams && data.stateParams.privateKey) ? data.stateParams.privateKey : null;
       $scope.isPkEncrypted = $scope.scannedKey ? ($scope.scannedKey.substring(0, 2) == '6P') : null;
@@ -127,6 +137,11 @@ angular.module('copayApp.controllers').controller('paperWalletController',
         $scope.noMatchingWallet = true;
         return;
       }
+
+      customNetworks.getAll().then(function(networks) {
+        $scope.networks = networks;
+        $scope.network = networks[defaults.defaultNetwork.name];
+      });
     });
 
     $scope.$on("$ionicView.enter", function(event, data) {
