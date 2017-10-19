@@ -27,21 +27,25 @@ action-sheet {
         box-shadow: 0px 2px 13px 3px rgba(0, 0, 0, .3);
       }
 
-      .close-box {
-        padding-bottom: 1.25rem;
-        @include clearfix();
-      }
-
-      .close {
-        cursor: pointer;
-        float: right;
-      }
-
       .header {
         font-weight: 600;
         padding-bottom: 1rem;
         border-bottom: 1px solid $border-color;
         margin-bottom: 1px;
+
+        & > div {
+          display: inline-block;
+          width: 49%;
+        }
+
+        & > .action {
+          display: inline-flex;
+          justify-content: flex-end;
+        }
+
+        .icon-close {
+          cursor: pointer;
+        }
       }
     }
 

@@ -1,8 +1,10 @@
 <action-sheet action-sheet-show="show" class="log-options">
-  <div class="close-box">
-    <img class="close" src="img/x.svg" alt="close" ng-click="hide()">
+  <div class="header">
+    <div class="title">{{title}}</div>
+    <div class="action">
+      <img class="icon-close" src="img/icon-close.svg" alt="close" ng-click="hide()">
+    </div>
   </div>
-  <div class="header" translate="">Log options</div>
   <div ng-include="'views/includes/checkBar.html'"></div>
   <a class="item item-icon-left entry no-border" copy-to-clipboard="onCopy()" ng-click="hide()">
     <i class="icon ion-clipboard"></i>
