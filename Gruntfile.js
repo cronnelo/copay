@@ -220,6 +220,24 @@ module.exports = function(grunt) {
         src: 'bower_components/ionic/release/js/ionic.bundle.min.js',
         dest: 'www/lib/'
       },
+      react: {
+        expand: true,
+        flatten: true,
+        src: 'bower_components/react/react.development.js',
+        dest: 'www/lib/'
+      },
+      react_dom: {
+        expand: true,
+        flatten: true,
+        src: 'bower_components/react/react-dom.development.js',
+        dest: 'www/lib/'
+      },
+      ngReact: {
+        expand: true,
+        flatten: true,
+        src: 'bower_components/ngReact/ngReact.js',
+        dest: 'www/lib/'
+      },
       linux: {
         files: [{
           expand: true,
@@ -271,7 +289,7 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask('default', ['nggettext_compile', 'exec:appConfig', 'exec:externalServices', 'browserify', 'sass', 'concat', 'copy:ionic_fonts', 'copy:ionic_js']);
+  grunt.registerTask('default', ['nggettext_compile', 'exec:appConfig', 'exec:externalServices', 'browserify', 'sass', 'concat', 'copy:ionic_fonts', 'copy:ionic_js', 'copy:react', 'copy:react_dom', 'copy:ngReact']);
   grunt.registerTask('prod', ['default', 'uglify']);
   grunt.registerTask('translate', ['nggettext_extract']);
   grunt.registerTask('desktop', ['prod', 'nwjs', 'copy:linux', 'compress:linux']);
