@@ -11,6 +11,7 @@
      on-refresh="onRefresh()">
    </ion-refresher>
 
+
     <div class="list card release ng-hide" ng-show="newRelease">
       <i class="item icon big-icon-svg">
         <img src="img/icon-update.svg" class="bg"/>
@@ -62,6 +63,10 @@
       <a class="item item-sub activity" ng-repeat="notification in notifications" ng-click="openNotificationModal(notification)">
         <span ng-include="'views/includes/walletActivity.html'"></span>
       </a>
+    </div>
+
+    <div>
+      <greetings message="reactMessage"/>
     </div>
 
     <div class="list card">

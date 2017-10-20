@@ -19,6 +19,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
     $scope.showRateCard = {};
     $scope.defaults = {};
     $scope.showReorder = false;
+    $scope.reactMessage = 'from var in tab home';
 
     $scope.$on("$ionicView.afterEnter", function() {
       startupService.ready();

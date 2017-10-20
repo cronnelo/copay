@@ -22,6 +22,7 @@ var modules = [
   'copayApp.controllers',
   'copayApp.directives',
   'copayApp.addons',
+  'react',
   'app.core',
   'app.wallet',
   'app.util'
