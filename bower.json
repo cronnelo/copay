@@ -23,7 +23,9 @@
     "bytebuffer": "5.0.1",
     "protobuf": "5.0.1",
     "bignumber.js": "^4.0.0",
-    "async": "^2.1.5"
+    "async": "^2.1.5",
+    "ngReact": "^0.5.0",
+    "react": "^16.0.0"
   },
   "resolutions": {
     "angular": "1.5.3",
