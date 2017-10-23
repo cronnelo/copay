@@ -38,6 +38,8 @@ angular.module('copayApp.controllers').controller('amountController', function($
     $scope.customAmount = data.stateParams.customAmount;
     $scope.network = (new bitcore.Address($scope.toAddress)).network.name;
     $scope.unitName = "BTC";
+    $scope.amountSign = '&asymp;';
+
     customNetworks.getAll().then(function(CUSTOMNETWORKS) {
       if(CUSTOMNETWORKS[$scope.network]) {
         $scope.unitName = CUSTOMNETWORKS[$scope.network].symbol;
@@ -182,6 +184,7 @@ angular.module('copayApp.controllers').controller('amountController', function($
 
   $scope.resetAmount = function() {
     $scope.amount = $scope.alternativeResult = $scope.amountResult = $scope.globalResult = '';
+    $scope.amountSign = '&asymp;';
     $scope.allowSend = false;
     checkFontSize();
   };
@@ -211,14 +214,16 @@ angular.module('copayApp.controllers').controller('amountController', function($
 
   function toFiat(val) {
     var network = customNetworks.getStatic()[$scope.network];
-    var _fiat = rateService.toFiat(val * unitToSatoshi, $scope.alternativeIsoCode, network);
+    var fiat = rateService.toFiat(val * unitToSatoshi, $scope.alternativeIsoCode, network);
 
-    if (_fiat.toFixed(2) === "0.00" && _fiat > 0) {
-      _fiat = "0.01";
+    if (fiat.toFixed(2) === '0.00' && fiat > 0) {
+      $scope.amountSign = '&lt;';
+    } else {
+      $scope.amountSign = '&asymp;';
     }
 
-    return parseFloat(_fiat);
-  };
+    return parseFloat(fiat);
+  }
 
   function evaluate(val) {
     var result;

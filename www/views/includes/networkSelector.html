@@ -1,18 +1,15 @@
 <action-sheet action-sheet-show="show" class="network-selector">
-  <div class="close-box">
-    <img class="close" src="img/x.svg" alt="close" ng-click="hide()">
+  <div class="header">
+    <div class="title">{{title}}</div>
+    <div class="action">
+      <img class="icon-close" src="img/icon-close.svg" alt="close" ng-click="hide()">
+    </div>
   </div>
-  <!-- <a ng-click="hide()">Close</a> -->
-  <div class="header">{{title}}</div>
-  <a
-    ng-repeat="(key,net) in networks"
-    class="item item-icon-left item-big-icon-left item-icon-right wallet network"
-    ng-click="selectNetwork(net)"
-  >
-    <i class="icon big-icon-svg" wallet-icon data-wallet="net">
-    </i>
+  <a ng-repeat="(key,net) in networks"
+     class="item item-icon-left item-big-icon-left item-icon-right wallet network"
+     ng-click="selectNetwork(net)">
+    <i class="icon big-icon-svg" wallet-icon data-wallet="net"></i>
     <span>{{net.alias}}</span>
     <img class="check" src="img/check.svg" ng-show="selectedNetwork.name === net.name"/>
-
   </a>
 </action-sheet>
