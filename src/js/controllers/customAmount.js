@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('copayApp.controllers').controller('customAmountController', function($scope, $ionicHistory, txFormatService, platformInfo, configService, profileService, walletService, popupService, customNetworks) {
+angular.module('copayApp.controllers').controller('customAmountController', function($scope, $filter, $ionicHistory, txFormatService, platformInfo, configService, rateService, profileService, walletService, popupService, customNetworks) {
 
   var showErrorAndBack = function(title, msg) {
     popupService.showAlert(title, msg, function() {
@@ -20,10 +20,12 @@ angular.module('copayApp.controllers').controller('customAmountController', func
 
     $scope.wallet = profileService.getWallet(walletId);
     $scope.network = $scope.wallet.network;
-    if($scope.network === "livenet") {$scope.network = "bitcoin";}
+
+    if($scope.network === 'livenet') {
+      $scope.network = 'bitcoin';
+    }
 
     walletService.getAddress($scope.wallet, false, function(err, addr) {
-      
       if (!addr) {
         showErrorAndBack('Error', 'Could not get the address');
         return;
@@ -35,11 +37,23 @@ angular.module('copayApp.controllers').controller('customAmountController', func
         data.stateParams.amount, 
         data.stateParams.currency);
 
-      $scope.amountUnitStr = parsedAmount.amountUnitStr + " " + data.stateParams.currency;
+      $scope.amountUnitStr = parsedAmount.amountUnitStr + ' ' + data.stateParams.currency;
       $scope.amountBtc = parsedAmount.amount; // BTC
+
       customNetworks.getAll().then(function(CUSTOMNETWORKS) {
-        $scope.altAmountStr = txFormatService.formatAlternativeStr(parsedAmount.amountSat, CUSTOMNETWORKS[$scope.network]);
-      })
+        var config = configService.getSync().wallet.settings;
+        var network = CUSTOMNETWORKS[$scope.network];
+
+        var fiat = rateService.toFiat(parsedAmount.amountSat, config.alternativeIsoCode, network);
+
+        if (fiat.toFixed(2) === '0.00' && fiat > 0) {
+          $scope.amountSign = '&lt;';
+        } else {
+          $scope.amountSign = '&asymp;';
+        }
+
+        $scope.altAmountStr = $filter('formatFiatAmount')(fiat) + ' ' + config.alternativeIsoCode;
+      });
     });
   });
 

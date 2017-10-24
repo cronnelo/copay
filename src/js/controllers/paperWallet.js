@@ -1,24 +1,26 @@
 angular.module('copayApp.controllers').controller('paperWalletController',
-  function($scope, $timeout, $log, $ionicModal, $ionicHistory, feeService, popupService, gettextCatalog, platformInfo, configService, profileService, $state, bitcore, ongoingProcess, txFormatService, $stateParams, walletService) {
-    var defaults = configService.getDefaults()
+  function($scope, $timeout, $log, $ionicModal, $ionicHistory, feeService, popupService, gettextCatalog, platformInfo, configService, profileService, $state, bitcore, ongoingProcess, txFormatService, $stateParams, walletService, derivationPathHelper, customNetworks) {
+    var defaults = configService.getDefaults();
+
     function _scanFunds(cb) {
       function getPrivateKey(scannedKey, isPkEncrypted, passphrase, cb) {
         if (!isPkEncrypted) return cb(null, scannedKey);
         $scope.wallet.decryptBIP38PrivateKey(scannedKey, passphrase, null, cb);
-      };
+      }
 
       function getBalance(privateKey, cb) {
         $scope.wallet.getBalanceFromPrivateKey(privateKey, cb);
-      };
+      }
 
       function checkPrivateKey(privateKey) {
         try {
-          new bitcore.PrivateKey(privateKey, defaults.networkName);
+          var networkName = $scope.network && $scope.network.name || defaults.defaultNetwork.name;
+          new bitcore.PrivateKey(privateKey, networkName);
         } catch (err) {
           return false;
         }
         return true;
-      };
+      }
 
       getPrivateKey($scope.scannedKey, $scope.isPkEncrypted, $scope.passphrase, function(err, privateKey) {
         if (err) return cb(err);
@@ -29,7 +31,7 @@ angular.module('copayApp.controllers').controller('paperWalletController',
           return cb(null, privateKey, balance);
         });
       });
-    };
+    }
 
     $scope.scanFunds = function() {
       ongoingProcess.set('scanning', true);
@@ -112,6 +114,16 @@ angular.module('copayApp.controllers').controller('paperWalletController',
       $scope.showWallets = true;
     };
 
+    $scope.showNetworkSelector = function() {
+      $scope.networkSelectorTitle = gettextCatalog.getString('Select currency');
+      $scope.showNetworks = true;
+    };
+
+    $scope.onNetworkSelect = function(network) {
+      $scope.network = network;
+      $scope.showNetworks = false;
+    };
+
     $scope.$on("$ionicView.beforeEnter", function(event, data) {
       $scope.scannedKey = (data.stateParams && data.stateParams.privateKey) ? data.stateParams.privateKey : null;
       $scope.isPkEncrypted = $scope.scannedKey ? ($scope.scannedKey.substring(0, 2) == '6P') : null;
@@ -127,6 +139,11 @@ angular.module('copayApp.controllers').controller('paperWalletController',
         $scope.noMatchingWallet = true;
         return;
       }
+
+      customNetworks.getAll().then(function(networks) {
+        $scope.networks = networks;
+        $scope.network = networks[defaults.defaultNetwork.name];
+      });
     });
 
     $scope.$on("$ionicView.enter", function(event, data) {

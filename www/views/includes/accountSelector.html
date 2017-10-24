@@ -1,8 +1,10 @@
 <action-sheet action-sheet-show="show" class="account-selector">
-  <div class="close-box">
-    <img class="close" src="img/x.svg" alt="close" ng-click="hide()">
+  <div class="header">
+    <div class="title">{{title}}</div>
+    <div class="action">
+      <img class="icon-close" src="img/icon-close.svg" alt="close" ng-click="hide()">
+    </div>
   </div>
-  <div class="header">{{title}}</div>
   <a ng-repeat="a in accounts track by $index"
     class="item item-icon-left item-big-icon-left item-icon-right account" ng-click="selectAccount(a)">
     <i class="icon big-icon-svg">
