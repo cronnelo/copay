@@ -13,7 +13,7 @@
       <div class="list card" ng-hide="bitlox.connected" ng-if="!bitlox.isMobile && timer">
           <span class="item">
               No BitLox device detected.<br /><br />
-              Please turn on your BitLox, enter the device PIN, and select USB mode.<br/><br/>
+              Please turn on your BitLox, enter the device PIN, select USB mode, and then touch the refresh button on this screen.<br/><br/>
               <button class="button button-standard button-primary" ng-click="reset()">Refresh</button>
               <button class="button button-standard button-secondary" ng-if="closeModal" ng-click="closeModal()">Cancel</button>              
           </span>
@@ -91,7 +91,7 @@
       </div>
     <!-- </div> -->
 
-    <div class="list card"  ng-hide="bitlox.connected" ng-if="!bitlox.isMobile && timer">
+    <div class="list card"  ng-if="!bitlox.connected && timer">
       <a ng-click="openBitlox();"  ng-click="openBitlox($event)" class="open-bitlox item item-sub item-icon-left item-big-icon-left">
        <i class="icon big-icon-svg">
          <img src="img/icon-wallet-bitlox.svg" class="bg wallet icon-create-wallet"/>

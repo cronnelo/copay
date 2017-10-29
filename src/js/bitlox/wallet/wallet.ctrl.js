@@ -169,11 +169,11 @@
             profileService.createWallet(opts, function(err, walletId) {
               // $log.debug("DONE IMPORTING")
               if (err) {
-                $log.error(err)
+                $log.error("create wallet error, trying import", err)
 
 
                 profileService.importExtendedPublicKey(opts, function(err2, walletId) {
-                  // $log.warn("DONE IMPORTING")
+                  $log.warn("DONE IMPORTING")
                   if (err2) {
                     popupService.showAlert(gettextCatalog.getString('Error'), err2);
                     $ionicLoading.hide();
@@ -244,8 +244,7 @@
                     // only read wallets if we are on the add bitlox screen
                     if($state.current.url === '/attach-bitlox') {
                         $scope.readWallets(); 
-                    }
-                    $timeout.cancel($rootScope.bitloxConnectTimer)              
+                    }             
                   break;
               case api.STATUS_IDLE:
                   $scope.bitlox.connectAttempted = true;
@@ -421,7 +420,8 @@
 
         $scope.initializeDevice = function() {
             var session = new Date().getTime(true);
-            api.initialize(session).then(function(res) {
+            $timeout.cancel($scope.timeout) 
+            api.initialize(session).then(function(res) {                
                 if(!res || res.type === api.TYPE_ERROR) {
                     $ionicLoading.hide();
                     popupService.showAlert(gettextCatalog.getString('Error'), "BitLox Initialization Error.");
@@ -456,6 +456,7 @@
                     $timeout(function() {
                         api.device().then(function() {
                             if(api.getStatus() === api.STATUS_IDLE) {
+
                                 $scope.readWallets();
                             }
                         })
