@@ -48,6 +48,11 @@
                    ng-model="addressbookEntry.address"
                    valid-address
                    required>
+            <p ng-show="addressbookForm.address.$invalid && addressbookForm.address.$dirty"
+               class="invalid-field"
+               translate>
+              Invalid Address
+            </p>
           </div>
           <div class="qr-scan-icon">
             <qr-scanner on-scan="onQrCodeScannedAddressBook(data, addressbookForm)"></qr-scanner>

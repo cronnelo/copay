@@ -58,6 +58,11 @@
       color: $v-error-color;
     }
   }
+  .invalid-field {
+    color: $v-error-color;
+    font-style: italic;
+    padding-top: 4px;
+  }
 }
 #view-address-book {
   @extend .deflash-blue;
