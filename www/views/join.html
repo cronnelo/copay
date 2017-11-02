@@ -40,6 +40,18 @@
           </div>
         </div>
         <div class="item item-divider"></div>
+        <a class="item" ng-hide="formData.customParam" ng-click="showNetworkSelector()">
+          <span class="input-label" translate>Currency</span>
+          <div class="form-table -compact">
+            <i class="icon big-icon-svg" wallet-icon data-wallet="network"></i>
+            <div>{{network.alias}}</div>
+          </div>
+          <div class="item-icon-right">
+            <i class="icon bp-arrow-right"></i>
+          </div>
+        </a>
+        
+        <div class="item item-divider"></div>
 
         <a class="item" ng-click="showAdvChange()">
           <span translate ng-show="!showAdv">Show advanced options</span>
@@ -153,4 +165,12 @@
       </div>
     </form>
   </ion-content>
+  <network-selector
+      network-selector-title="networkSelectorTitle"
+      network-selector-networks="networks"
+      network-selector-selected-network="network"
+      network-selector-show="showNetworks"
+      network-selector-on-select="onNetworkSelect">
+    </network-selector>
+  
 </ion-view>
