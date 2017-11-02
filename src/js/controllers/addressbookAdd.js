@@ -36,6 +36,10 @@ angular.module('copayApp.controllers').controller('addressbookAddController', fu
     }, 100);
   };
 
+  $scope.clearAddressInput = function() {
+    $scope.addressbookEntry.address = '';
+  };
+
   $scope.goHome = function() {
     $ionicHistory.removeBackView();
     $state.go('tabs.home');
