@@ -34,11 +34,13 @@
                  ng-model="addressbookEntry.email">
         </label>
         <div>
-          <label class="item item-input item-stacked-label">
+          <div class="item item-input item-stacked-label">
             <span class="input-label" translate>Cryptocurrency Address</span>
-            <div class="input-notification">
+            <div class="input-notification" ng-click="clearAddressInput()">
               <i ng-show="addressbookForm.address.$valid" class="icon ion-checkmark-circled valid"></i>
-              <i ng-show="addressbookForm.address.$invalid && addressbookForm.address.$dirty" class="icon ion-close-circled invalid"></i>
+              <i ng-show="addressbookForm.address.$invalid && addressbookForm.address.$dirty"
+                 class="icon ion-close-circled invalid"
+                 ng-click="clearAddressInput()"></i>
             </div>
             <input type="text"
                    id="address"
@@ -46,7 +48,7 @@
                    ng-model="addressbookEntry.address"
                    valid-address
                    required>
-          </label>
+          </div>
           <div class="qr-scan-icon">
             <qr-scanner on-scan="onQrCodeScannedAddressBook(data, addressbookForm)"></qr-scanner>
           </div>
