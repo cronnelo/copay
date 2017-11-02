@@ -50,12 +50,12 @@ function HidApi($q, $log, $timeout, $interval, $rootScope,
 
     // monitor disconnect
     chrome.hid.onDeviceRemoved.addListener(function() {
-        $log.debug("DEVICE REMOVED", status);
+        $log.log("DEVICE REMOVED", status);
         
         if(status !== HidApi.STATUS_DISCONNECTED && status !== HidApi.STATUS_INITIALIZING) { $rootScope.$broadcast('bitloxConnectError'); }
 
         if(HidApi.currentPromise) { 
-            // $log.debug("rejecting promise after device removal")
+            // $log.log("rejecting promise after device removal")
             HidApi.currentPromise.reject(); 
         }
         HidApi.disconnect()
@@ -108,7 +108,7 @@ function HidApi($q, $log, $timeout, $interval, $rootScope,
         }
         HidApi.setStatus(HidApi.STATUS_CONNECTING);
         var deferred = HidApi.$q.defer();
-        // $log.debug("device: Getting HID devices");
+        // $log.log("device: Getting HID devices");
         chrome.hid.getDevices({
             filters: [{
                 vendorId: HidApi.VENDOR_ID,
@@ -129,10 +129,10 @@ function HidApi($q, $log, $timeout, $interval, $rootScope,
                 $log.error("device: No devices");
                 return deferred.reject(new Error("No devices"));
             }
-            // $log.debug("device: Got devices", devices);
-            // $log.debug("device: reportDescriptor",
+            // $log.log("device: Got devices", devices);
+            // $log.log("device: reportDescriptor",
                           // HidApi.abconv.ab2hex(devices[0].reportDescriptor));
-            $log.debug("device: Connecting to device", devices[0].deviceId);
+            $log.log("device: Connecting to device", devices[0].deviceId);
             chrome.hid.connect(devices[0].deviceId, function(connection) {
                 if (chrome.runtime.lastError) {
                     
@@ -148,7 +148,7 @@ function HidApi($q, $log, $timeout, $interval, $rootScope,
 
                     return deferred.reject(new Error("Failed to get connection"));
                 }
-                // $log.debug("device: Got connection", connection);
+                // $log.log("device: Got connection", connection);
                 HidApi.setStatus(HidApi.STATUS_INITIALIZING);
                 HidApi._device = connection.connectionId;
                 deferred.resolve(HidApi._device);
@@ -186,14 +186,14 @@ function HidApi($q, $log, $timeout, $interval, $rootScope,
                 break;
             }
         }
-        // $log.debug("delay ", milliseconds);
+        // $log.log("delay ", milliseconds);
     }
 
     HidApi.write = function(data) {
         var HidApi = this;
         var deferred = this.$q.defer();
         HidApi.setStatus(HidApi.STATUS_WRITING);
-        $log.debug("write:", data);
+        $log.log("write:", data);
         HidApi.device().then(function(dev) {
             // get the device
             if (dev === null) {
@@ -209,7 +209,7 @@ function HidApi($q, $log, $timeout, $interval, $rootScope,
             }
             // split into 16 byte chunks
             var chunks = HidApi.chunkData(data, 64);
-            // $log.debug("write:", chunks.length, "chunks");
+            // $log.log("write:", chunks.length, "chunks");
             // keep track of the total sent
             var totalSent = 0;
             async.eachSeries(chunks, function(thisData, next) {
@@ -220,13 +220,13 @@ function HidApi($q, $log, $timeout, $interval, $rootScope,
                     }
                     // write to the device
                     var thisAb = HidApi.abconv.hex2abPad(thisData, 32);
-//                     $log.debug("write: writing", thisAb.byteLength, "bytes", thisData, HidApi.abconv.ab2hex(thisAb));
+//                     $log.log("write: writing", thisAb.byteLength, "bytes", thisData, HidApi.abconv.ab2hex(thisAb));
                     chrome.hid.send(dev, 0, thisAb, function() {
                         if (chrome.runtime.lastError) {
                             $log.error("write error:", chrome.runtime.lastError);
                             return next(chrome.runtime.lastError);
                         }
-//                         $log.debug("write: wrote", thisAb.byteLength);
+//                         $log.log("write: wrote", thisAb.byteLength);
                         // add to the total sent
                         totalSent += thisAb.length;
                         pausecomp(150);
@@ -237,7 +237,7 @@ function HidApi($q, $log, $timeout, $interval, $rootScope,
                 if (err) {
                     return deferred.reject(err);
                 }
-                // $log.debug("write: finished");
+                // $log.log("write: finished");
                 HidApi.isWriting = false;
                 return deferred.resolve(totalSent);
             });
@@ -258,15 +258,15 @@ function HidApi($q, $log, $timeout, $interval, $rootScope,
         var HidApi = this;
         this.currentPromise = this.$q.defer();
         HidApi.device().then(function(dev) {
-            // $log.debug("hidRead: doing read");
+            // $log.log("hidRead: doing read");
             chrome.hid.receive(dev, function(reportId, data) {
                 if (chrome.runtime.lastError) {
                     return deferred.reject(chrome.runtime.lastError);
                 }
-                // $log.debug("hidRead: reportId", reportId);
+                // $log.log("hidRead: reportId", reportId);
                 var result = HidApi.abconv.ab2hex(data)
                     .replace(trimBeef, '$3');
-                // $log.debug("hidRead: RX", result);
+                // $log.log("hidRead: RX", result);
                 HidApi.currentPromise.resolve(result);
             });
         }, HidApi.currentPromise.reject);
@@ -283,10 +283,10 @@ function HidApi($q, $log, $timeout, $interval, $rootScope,
         }
         var HidApi = this;
         HidApi.readErr = false;
-//         $log.debug("read: data so far", serialData);
+//         $log.log("read: data so far", serialData);
         return this.hidRead().then(function(newData) {
             HidApi.isReading = true;
-//             $log.debug("reading");
+//             $log.log("reading");
             if (serialData===newData) {
                 return HidApi.read(serialData, wait);
             }
@@ -297,9 +297,9 @@ function HidApi($q, $log, $timeout, $interval, $rootScope,
 
             // 			bonehead forgot to put in the edge split case
       			if (((serialData[60] !== 2) || (serialData[61] !== 3)) && ((serialData[62] === 2) && (serialData[63] === 3))) {
-      			  //                     $log.debug('EDGE:' + sD);
+      			  //                     $log.log('EDGE:' + sD);
 		          serialData = serialData + HidApi.read(serialData, wait);
-      			  //                     $log.debug('EDGE WRAP:' + sD);
+      			  //                     $log.log('EDGE WRAP:' + sD);
       			}
 
 
@@ -322,11 +322,11 @@ function HidApi($q, $log, $timeout, $interval, $rootScope,
                 var payloadSize = serialData.substring(headerPosition + 8, headerPosition + 16);
                 // parse the hex number to decimal
                 var decPayloadSize = parseInt(payloadSize, 16);
-//                 $log.debug("decPayloadSize: ", decPayloadSize);
+//                 $log.log("decPayloadSize: ", decPayloadSize);
                 if(command === "0034"||command === "0023"||command === "2323"||decPayloadSize === 2302720 ||decPayloadSize === 14942671)
                 {
                 	decPayloadSize = 0 ;
-//                 	$log.debug("decPayloadSize set to 0: ", decPayloadSize);
+//                 	$log.log("decPayloadSize set to 0: ", decPayloadSize);
                 }
                 // if the content length is longer than the rest of the
                 // data, go get some more
@@ -360,7 +360,7 @@ function HidApi($q, $log, $timeout, $interval, $rootScope,
             type: null,
             payload: {}
         };
-        $log.debug(command, length, payload)
+        $log.log(command, length, payload)
 
         switch (command) {
         case "3A": // initialize
@@ -390,9 +390,9 @@ function HidApi($q, $log, $timeout, $interval, $rootScope,
             data.type = HidApi.TYPE_ERROR;
             var hidErr = Device.Failure.decodeHex(payload);
             data.payload = new Error(hidErr.error_message.toString('utf8'));
-            // $log.debug(data.payload);
+            // $log.log(data.payload);
             data.payload.code = parseInt(hidErr.error_code, 10);
-            // $log.debug("caught error");
+            // $log.log("caught error");
             break;
         case "36": // device uuid return
             data.type = HidApi.TYPE_UUID;
@@ -416,14 +416,14 @@ function HidApi($q, $log, $timeout, $interval, $rootScope,
             data.type = HidApi.TYPE_SIGNATURE_RETURN;
             var signedScripts = [];
             var sigs = Device.SignatureComplete.decodeHex(payload).signature_complete_data;
-            // $log.debug(sigs)
+            // $log.log(sigs)
             sigs.forEach(function(sig) {
                 var sigHex = sig.signature_data_complete.toString('hex');
-                // $log.debug('original sig', sigHex)
+                // $log.log('original sig', sigHex)
                 var sigSize = parseInt(sigHex.slice(0, 2), 16);
                 var sigChars = 2 + (sigSize * 2);
                 sigHex = sigHex.slice(0, sigChars);
-                // $log.debug('sliced up sig', sigHex)
+                // $log.log('sliced up sig', sigHex)
                 signedScripts.push(sigHex);
             });
             data.payload = {
@@ -452,7 +452,7 @@ function HidApi($q, $log, $timeout, $interval, $rootScope,
         HidApi.clearDevice();
         return HidApi.$timeout(function() {
             HidApi.setStatus(HidApi.STATUS_DISCONNECTED);
-            // $log.debug("closed");
+            // $log.log("closed");
         })
     };
 
@@ -466,16 +466,16 @@ function HidApi($q, $log, $timeout, $interval, $rootScope,
             && command.indexOf(this.commands.ping) != 0 
             && command.indexOf(this.commands.initPrefix) != 0
             && command.indexOf(this.commands.scan_wallet) != 0) {
-            // $log.debug("checking session with ping")
+            // $log.log("checking session with ping")
             return this._doCommand(this.commands.ping, this.TYPE_PONG).then(function(pingResult) {
-                // $log.debug(JSON.stringify(pingResult))
+                // $log.log(JSON.stringify(pingResult))
                 if(!pingResult) {
-                    $log.debug("session id not found or ping failed")
+                    $log.log("session id not found or ping failed")
                     return HidApi.$q.reject(new Error('BitLox session error. Try reconnecting the BitLox'))
                 }
                 var sessionIdHex = pingResult.payload.echoed_session_id.toString('hex')
                 if(sessionIdHex !== HidApi.sessionIdHex) {
-                    $log.debug("session id does not match")
+                    $log.log("session id does not match")
                     HidApi.disconnect();
                     return HidApi.$q.reject(new Error('BitLox session expired. Try reconnecting the BitLox'))
                 }
@@ -514,6 +514,7 @@ function HidApi($q, $log, $timeout, $interval, $rootScope,
                     if (data.type === HidApi.TYPE_PLEASE_ACK) {
                         return HidApi._doCommand(HidApi.commands.button_ack, expectedType);
                     } else if (expectedType) {
+                        $log.log("bitlox response HID", data, expectedType)
                         if (data.type === expectedType) {
 
                             if(data.type === HidApi.TYPE_INITIALIZE) {
@@ -563,7 +564,7 @@ function HidApi($q, $log, $timeout, $interval, $rootScope,
         this.sessionId = sessionId;
         var sessionIdHex = this.hexUtil.toPaddedHex(sessionId, 39) + '00';
         this.sessionIdHex = sessionIdHex;
-        // $log.debug(sessionId, "->", sessionIdHex);
+        // $log.log(sessionId, "->", sessionIdHex);
         var sessionIdBuf = this.hexUtil.hexToByteBuffer(sessionIdHex);
         sessionIdBuf.flip();
         var sessionIdProtoBuf = new Device.Initialize({
@@ -668,7 +669,7 @@ function HidApi($q, $log, $timeout, $interval, $rootScope,
             input.chain = parseInt(inputPath[1],10)
             input.chainIndex = parseInt(inputPath[2],10)
 
-            // $log.debug(inputPath)
+            // $log.log(inputPath)
 
             var handler = HidApi.makeAddressHandler(input.chain, input.chainIndex);
             // add to the handler array
@@ -687,7 +688,7 @@ function HidApi($q, $log, $timeout, $interval, $rootScope,
             if (err) {
                 return deferred.reject(err);
             }
-            // $log.debug(inputData)
+            // $log.log(inputData)
 
             var dataString = '00';
             dataString += opts.unsignedHex
@@ -697,15 +698,15 @@ function HidApi($q, $log, $timeout, $interval, $rootScope,
             dataString = inputData.join('') + dataString;
 
             var dataBuf = HidApi.hexUtil.hexToByteBuffer(dataString);
-            // $log.debug(addrHandlers,dataBuf)
+            // $log.log(addrHandlers,dataBuf)
             dataBuf.flip();
             var txMessage = new Device.SignTransactionExtended({
                 address_handle_extended: addrHandlers,
                 transaction_data: dataBuf
             });
             var cmd = HidApi.makeCommand(HidApi.commands.signTxPrefix, txMessage);
-            // $log.debug('sending')
-            // $log.debug(cmd)
+            // $log.log('sending')
+            // $log.log(cmd)
             HidApi._doCommand(cmd, HidApi.TYPE_SIGNATURE_RETURN).then(deferred.resolve, deferred.resolve);
         });
         return deferred.promise;
@@ -724,7 +725,7 @@ function HidApi($q, $log, $timeout, $interval, $rootScope,
         var messageHex = HidApi.hexUtil.bytesToHex(messageBytes);
         var msgBuf = HidApi.hexUtil.hexToByteBuffer(messageHex);
         msgBuf.flip();
-        // $log.debug("signMessage: ", message, "->", messageBytes, "->", messageHex);
+        // $log.log("signMessage: ", message, "->", messageBytes, "->", messageHex);
         var protoMsg = new Device.SignMessage({
             address_handle_extended: HidApi.makeAddressHandler(chain, chainIndex),
             message_data: msgBuf
@@ -767,7 +768,7 @@ function HidApi($q, $log, $timeout, $interval, $rootScope,
     HidApi.renameWallet = function(name) {
         var Device = this.protoBuilder();
         var nameHex = this.hexUtil.toPaddedHex(name, 39) + '00';
-        $log.debug(name, "->", nameHex);
+        $log.log(name, "->", nameHex);
         var nameBuf = this.hexUtil.hexToByteBuffer(nameHex);
         nameBuf.flip();
         // make a proto buffer for the data, generate a command and
@@ -805,7 +806,7 @@ function HidApi($q, $log, $timeout, $interval, $rootScope,
     };
 
     HidApi.setChangeAddress = function(chainIndex) {
-    	// $log.debug("in HidApi setChangeAddress",chainIndex,typeof(chainIndex));
+    	// $log.log("in HidApi setChangeAddress",chainIndex,typeof(chainIndex));
         var Device = this.protoBuilder();
         var otpMessage = new Device.SetChangeAddressIndex({
             address_handle_index: parseInt(chainIndex,10),
