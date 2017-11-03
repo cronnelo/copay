@@ -384,10 +384,10 @@ angular.module('copayApp.controllers').controller('walletDetailsController', fun
 
   $scope.$on("$ionicView.afterLeave", function(event, data) {
 
-    if ($window.StatusBar) {
-      var statusBarColor = appConfigService.name == 'copay' ? '#192c3a' : '#1e3186';
-      $window.StatusBar.backgroundColorByHexString(statusBarColor);
-    }
+    // if ($window.StatusBar) {
+    //   var statusBarColor = appConfigService.name == 'copay' ? '#192c3a' : '#1e3186';
+    //   $window.StatusBar.backgroundColorByHexString(statusBarColor);
+    // }
   });
 
   $scope.$on("$ionicView.leave", function(event, data) {
@@ -411,8 +411,8 @@ angular.module('copayApp.controllers').controller('walletDetailsController', fun
       }
     });
     var statusBarColorHexString = rgbToHex(rgb.r, rgb.g, rgb.b);
-    if ($window.StatusBar)
-      $window.StatusBar.backgroundColorByHexString(statusBarColorHexString);
+    // if ($window.StatusBar)
+    //   $window.StatusBar.backgroundColorByHexString(statusBarColorHexString);
   }
 
   function hexToRgb(hex) {

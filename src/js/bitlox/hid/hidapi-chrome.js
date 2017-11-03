@@ -461,7 +461,9 @@ function HidApi($q, $log, $timeout, $interval, $rootScope,
 
     HidApi._doCommand = function(command, expectedType, forcePing) {
         var HidApi = this;
+        
         HidApi.doingCommand = true;
+        $log.log(HidApi.doingCommand, "doing cmmand")
         if(!forcePing && !HidApi.sessionIdMatch 
             && command.indexOf(this.commands.ping) != 0 
             && command.indexOf(this.commands.initPrefix) != 0
@@ -618,6 +620,7 @@ function HidApi($q, $log, $timeout, $interval, $rootScope,
     };
 
     HidApi.scanWallet = function() {
+        $log.log('scan wallet')
         return this._doCommand(this.commands.scan_wallet, this.TYPE_XPUB);
     };
 
