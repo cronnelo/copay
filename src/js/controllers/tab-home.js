@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('copayApp.controllers').controller('tabHomeController',
-  function($rootScope, $timeout, $scope, $state, $stateParams, $ionicModal, $ionicScrollDelegate, $window, gettextCatalog, lodash, popupService, ongoingProcess, externalLinkService, latestReleaseService, profileService, walletService, configService, $log, platformInfo, storageService, txpModalService, appConfigService, startupService, addressbookService, feedbackService, bwcError, nextStepsService, buyAndSellService, homeIntegrationsService, bitpayCardService, pushNotificationsService, timeService, bitcore, customNetworks) {
+  function($rootScope, $timeout, $scope, $state, $stateParams, $ionicModal, $ionicScrollDelegate, $window, gettextCatalog, lodash, popupService, ongoingProcess, externalLinkService, latestReleaseService, profileService, walletService, configService, $log, platformInfo, storageService, txpModalService, appConfigService, startupService, addressbookService, feedbackService, bwcError, nextStepsService, buyAndSellService, homeIntegrationsService, bitpayCardService, pushNotificationsService, timeService, bitcore, customNetworks, txFormatService, $q) {
 
     var wallet;
     var listeners = [];
@@ -46,13 +46,15 @@ angular.module('copayApp.controllers').controller('tabHomeController',
         });
       }
 
+      $scope.defaults = configService.getDefaults();
       $scope.wallets = profileService.getWallets();
+
+      setRates();
 
       profileService.getOrderedWallets(function(orderedWallets) {
         $scope.orderedWallets = orderedWallets;
       });
 
-      $scope.defaults = configService.getDefaults();
       storageService.getFeedbackInfo(function(error, info) {
 
         if ($scope.isWindowsPhoneApp) {
@@ -78,6 +80,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
             $scope.$apply();
           });
         }
+
       });
 
       function initFeedBackInfo() {
@@ -146,6 +149,24 @@ angular.module('copayApp.controllers').controller('tabHomeController',
         x();
       });
     });
+
+    function setRates() {
+      var unitToSatoshi = $scope.defaults.wallet.settings.unitToSatoshi;
+
+      var networkPromise = lodash.map(customNetworks.getStatic(), function(network) {
+        var defer = $q.defer();
+
+        txFormatService.formatAlternativeStr(1 * unitToSatoshi, network, function(str) {
+          defer.resolve('1 ' + network.symbol + ' = ' + str);
+        });
+
+        return defer.promise;
+      });
+
+      $q.all(networkPromise).then(function(rates) {
+        $scope.rates = rates;
+      });
+    };
 
     $scope.createdWithinPastDay = function(time) {
       return timeService.withinPastDay(time);
