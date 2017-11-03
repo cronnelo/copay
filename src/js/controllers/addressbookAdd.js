@@ -36,8 +36,9 @@ angular.module('copayApp.controllers').controller('addressbookAddController', fu
     }, 100);
   };
 
-  $scope.clearAddressInput = function() {
+  $scope.clearAddressInput = function(addressbookForm) {
     $scope.addressbookEntry.address = '';
+    addressbookForm.$setPristine();
   };
 
   $scope.goHome = function() {

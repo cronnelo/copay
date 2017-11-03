@@ -36,7 +36,7 @@
         <div>
           <div class="item item-input item-stacked-label">
             <span class="input-label" translate>Cryptocurrency Address</span>
-            <div class="input-notification" ng-click="clearAddressInput()">
+            <div class="input-notification" ng-click="clearAddressInput(addressbookForm)">
               <i ng-show="addressbookForm.address.$valid" class="icon ion-checkmark-circled valid"></i>
               <i ng-show="addressbookForm.address.$invalid && addressbookForm.address.$dirty"
                  class="icon ion-close-circled invalid"
