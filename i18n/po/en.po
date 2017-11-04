@@ -151,7 +151,7 @@ msgstr "All Addresses"
 
 #: www/views/modals/wallet-balance.html:18
 msgid "All of your bitcoin wallet balance may not be available for immediate spending."
-msgstr "All of your wallet balance may not be available for immediate spending."
+msgstr "Some of your wallet balance may not be available for immediate spending."
 
 #: www/views/tab-receive.html:33
 msgid "All signing devices must be added to this multisig wallet before addresses can be created."
@@ -890,7 +890,7 @@ msgstr "Error"
 
 #: src/js/controllers/confirm.js:379
 msgid "Error at confirm"
-msgstr "Error at confirm"
+msgstr "Transaction Error"
 
 #: src/js/services/profileService.js:396
 msgid "Error creating wallet"
