@@ -420,6 +420,8 @@
 
         $scope.initializeDevice = function() {
             var session = new Date().getTime(true);
+
+            $scope.timer = true;
             $timeout.cancel($scope.timeout) 
             api.initialize(session).then(function(res) {                
                 if(!res || res.type === api.TYPE_ERROR) {
@@ -442,6 +444,7 @@
             
             $scope.timeout = $timeout(function() {
                 $scope.timer = true;
+                $log.log($scope.bitlox)
                 $ionicLoading.hide();
             },3000);            
             // if($state.current.url === '/attach-bitlox' || $state.current.url === '/create-bitlox') {
@@ -470,6 +473,7 @@
         }
 
         $scope.$on('destroy', function() {
+          $scope.timer = true;
           $timeout.cancel($scope.timeout)
         })
 

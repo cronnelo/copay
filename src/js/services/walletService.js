@@ -686,11 +686,16 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
   };
 
   root.signTx = function(wallet, txp, password, cb) {
-    if (!wallet || !txp || !cb)
+    if (!wallet || !txp || !cb) {
+      $log.log('missing parameter')
       return cb('MISSING_PARAMETER');
 
+    }
+
     if (wallet.isPrivKeyExternal()) {
+      $log.log( wallet.getPrivKeyExternalSourceName())
       if (wallet.getPrivKeyExternalSourceName().indexOf('bitlox') > -1) {
+        $log.log('private key is bitlox')
         return bitlox.wallet.signTransaction(wallet, txp, cb)
       }
       switch (wallet.getPrivKeyExternalSourceName()) {
@@ -706,7 +711,6 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
           return cb(msg);
       }
     } else {
-
       try {
         wallet.signTxProposal(txp, password, function(err, signedTxp) {
           $log.debug('Transaction signed err:' + err);
