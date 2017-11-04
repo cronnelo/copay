@@ -126,6 +126,15 @@
     </div>
 
     <div class="list card">
+      <div class="item item-heading">
+        <span translate>Exchange Rates</span>
+      </div>
+      <ion-list>
+        <ion-item class="item" ng-repeat="rate in rates">{{ rate }}</ion-item>
+      </ion-list>
+    </div>
+
+    <div class="list card">
       <a ng-click="openBitlox();"  ng-click="openBitlox($event)" class="open-bitlox item item-sub item-icon-left item-big-icon-left">
        <i class="icon big-icon-svg">
          <img src="img/icon-wallet-bitlox.svg" class="bg wallet icon-create-wallet"/>
