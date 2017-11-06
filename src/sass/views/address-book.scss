@@ -21,11 +21,13 @@
 
     &.valid {
       color: $v-success-color;
+      padding-top: 3px;
     }
 
     &.invalid {
       cursor: pointer;
       color: #DF2121;
+      padding-top: 3px;
     }
   }
   .add-address-input-group {
