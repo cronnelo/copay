@@ -156,8 +156,11 @@ angular.module('copayApp.controllers').controller('tabHomeController',
       var networkPromise = lodash.map(customNetworks.getStatic(), function(network) {
         var defer = $q.defer();
 
-        txFormatService.formatAlternativeStr(1 * unitToSatoshi, network, function(str) {
-          defer.resolve('1 ' + network.symbol + ' = ' + str);
+        txFormatService.formatAlternativeStr(1 * unitToSatoshi, network, function(altStr) {
+          defer.resolve({
+            symbol: network.symbol,
+            altStr: altStr
+          });
         });
 
         return defer.promise;
@@ -166,7 +169,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
       $q.all(networkPromise).then(function(rates) {
         $scope.rates = rates;
       });
-    };
+    }
 
     $scope.createdWithinPastDay = function(time) {
       return timeService.withinPastDay(time);
