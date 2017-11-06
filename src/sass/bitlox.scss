@@ -48,7 +48,7 @@
 .has-header[id*='onboard'],[id*='backup-warning'] .has-header{
   background-color: $v-onboarding-pane-bg;
 }
-#tab-scan {
+#tab-scan, #tab-home {
   .has-header {
     background-color: transparent;
   }
