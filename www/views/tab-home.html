@@ -130,7 +130,9 @@
         <span translate>Exchange Rates</span>
       </div>
       <ion-list>
-        <ion-item class="item" ng-repeat="rate in rates">{{ rate }}</ion-item>
+        <ion-item class="item" ng-repeat="rate in rates">
+          <span class="rate-symbol">1 {{rate.symbol}}</span> = <span>{{rate.altStr}}</span>
+        </ion-item>
       </ion-list>
     </div>
 

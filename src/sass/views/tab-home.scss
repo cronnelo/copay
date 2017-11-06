@@ -48,6 +48,11 @@
           right: 0;
         }
       }
+
+      > .rate-symbol {
+        display: inline-block;
+        width: 54px;
+      }
     }
 
     .disable-pointer-events {
