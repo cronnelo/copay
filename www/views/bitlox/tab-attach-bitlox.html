@@ -21,11 +21,7 @@
       <div class="list card"  ng-if="timer" ng-show="bitlox.isMobile && !bitlox.connected">
         <div class="item item-remove-animate" ng-if="api.getNumDevices() < 1">
           <span >No devices found</span><br /><br />
-          <button
-            class="button button-standard button-primary button-blue p10h"
-            ng-click="refreshBitlox($event)">
-            Scan for Bitlox Hardware wallets
-          </button>
+
         </div>
         <a ng-repeat="device in api.getKnownDevices()"
            ng-click="connectBle(device.address, false)"
@@ -38,7 +34,12 @@
           <i class="icon bp-arrow-right"></i>
           <!-- <pre>{{device}}</pre> -->
         </a>
-        <button ng-if="closeModal" class="button button-standard button-primary p10h"
+        <button style="width:90%;"
+          class="button button-standard button-primary button-blue p10h"
+          ng-click="refreshBitlox($event)">
+          Scan for Bitlox Hardware
+        </button>        
+        <button style="width:90%;" ng-if="closeModal" class="button button-standard button-primary p10h"
            ng-click = "closeModal()">Cancel</button>
       </div>
       <div
