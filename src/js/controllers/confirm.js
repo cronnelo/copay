@@ -242,11 +242,12 @@ angular.module('copayApp.controllers').controller('confirmController', function(
       tx.amountStr = txFormatService.formatAmountStr(tx.toAmount);
       tx.amountValueStr = tx.amountStr;
       customNetworks.getAll().then(function(CUSTOMNETWORKS) {
-        tx.amountUnitStr = CUSTOMNETWORKS[$scope.network].symbol;
-        txFormatService.formatAlternativeStr(tx.toAmount, CUSTOMNETWORKS[$scope.network], function(v) {
-          tx.alternativeAmountStr = v;
+        var network = CUSTOMNETWORKS[$scope.network];
+        tx.amountUnitStr = network.symbol;
+        txFormatService.alternativeAmountWithSymbol(tx.toAmount, network, function(amount) {
+          tx.alternativeAmountStr = amount;
         });
-      })
+      });
     }
 
     updateAmount();
@@ -297,8 +298,9 @@ angular.module('copayApp.controllers').controller('confirmController', function(
 
           txp.feeStr = txFormatService.formatAmountStr(txp.fee);
           customNetworks.getAll().then(function(CUSTOMNETWORKS) {
-            txFormatService.formatAlternativeStr(txp.fee, CUSTOMNETWORKS[wallet.credentials.network], function(v) {
-              txp.alternativeFeeStr = v;
+            var network = CUSTOMNETWORKS[wallet.credentials.network];
+            txFormatService.alternativeAmountWithSymbol(txp.fee, network, function(fee) {
+              txp.alternativeFeeStr = fee;
             });
 
             var per = (txp.fee / (txp.amount + txp.fee) * 100);
@@ -311,7 +313,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
 
             return cb();
           });
-        })          
+        });
       });
     });
   }
