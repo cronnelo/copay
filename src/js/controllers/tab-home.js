@@ -49,7 +49,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
       $scope.defaults = configService.getDefaults();
       $scope.wallets = profileService.getWallets();
 
-      setRates();
+      $scope.setRates();
 
       profileService.getOrderedWallets(function(orderedWallets) {
         $scope.orderedWallets = orderedWallets;
@@ -150,7 +150,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
       });
     });
 
-    function setRates() {
+    $scope.setRates = function() {
       var unitToSatoshi = $scope.defaults.wallet.settings.unitToSatoshi;
 
       var networkPromise = lodash.map(customNetworks.getStatic(), function(network) {
