@@ -7,7 +7,7 @@ angular.module('copayApp.controllers').controller('amountController', function($
   var unitDecimals;
   var satToBtc;
   var SMALL_FONT_SIZE_LIMIT = 10;
-  var LENGTH_EXPRESSION_LIMIT = 19;
+  var LENGTH_EXPRESSION_LIMIT = 10;
   var isNW = platformInfo.isNW;
   $scope.isChromeApp = platformInfo.isChromeApp;
 
