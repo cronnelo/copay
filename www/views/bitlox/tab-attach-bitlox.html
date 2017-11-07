@@ -14,7 +14,7 @@
           <span class="item">
               No BitLox device detected.<br /><br />
               Please turn on your BitLox, enter the device PIN, select USB mode, and then touch the refresh button on this screen.<br/><br/>
-              <button class="button button-standard button-primary" ng-click="reset()">Refresh</button>
+              <button class="button button-standard button-primary button-blue" ng-click="reset()">Refresh</button>
               <button class="button button-standard button-secondary" ng-if="closeModal" ng-click="closeModal()">Cancel</button>              
           </span>
       </div>
@@ -22,7 +22,7 @@
         <div class="item item-remove-animate" ng-if="api.getNumDevices() < 1">
           <span >No devices found</span><br /><br />
           <button
-            class="button button-standard button-primary p10h"
+            class="button button-standard button-primary button-blue p10h"
             ng-click="refreshBitlox($event)">
             Scan for Bitlox Hardware wallets
           </button>
@@ -38,7 +38,7 @@
           <i class="icon bp-arrow-right"></i>
           <!-- <pre>{{device}}</pre> -->
         </a>
-        <button ng-if="closeModal" style="width:100%" class="button icon icon-left ion-ios-close-outline"
+        <button ng-if="closeModal" class="button button-standard button-primary p10h"
            ng-click = "closeModal()">Cancel</button>
       </div>
       <div
@@ -94,7 +94,7 @@
     <div class="list card"  ng-if="!bitlox.connected && timer">
       <a ng-click="openBitlox();"  ng-click="openBitlox($event)" class="open-bitlox item item-sub item-icon-left item-big-icon-left">
        <i class="icon big-icon-svg">
-         <img src="img/icon-wallet-bitlox.svg" class="bg wallet icon-create-wallet"/>
+         <img src="img/icon-wallet-bitlox.svg" class="bg wallet icon-create-wallet button-blue"/>
        </i>
         <span style="text-decoration: none" translate>Buy a BitLox Now</span>
       </a>
