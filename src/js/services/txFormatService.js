@@ -86,6 +86,37 @@ angular.module('copayApp.services').factory('txFormatService', function($filter,
     };
   };
 
+  root.alternativeAmountWithSymbol = function(satoshis, network, cb) {
+    if (isNaN(satoshis)) return;
+    var config = configService.getSync().wallet.settings;
+    var _symbol = '≈';
+
+    var val = function() {
+      var fiat = rateService.toFiat(satoshis, config.alternativeIsoCode, network);
+
+      if (fiat.toFixed(2) === '0.00' && fiat > 0) {
+        _symbol = '<';
+      }
+
+      fiat = $filter('formatFiatAmount')(fiat);
+
+      if (!fiat) return null;
+
+      return _symbol + ' ' + fiat + ' ' + config.alternativeIsoCode;
+    };
+
+    // Async version
+    if (cb) {
+      rateService.whenAvailable(function() {
+        return cb(val());
+      });
+    } else {
+      if (!rateService.isAvailable()) return null;
+      return val();
+    };
+  };
+
+
   root.processTx = function(tx, network) {
     if (!tx || tx.action == 'invalid')
       return tx;
