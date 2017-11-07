@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('copayApp.controllers').controller('tabHomeController',
-  function($rootScope, $timeout, $scope, $state, $stateParams, $ionicModal, $ionicScrollDelegate, $window, gettextCatalog, lodash, popupService, ongoingProcess, externalLinkService, latestReleaseService, profileService, walletService, configService, $log, platformInfo, storageService, txpModalService, appConfigService, startupService, addressbookService, feedbackService, bwcError, nextStepsService, buyAndSellService, homeIntegrationsService, bitpayCardService, pushNotificationsService, timeService, bitcore, customNetworks, txFormatService, $q) {
+  function($rootScope, $timeout, $scope, $state, $stateParams, $ionicModal, $ionicScrollDelegate, $window, gettextCatalog, lodash, popupService, ongoingProcess, externalLinkService, latestReleaseService, profileService, walletService, configService, $log, platformInfo, storageService, txpModalService, appConfigService, startupService, addressbookService, feedbackService, bwcError, nextStepsService, buyAndSellService, homeIntegrationsService, bitpayCardService, pushNotificationsService, timeService, bitcore, customNetworks, txFormatService, $q, $ionicLoading) {
 
     var wallet;
     var listeners = [];
@@ -150,8 +150,15 @@ angular.module('copayApp.controllers').controller('tabHomeController',
       });
     });
 
-    $scope.setRates = function() {
+    $scope.setRates = function(showLoading) {
       var unitToSatoshi = $scope.defaults.wallet.settings.unitToSatoshi;
+
+      if (showLoading) {
+        $ionicLoading.show({
+          duration: 1800,
+          template: '<ion-spinner></ion-spinner> <br/> Fetching rates...'
+        });
+      }
 
       var networkPromise = lodash.map(customNetworks.getStatic(), function(network) {
         var defer = $q.defer();
@@ -169,7 +176,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
       $q.all(networkPromise).then(function(rates) {
         $scope.rates = rates;
       });
-    }
+    };
 
     $scope.createdWithinPastDay = function(time) {
       return timeService.withinPastDay(time);

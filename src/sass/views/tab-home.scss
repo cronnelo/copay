@@ -49,6 +49,13 @@
         }
       }
 
+      .ion-ios-refresh-empty {
+        cursor: pointer;
+        &:before {
+          transform: scale(1.6);
+        }
+      }
+
       > .rate-symbol {
         display: inline-block;
         width: 54px;
