@@ -46,6 +46,7 @@
                    id="address"
                    name="address"
                    ng-model="addressbookEntry.address"
+                   ng-paste="stripUnnecessaryAddressValue($event)"
                    valid-address
                    required>
             <p ng-show="addressbookForm.address.$invalid && addressbookForm.address.$dirty"

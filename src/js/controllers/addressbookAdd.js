@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('copayApp.controllers').controller('addressbookAddController', function($scope, $state, $stateParams, $timeout, $ionicHistory, gettextCatalog, addressbookService, popupService) {
+angular.module('copayApp.controllers').controller('addressbookAddController', function($scope, $state, $stateParams, $timeout, $ionicHistory, gettextCatalog, addressbookService, popupService, $timeout) {
 
   $scope.fromSendTab = $stateParams.fromSendTab;
 
@@ -46,4 +46,11 @@ angular.module('copayApp.controllers').controller('addressbookAddController', fu
     $state.go('tabs.home');
   };
 
+  $scope.stripUnnecessaryAddressValue = function(event) {
+    $timeout(function() {
+      var address = event.target.value;
+      var cleanAddress = address.replace('bitcoin:', '').replace(/\?.+/, '');
+      $scope.addressbookEntry.address = cleanAddress;
+    }, 0);
+  };
 });
