@@ -43,18 +43,18 @@
   padding-bottom: 5px;
 }
 .has-header {
-  background-color: #f2f2f2;
+  background-color: #f2f2f2 !important;
 }
 .has-header[id*='onboard'],[id*='backup-warning'] .has-header{
-  background-color: $v-onboarding-pane-bg;
+  background-color: $v-onboarding-pane-bg !important;
 }
-#tab-scan, #tab-home {
+#tab-scan, #tab-attach-bitlox {
   .has-header {
-    background-color: transparent;
+    background-color: transparent !important;
   }
 }
 #onboarding-disclaimer {
   .has-header {
-    background-color: transparent;
+    background-color: transparent !important;
   }
 }
