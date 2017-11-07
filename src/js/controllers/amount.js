@@ -7,7 +7,8 @@ angular.module('copayApp.controllers').controller('amountController', function($
   var unitDecimals;
   var satToBtc;
   var SMALL_FONT_SIZE_LIMIT = 10;
-  var LENGTH_EXPRESSION_LIMIT = 10;
+  var LENGTH_EXPRESSION_LIMIT = 19;
+  var DECIMAL_LIMIT = 8;
   var isNW = platformInfo.isNW;
   $scope.isChromeApp = platformInfo.isChromeApp;
 
@@ -141,12 +142,23 @@ angular.module('copayApp.controllers').controller('amountController', function($
   function checkFontSize() {
     if ($scope.amount && $scope.amount.length >= SMALL_FONT_SIZE_LIMIT) $scope.smallFont = true;
     else $scope.smallFont = false;
-  };
+  }
 
   $scope.pushDigit = function(digit) {
     if ($scope.amount && $scope.amount.length >= LENGTH_EXPRESSION_LIMIT) return;
+
     // if ($scope.amount.indexOf('.') > -1 && digit == '.') return;
-    if ($scope.showAlternativeAmount && $scope.amount.indexOf('.') > -1 && $scope.amount[$scope.amount.indexOf('.') + 2]) return;
+
+    if ($scope.showAlternativeAmount &&
+        $scope.amount.indexOf('.') > -1 &&
+        $scope.amount[$scope.amount.indexOf('.') + 2]) {
+      return;
+    }
+
+    if ($scope.amount.indexOf('.') > -1) {
+      var decimalCount = $scope.amount.split('.')[1].length + 1;
+      if (decimalCount > DECIMAL_LIMIT) return;
+    }
 
     $scope.amount = ($scope.amount + digit).replace('..', '.');
     checkFontSize();
