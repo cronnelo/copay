@@ -5,15 +5,16 @@ angular.module('copayApp.controllers').controller('preferencesAltCurrencyControl
 
     var next = 10;
     var completeAlternativeList = [];
+    $scope.searchedAltCurrency = '';
 
     function init() {
+
       var unusedCurrencyList = [{
         isoCode: 'LTL'
       }, {
         isoCode: 'BTC'
       }];
       rateService.whenAvailable(function() {
-
         $scope.listComplete = false;
 
         var idx = lodash.indexBy(unusedCurrencyList, 'isoCode');
@@ -32,20 +33,30 @@ angular.module('copayApp.controllers').controller('preferencesAltCurrencyControl
     }
 
     $scope.loadMore = function() {
+      if ($scope.searchedAltCurrency) {
+        $scope.listComplete = true;
+        return;
+      }
+
       $timeout(function() {
         $scope.altCurrencyList = completeAlternativeList.slice(0, next);
         next += 10;
+
         $scope.listComplete = $scope.altCurrencyList.length >= completeAlternativeList.length;
         $scope.$broadcast('scroll.infiniteScrollComplete');
       }, 100);
     };
 
     $scope.findCurrency = function(search) {
+      $scope.searchedAltCurrency = search;
+
       if (!search) init();
+
       $scope.altCurrencyList = lodash.filter(completeAlternativeList, function(item) {
         var val = item.name;
         return lodash.includes(val.toLowerCase(), search.toLowerCase());
       });
+
       $timeout(function() {
         $scope.$apply();
       });
