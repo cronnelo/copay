@@ -49,7 +49,7 @@ angular.module('copayApp.controllers').controller('addressbookAddController', fu
   $scope.stripUnnecessaryAddressValue = function(event) {
     $timeout(function() {
       var address = event.target.value;
-      var cleanAddress = address.replace('bitcoin:', '').replace(/\?.+/, '');
+      var cleanAddress = address.replace(/^.+:/, '').replace(/\?.+/, '');
       $scope.addressbookEntry.address = cleanAddress;
     }, 0);
   };
