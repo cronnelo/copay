@@ -61,7 +61,7 @@ angular.module('copayApp.filters', [])
             var finalValue = intValue + floatValue;
             return finalValue;
           } else {
-            return parseFloat(value);
+            return parseFloat(value).toFixed(2);
           }
         }
         return 0;
