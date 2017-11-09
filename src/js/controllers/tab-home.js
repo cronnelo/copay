@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('copayApp.controllers').controller('tabHomeController',
-  function($rootScope, $timeout, $scope, $state, $stateParams, $ionicModal, $ionicScrollDelegate, $window, gettextCatalog, lodash, popupService, ongoingProcess, externalLinkService, latestReleaseService, profileService, walletService, configService, $log, platformInfo, storageService, txpModalService, appConfigService, startupService, addressbookService, feedbackService, bwcError, nextStepsService, buyAndSellService, homeIntegrationsService, bitpayCardService, pushNotificationsService, timeService, bitcore, customNetworks, txFormatService, $q, $ionicLoading) {
+  function($rootScope, $timeout, $scope, $state, $stateParams, $ionicModal, $ionicScrollDelegate, $window, gettextCatalog, lodash, popupService, ongoingProcess, externalLinkService, latestReleaseService, profileService, walletService, configService, $log, platformInfo, storageService, txpModalService, appConfigService, startupService, addressbookService, feedbackService, bwcError, nextStepsService, buyAndSellService, homeIntegrationsService, bitpayCardService, pushNotificationsService, timeService, bitcore, customNetworks, txFormatService, $q, $ionicLoading, rateService) {
 
     var wallet;
     var listeners = [];
@@ -163,12 +163,14 @@ angular.module('copayApp.controllers').controller('tabHomeController',
       var networkPromise = lodash.map(customNetworks.getStatic(), function(network) {
         var defer = $q.defer();
 
-        txFormatService.formatAlternativeStr(1 * unitToSatoshi, network, function(altStr) {
-          defer.resolve({
-            symbol: network.symbol,
-            altStr: altStr
-          });
-        });
+        rateService._fetchCurrencies(function() {
+          txFormatService.formatAlternativeStr(1 * unitToSatoshi, network, function(altStr) {
+            defer.resolve({
+              symbol: network.symbol,
+              altStr: altStr
+            });
+          });          
+        })
 
         return defer.promise;
       });

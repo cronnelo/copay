@@ -19,7 +19,7 @@
           </span>
       </div>
       <div class="list card"  ng-if="timer" ng-show="bitlox.isMobile && !bitlox.connected">
-        <div class="item item-remove-animate" ng-if="api.getNumDevices() < 1" style="border:0">
+        <div class="item item-remove-animate" ng-if="api.getNumDevices() < 1" style="border:0;vertical-align: middle">
           <span >No devices found</span><br /><br />
         </div>
         <a ng-repeat="device in api.getKnownDevices()"

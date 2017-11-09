@@ -44,7 +44,7 @@ RateService.singleton = function(opts) {
   return _instance;
 };
 
-RateService.prototype._fetchCurrencies = function() {
+RateService.prototype._fetchCurrencies = function(fetchCallback) {
   var self = this;
 
   var backoffSeconds = 5;
@@ -100,7 +100,8 @@ RateService.prototype._fetchCurrencies = function() {
             self.lodash.each(self._queued, function(callback) {
               setTimeout(callback, 1);
             });
-            setTimeout(retrieve, updateFrequencySeconds * 1000);          
+            setTimeout(retrieve, updateFrequencySeconds * 1000);      
+            if(fetchCallback) fetchCallback();    
           }
         })
       }
