@@ -418,6 +418,26 @@ angular.module('copayApp').config(function(historicLogProvider, $provide, $logPr
 
       /*
        *
+       * Rates Calculator
+       *
+       */
+
+      .state('tabs.rates-calculator', {
+        url: '/rates-calculator',
+        params: {
+          ratesCalculator: true,
+          network: ''
+        },
+        views: {
+          'tab-home@tabs': {
+            controller: 'amountController',
+            templateUrl: 'views/amount.html'
+          }
+        }
+      })
+
+      /*
+       *
        * Global Settings
        *
        */

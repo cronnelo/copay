@@ -167,10 +167,11 @@ angular.module('copayApp.controllers').controller('tabHomeController',
           txFormatService.formatAlternativeStr(1 * unitToSatoshi, network, function(altStr) {
             defer.resolve({
               symbol: network.symbol,
-              altStr: altStr
+              altStr: altStr,
+              network: network.name
             });
           });          
-        })
+        });
 
         return defer.promise;
       });

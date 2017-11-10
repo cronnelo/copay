@@ -132,8 +132,10 @@
           <i class="icon ion-ios-refresh-empty"></i>
         </a>
       </div>
-      <ion-list>
-        <ion-item class="item" ng-repeat="rate in rates">
+      <ion-list class="rates">
+        <ion-item class="item"
+                  ng-repeat="rate in rates"
+                  ui-sref="tabs.rates-calculator({ network: rate.network, test: 'why' })">
           <span class="rate-symbol">1 {{rate.symbol}}</span> = <span>{{rate.altStr}}</span>
         </ion-item>
       </ion-list>

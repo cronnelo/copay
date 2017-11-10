@@ -19,13 +19,14 @@ angular.module('copayApp.controllers').controller('amountController', function($
   $scope.$on("$ionicView.beforeEnter", function(event, data) {
     // Go to...
     _id = data.stateParams.id; // Optional (BitPay Card ID or Wallet ID)
+    $scope.isRatesCalculator = data.stateParams.ratesCalculator;
     $scope.nextStep = data.stateParams.nextStep;
     $scope.currency = data.stateParams.currency;
     $scope.forceCurrency = data.stateParams.forceCurrency;
 
     $scope.showMenu = $ionicHistory.backView() && ($ionicHistory.backView().stateName == 'tabs.send' ||
 
-      $ionicHistory.backView().stateName == 'tabs.bitpayCard');
+    $ionicHistory.backView().stateName == 'tabs.bitpayCard');
     $scope.recipientType = data.stateParams.recipientType || null;
     $scope.toAddress = data.stateParams.toAddress;
     $scope.toName = data.stateParams.toName;
@@ -37,25 +38,30 @@ angular.module('copayApp.controllers').controller('amountController', function($
     $scope.showSendMax = false;
 
     $scope.customAmount = data.stateParams.customAmount;
-    $scope.network = (new bitcore.Address($scope.toAddress)).network.name;
-    $scope.unitName = "BTC";
+    if ($scope.toAddress) {
+      $scope.network = (new bitcore.Address($scope.toAddress)).network.name;
+    } else {
+      $scope.network = data.stateParams.network;
+    }
+
+    $scope.unitName = 'BTC';
     $scope.amountSign = '&asymp;';
 
     customNetworks.getAll().then(function(CUSTOMNETWORKS) {
       if(CUSTOMNETWORKS[$scope.network]) {
         $scope.unitName = CUSTOMNETWORKS[$scope.network].symbol;
       }      
-    })
+    });
 
-    if (!$scope.nextStep && !data.stateParams.toAddress) {
-      $log.error('Bad params at amount')
+    if (!$scope.isRatesCalculator && !$scope.nextStep && !data.stateParams.toAddress) {
+      $log.error('Bad params at amount');
       throw ('bad params');
     }
 
     var reNr = /^[1234567890\.]$/;
     var reOp = /^[\*\+\-\/]$/;
 
-    var disableKeys = angular.element($window).on('keydown', function(e) {
+    angular.element($window).on('keydown', function disableKeys(e) {
       if (!e.key) return;
       if (e.which === 8) { // you can add others here inside brackets.
         e.preventDefault();
@@ -111,13 +117,13 @@ angular.module('copayApp.controllers').controller('amountController', function($
     $timeout(function() {
       $scope.$apply();
     });
-  };
+  }
 
   function processClipboard() {
     if (!isNW) return;
     var value = nodeWebkitService.readFromClipboard();
     if (value && evaluate(value) > 0) paste(evaluate(value));
-  };
+  }
 
   $scope.showSendMaxMenu = function() {
     $scope.showSendMax = true;
@@ -175,18 +181,18 @@ angular.module('copayApp.controllers').controller('amountController', function($
       } else {
         return val.slice(0, -1) + operator;
       }
-    };
+    }
   };
 
   function isOperator(val) {
     var regex = /[\/\-\+\x\*]/;
     return regex.test(val);
-  };
+  }
 
   function isExpression(val) {
     var regex = /^\.?\d+(\.?\d+)?([\/\-\+\*x]\d?\.?\d+)+$/;
     return regex.test(val);
-  };
+  }
 
   $scope.removeDigit = function() {
     $scope.amount = ($scope.amount).toString().slice(0, -1);
@@ -210,19 +216,19 @@ angular.module('copayApp.controllers').controller('amountController', function($
       $scope.amountResult = $filter('formatFiatAmount')(toFiat(result));
       $scope.alternativeResult = txFormatService.formatAmount(fromFiat(result) * unitToSatoshi, true);
     }
-  };
+  }
 
   function processResult(val) {
     if ($scope.showAlternativeAmount)
       return $filter('formatFiatAmount')(val);
     else
       return txFormatService.formatAmount(val.toFixed(unitDecimals) * unitToSatoshi, true);
-  };
+  }
 
   function fromFiat(val) {
     var CUSTOMNETWORKS = customNetworks.getStatic();
     return parseFloat((rateService.fromFiat(val, $scope.alternativeIsoCode, CUSTOMNETWORKS[$scope.network]) * satToUnit).toFixed(unitDecimals));
-  };
+  }
 
   function toFiat(val) {
     var network = customNetworks.getStatic()[$scope.network];
@@ -246,7 +252,7 @@ angular.module('copayApp.controllers').controller('amountController', function($
     }
     if (!lodash.isFinite(result)) return 0;
     return result;
-  };
+  }
 
   function format(val) {
     var result = val.toString();
@@ -255,7 +261,7 @@ angular.module('copayApp.controllers').controller('amountController', function($
       result = result.slice(0, -1);
 
     return result.replace('x', '*');
-  };
+  }
 
   $scope.finish = function() {
     var _amount = evaluate(format($scope.amount));
