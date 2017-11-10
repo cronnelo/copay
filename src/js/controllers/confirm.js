@@ -307,6 +307,10 @@ angular.module('copayApp.controllers').controller('confirmController', function(
 
             var per = (txp.fee / txp.amount) * 100;
 
+            if (per > 0.00 && per < 0.01) {
+              per = 0.01;
+            }
+
             txp.feeRatePerStr = per.toFixed(2) + '%';
             txp.feeToHigh = per > FEE_TOO_HIGH_LIMIT_PER;
 
