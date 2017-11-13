@@ -696,6 +696,11 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
       $log.log( wallet.getPrivKeyExternalSourceName())
       if (wallet.getPrivKeyExternalSourceName().indexOf('bitlox') > -1) {
         $log.log('private key is bitlox')
+        $rootScope.bitloxConnectErrorListener = $rootScope.$on('bitloxConnectError', function() {
+          root.removeTx(wallet, txp, function() {  
+            //noop
+          })  
+        })              
         return bitlox.wallet.signTransaction(wallet, txp, cb)
       }
       switch (wallet.getPrivKeyExternalSourceName()) {

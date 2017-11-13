@@ -1391,7 +1391,11 @@ angular.module('copayApp').config(function(historicLogProvider, $provide, $logPr
       }
       win.menu = nativeMenuBar;
     }
-
+    $rootScope.destroyBitloxListeners = function() {
+      if($rootScope.bitloxConnectErrorListener) {
+        $rootScope.bitloxConnectErrorListener();    
+      }    
+    }
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
       $log.debug('Route change from:', fromState.name || '-', ' to:', toState.name);
       $log.debug('            toParams:' + JSON.stringify(toParams || {}));

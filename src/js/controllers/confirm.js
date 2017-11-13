@@ -520,7 +520,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
             if (err) setSendError(err);
           }, onSendStatusChange);
         }
-        destroyBitloxListeners();
+        $rootScope.destroyBitloxListeners();
         walletService.publishAndSign(wallet, txp, function(err, txp) {
           if (err) return setSendError(err);
           if (config.confirmedTxsNotifications && config.confirmedTxsNotifications.enabled) {
@@ -619,11 +619,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
   };
 
   $scope.$on('destroy', function() {
-    destroyBitloxListeners();
+    $rootScope.destroyBitloxListeners();
   })
-  function destroyBitloxListeners() {
-    if($rootScope.bitloxConnectErrorListener) {
-      $rootScope.bitloxConnectErrorListener();    
-    }    
-  }
+
 });

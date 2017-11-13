@@ -8,14 +8,14 @@
         '$rootScope', '$q', '$timeout',
         'WalletStatus', '$state', 
          'bitloxHidChrome', 'bitloxHidWeb', 'bitloxBleApi', 'BIP32', 'bitloxTransaction', 'addressInfo', 'MIN_OUTPUT', 'bcMath', 'platformInfo',
-         '$ionicLoading',  '$ionicModal', '$log', 'lodash', 'txUtil', 'popupService', 'gettextCatalog', 'walletService'
+         '$ionicLoading',  '$ionicModal', '$log', 'lodash', 'txUtil', 'popupService', 'gettextCatalog'
       ];
 
     function WalletFactory(
         $rootScope, $q, $timeout,
         WalletStatus, $state,
         hidchrome,hidweb, bleapi, BIP32, Transaction, addressInfo, MIN_OUTPUT, bcMath, platformInfo,
-        $ionicLoading, $ionicModal, $log, lodash, txUtil, popupService, gettextCatalog, walletService) {
+        $ionicLoading, $ionicModal, $log, lodash, txUtil, popupService, gettextCatalog) {
 
         var Wallet = function(data) {
             this.number = data.wallet_number;
@@ -162,9 +162,7 @@
                 // Execute action
                 successListener()
                 errorListener()
-                $rootScope.bitloxConnectErrorListener = $rootScope.$on('bitloxConnectError', function() {
-                  cb(new Error("BitLox Disconnected"));
-                })      
+
                 $log.log("BitLox connection successful, signing...")
 
                 if(longSign) {
@@ -182,11 +180,7 @@
                 newScope.modal.remove()                
               });
               errorListener = newScope.$on('bitloxConnectError', function() {
-
-                // Execute action
-                walletService.removeTx(wallet, txp, function() {  
-                  //noop
-                })                
+                $rootScope.destroyBitloxListeners()        
               });
           }
         }
