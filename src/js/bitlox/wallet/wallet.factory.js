@@ -8,7 +8,7 @@
         '$rootScope', '$q', '$timeout',
         'WalletStatus', '$state', 
          'bitloxHidChrome', 'bitloxHidWeb', 'bitloxBleApi', 'BIP32', 'bitloxTransaction', 'addressInfo', 'MIN_OUTPUT', 'bcMath', 'platformInfo',
-         '$ionicLoading',  '$ionicModal', '$log', 'lodash', 'txUtil', 'popupService', 'gettextCatalog', walletService
+         '$ionicLoading',  '$ionicModal', '$log', 'lodash', 'txUtil', 'popupService', 'gettextCatalog', 'walletService'
       ];
 
     function WalletFactory(
