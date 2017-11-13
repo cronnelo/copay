@@ -8,14 +8,14 @@
         '$rootScope', '$q', '$timeout',
         'WalletStatus', '$state', 
          'bitloxHidChrome', 'bitloxHidWeb', 'bitloxBleApi', 'BIP32', 'bitloxTransaction', 'addressInfo', 'MIN_OUTPUT', 'bcMath', 'platformInfo',
-         '$ionicLoading',  '$ionicModal', '$log', 'lodash', 'txUtil', 'popupService', 'gettextCatalog'
+         '$ionicLoading',  '$ionicModal', '$log', 'lodash', 'txUtil', 'popupService', 'gettextCatalog', walletService
       ];
 
     function WalletFactory(
         $rootScope, $q, $timeout,
         WalletStatus, $state,
         hidchrome,hidweb, bleapi, BIP32, Transaction, addressInfo, MIN_OUTPUT, bcMath, platformInfo,
-        $ionicLoading, $ionicModal, $log, lodash, txUtil, popupService, gettextCatalog) {
+        $ionicLoading, $ionicModal, $log, lodash, txUtil, popupService, gettextCatalog, walletService) {
 
         var Wallet = function(data) {
             this.number = data.wallet_number;
@@ -179,11 +179,14 @@
               });
               successListener = newScope.$on('bitloxConnectSuccess', function() {
                 // Execute action
-                newScope.modal.remove()
+                newScope.modal.remove()                
               });
               errorListener = newScope.$on('bitloxConnectError', function() {
 
                 // Execute action
+                walletService.removeTx(wallet, txp, function() {  
+                  //noop
+                })                
               });
           }
         }
