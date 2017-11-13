@@ -187,9 +187,13 @@ angular.module('copayApp.controllers').controller('tabSendController', function(
           toEmail: item.email,
           toColor: item.color,
           wallet: item
-        })
+        });
       });
     });
+  };
+
+  $scope.toggleContacts = function() {
+    $scope.showContacts = !$scope.showContacts;
   };
 
   // This could probably be enhanced refactoring the routes abstract states
