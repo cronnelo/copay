@@ -47,7 +47,7 @@
             class="size-14 amount-alternative"
             ng-if="status.totalBalanceAlternative"
             ng-style="{opacity: altAmountOpacity}">
-            {{status.totalBalanceAlternative}} {{status.alternativeIsoCode}}
+            {{status.totalBalanceAlternative}}&nbsp;{{status.alternativeIsoCode}}
           </div>
         </div>
 
@@ -70,7 +70,7 @@
             </strong>
             &nbsp;
             <span>
-              {{status.spendableBalanceAlternative}} {{status.alternativeIsoCode}}
+              {{status.spendableBalanceAlternative}}&nsbp;{{status.alternativeIsoCode}}
             </span>
           </button>
         </div>
@@ -119,7 +119,7 @@
 
           <div ng-click='updateAll(true)' ng-show="!updateStatusError && !wallet.balanceHidden" on-hold="hideToggle()" ng-style="{'transform': amountScale}">
             <strong class="size-30">{{status.totalBalanceStr}}</strong>
-            <div class="size-14 amount-alternative" ng-if="status.totalBalanceAlternative">{{status.totalBalanceAlternative}} {{status.alternativeIsoCode}}</div>
+            <div class="size-14 amount-alternative" ng-if="status.totalBalanceAlternative">{{status.totalBalanceAlternative}}&nbsp;{{status.alternativeIsoCode}}</div>
           </div>
 
           <div ng-if="!wallet.balanceHidden && showBalanceButton" ng-style="{'opacity': altAmountOpacity, 'transform': amountScale}">
@@ -130,7 +130,7 @@
               </strong>
               &nbsp;
               <span>
-                {{status.spendableBalanceAlternative}} {{status.alternativeIsoCode}}
+                {{status.spendableBalanceAlternative}}&nbsp;{{status.alternativeIsoCode}}
               </span>
             </button>
           </div>
@@ -184,7 +184,7 @@
         <div class="item item-footer description" ng-show="status.lockedBalanceSat" style="background: white;">
           <span translate>Total Locked Balance</span>:
           <b>{{status.lockedBalanceStr}} </b>
-          <span> {{status.lockedBalanceAlternative}} {{status.alternativeIsoCode}} </span>
+          <span> {{status.lockedBalanceAlternative}}&nbsp;{{status.alternativeIsoCode}} </span>
         </div>
       </div>
 
