@@ -4,6 +4,7 @@ angular.module('copayApp.controllers').controller('feeLevelsController', functio
 
   var FEE_MULTIPLIER = 10;
   var FEE_MIN = 0;
+  var DEFAULT_AVG_MINUTES = 30;
 
   var showErrorAndClose = function(title, msg) {
     title = title || gettextCatalog.getString('Error');
@@ -62,12 +63,16 @@ angular.module('copayApp.controllers').controller('feeLevelsController', functio
     if (value) {
       $scope.customFeePerKB = null;
       $scope.feePerSatByte = (value.feePerKB / 1000).toFixed();
-      $scope.avgConfirmationTime = value.nbBlocks * 10;
+      $scope.avgConfirmationTime = value.nbBlocks * 10 || DEFAULT_AVG_MINUTES;
     } else {
       $scope.avgConfirmationTime = null;
       $scope.customSatPerByte = { value: Number($scope.feePerSatByte) };
       $scope.customFeePerKB = ($scope.feePerSatByte * 1000).toFixed();
     }
+
+    $scope.lessThanSign = $scope.avgConfirmationTime &&
+                          $scope.network !== 'livenet'
+                        ? '<' : null;
 
     // Warnings
     $scope.setFeesRecommended();
