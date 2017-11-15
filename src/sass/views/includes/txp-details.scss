@@ -125,8 +125,19 @@
       margin-top: 10px;
       margin-bottom: 5px;
       display: flex;
+      flex-flow: row wrap;
       align-items: center;
       border-radius: 4px;
+
+      .wallet-box {
+        flex: 1;
+      }
+
+      .sub-wallet-box {
+        flex: 1 1 100%;
+        margin: 6px 0 0 10px;
+        font-size: 14px;
+      }
 
       .recipient-address {
         display:inline;
@@ -142,9 +153,12 @@
         padding: 0 10px;
         float: right;
 
-        &.big-icon-svg > .bg {
-          width: 24px;
-          height: 24px;
+        &.big-icon-svg {
+          flex: 0;
+          & > .bg {
+            width: 24px;
+            height: 24px;
+          }
         }
       }
       contact {
