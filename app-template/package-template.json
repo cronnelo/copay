@@ -115,6 +115,7 @@
     "apply:bitlox":           "npm i fs-extra && cd app-template && node apply.js bitlox && npm i && cordova prepare && npm run fixbitcore",
     "apply:deuscoin":         "npm i fs-extra && cd app-template && node apply.js deuscoin && npm i && cordova prepare && npm run fixbitcore",
     "apply:aureus":           "npm i fs-extra && cd app-template && node apply.js aureus && npm i && cordova prepare && npm run fixbitcore",
+    "apply:switch":           "npm i fs-extra && cd app-template && node apply.js switch && npm i && cordova prepare && npm run fixbitcore",
     "apply:primecode":        "npm i fs-extra && cd app-template && node apply.js primecode && npm i && cordova prepare && npm run fixbitcore",
     "fixbitcore":             "rm -rf node_modules/bitcore* && npm i git://github.com/bitlox/bitcore-wallet-client#customnet",
     "test":                   "echo \"no package tests configured\"",
