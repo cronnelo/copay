@@ -19,7 +19,9 @@ angular.module('copayApp.directives')
         var ms = scope.clipboardMillisecond || '1000';
         var msg = gettextCatalog.getString('Copied to clipboard');
 
-        msg += '\n' + scope.clipboardMessage;
+        if (scope.clipboardMesssage) {
+          msg += '\n' + scope.clipboardMessage;
+        }
 
         elem.bind('click', function() {
           var data = scope.copyToClipboard;
