@@ -17,7 +17,7 @@
       <div class="col time" ng-if="!customFeePerKB">
         <div class="value">
           <span ng-if="avgConfirmationTime">
-            {{avgConfirmationTime | amDurationFormat: 'minute'}}
+            {{lessThanSign}} {{avgConfirmationTime | amDurationFormat: 'minute'}}
           </span>
           <span ng-if="loadingFee">...</span>
         </div>
