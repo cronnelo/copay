@@ -4,7 +4,7 @@ angular.module('copayApp.controllers').controller('feeLevelsController', functio
 
   var FEE_MULTIPLIER = 10;
   var FEE_MIN = 0;
-  var DEFAULT_AVG_MINUTES = 30;
+  var DEFAULT_AVG_MINUTES = 5;
 
   var showErrorAndClose = function(title, msg) {
     title = title || gettextCatalog.getString('Error');
