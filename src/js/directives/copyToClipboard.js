@@ -5,24 +5,31 @@ angular.module('copayApp.directives')
     return {
       restrict: 'A',
       scope: {
-        copyToClipboard: '=copyToClipboard'
+        copyToClipboard: '=',
+        clipboardMessage: '=',
+        clipboardMillisecond: '='
       },
-      link: function(scope, elem, attrs, ctrl) {
+      link: function(scope, elem) {
         var isCordova = platformInfo.isCordova;
-        var isChromeApp = platformInfo.isChromeApp;
         var isNW = platformInfo.isNW;
         elem.bind('mouseover', function() {
           elem.css('cursor', 'pointer');
         });
 
+        var ms = scope.clipboardMillisecond || '1000';
         var msg = gettextCatalog.getString('Copied to clipboard');
+
+        if (scope.clipboardMesssage) {
+          msg += '\n' + scope.clipboardMessage;
+        }
+
         elem.bind('click', function() {
           var data = scope.copyToClipboard;
           if (!data) return;
           if (isCordova) {
             cordova.plugins.clipboard.copy(data,
-              function() { $log.log('successfully copied to board')},
-              function(err) { $log.log(err); $log.log('copy to board error')}
+              function() { $log.log('successfully copied to board'); },
+              function(err) { $log.log(err); $log.log('copy to board error');}
             );
           } else if (isNW) {
             nodeWebkitService.writeToClipboard(data);
@@ -33,9 +40,9 @@ angular.module('copayApp.directives')
             return;
           }
           scope.$apply(function() {
-            ionicToast.show(msg, 'middle', false, 1000);
+            ionicToast.show(msg, 'middle', false, ms);
           });
         });
       }
-    }
+    };
   });
