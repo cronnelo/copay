@@ -1,6 +1,11 @@
 .button-blue {
   background-color: #4A90E2 !important;
+
+  &:active {
+    background-color: darken(#4A90E2, 15%) !important;
+  }
 }
+
 .open-bitlox {
   span {
     line-height: 3.1em
