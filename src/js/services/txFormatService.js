@@ -161,7 +161,9 @@ angular.module('copayApp.services').factory('txFormatService', function($filter,
         }
         tx.amount = lodash.reduce(tx.outputs, function(total, o) {
           o.amountStr = root.formatAmountStr(o.amount) + " " + unitSymbol;
-          o.alternativeAmountStr = root.formatFormerAlternativeStr(o.amount, networkObj, customRate);
+          o.alternativeAmountStr = customRate
+            ? root.formatFormerAlternativeStr(tx.amount, networkObj, customRate)
+            : root.formatAlternativeStr(tx.amount, networkObj);
           return total + o.amount;
         }, 0);
       }
