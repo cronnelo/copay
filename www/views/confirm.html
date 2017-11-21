@@ -29,17 +29,19 @@
 
         <div class="item">
           <span class="label" translate>To</span>
-          <span class="payment-proposal-to" ng-if="!recipientType">
+          <span class="payment-proposal-to"
+                ng-if="!recipientType"
+                ng-class="{'with-sub-wallet': tx.toName}">
             <i class="icon big-icon-svg"
-              wallet-icon
-              data-wallet="wallet"
-              data-network="network"
-              data-bgcolor="tx.toColor"></i>
+               wallet-icon
+               data-wallet="wallet"
+               data-network="network"
+               data-bgcolor="tx.toColor"></i>
             <div copy-to-clipboard="tx.toAddress" ng-if="!tx.paypro" class="ellipsis wallet-box">
               <contact ng-if="!tx.toName" address="{{tx.toAddress}}"></contact>
-              <span class="m15l size-14" ng-if="tx.toName">{{tx.toName}}</span>
+              <span ng-if="tx.toName">{{tx.toName}}</span>
               <contact ng-if="!tx.toName" address="{{toAddress}}"></contact>
-              <span class="m15l size-14" ng-if="toName">{{toName}}</span>
+              <span ng-if="toName">{{toName}}</span>
             </div>
 
             <div ng-if="tx.paypro" ng-click="openPPModal(tx.paypro)" class="m15l size-14 w100p pointer">
@@ -49,9 +51,9 @@
               <span ng-show="tx.toName">{{tx.toName}}</span>
             </div>
 
-            <div class="sub-wallet-box" ng-if="tx.toName" copy-to-clipboard="tx.toAddress">
+            <p class="sub-wallet-box" ng-if="tx.toName" copy-to-clipboard="tx.toAddress">
               {{tx.toAddress}}
-            </div>
+            </p>
 
             <!-- <contact ng-if="!tx.hasMultiplesOutputs" class="ellipsis" address="{{toAddress}}"></contact>
             <span ng-if="tx.hasMultiplesOutputs" translate>Multiple recipients</span> -->
