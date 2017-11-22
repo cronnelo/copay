@@ -44,7 +44,7 @@
           ng-class="{amount__balance: amountIsCollapsible}">
           <strong class="size-30">{{status.totalBalanceStr}}</strong>
           <div
-            class="size-14 amount-alternative"
+            class="size-14 amount-alternative nowrap"
             ng-if="status.totalBalanceAlternative"
             ng-style="{opacity: altAmountOpacity}">
             {{status.totalBalanceAlternative}} {{status.alternativeIsoCode}}
@@ -115,7 +115,7 @@
 
           <div ng-click='updateAll(true)' ng-show="!updateStatusError && !wallet.balanceHidden" on-hold="hideToggle()" ng-style="{'transform': amountScale}">
             <strong class="size-30">{{status.totalBalanceStr}}</strong>
-            <div class="size-14 amount-alternative" ng-if="status.totalBalanceAlternative">
+            <div class="size-14 amount-alternative nowrap" ng-if="status.totalBalanceAlternative">
               {{status.totalBalanceAlternative}} {{status.alternativeIsoCode}}
             </div>
           </div>
