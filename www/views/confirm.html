@@ -55,7 +55,11 @@
               <span ng-show="tx.toName">{{tx.toName}}</span>
             </div>
 
-            <p class="sub-wallet-box" ng-if="tx.toName" copy-to-clipboard="tx.toAddress">
+            <p class="sub-wallet-box"
+               ng-if="tx.toName"
+               copy-to-clipboard="tx.toAddress"
+               clipboard-message="tx.toAddress"
+               clipboard-millisecond="5000">
               {{tx.toAddress}}
             </p>
 
