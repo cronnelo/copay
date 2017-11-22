@@ -146,12 +146,14 @@ RateService.prototype.whenAvailable = function(callback) {
   }
 };
 
-RateService.prototype.toFiat = function(satoshis, code, network) {
+RateService.prototype.toFiat = function(satoshis, code, network, rate) {
   if (!this.isAvailable()) {
     return null;
   }
 
-  return satoshis * this.SAT_TO_BTC * this.getRate(code, network);
+  rate = rate != null ? rate : this.getRate(code, network);
+
+  return satoshis * this.SAT_TO_BTC * rate;
 };
 
 RateService.prototype.fromFiat = function(amount, code, network) {
