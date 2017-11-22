@@ -120,9 +120,7 @@
           }          
           if(api.getStatus() === api.STATUS_CONNECTED || api.getStatus() === api.STATUS_IDLE) {
             $log.log('device is already connected, proceed with transaction:'+api.getStatus())
-            $rootScope.bitloxConnectErrorListener = $rootScope.$on('bitloxConnectError', function() {
-              cb(new Error("BitLox Disconnected"));
-            })
+
             if(longSign) {
               return popupService.showConfirm(gettextCatalog.getString('Warning'), "BitLox will take a very long time to sign this transaction. Please keep your BitLox plugged in and be patient.", "OK", "Cancel", function(ok) {
                 if(ok) { _bitloxSend(wallet,txp,signTimer,cb) }
@@ -187,7 +185,8 @@
         function _bitloxSend(wallet,txp,signTimer,cb) {
 
             if(api.getStatus() !== api.STATUS_CONNECTED && api.getStatus() !== api.STATUS_IDLE) {
-              return cb(new Error("Unable to connect to BitLox"))
+              return cb()
+              // return cb(new Error("Unable to connect to BitLox"))
             }          
             $ionicLoading.show({
               template: 'Connecting to BitLox, Please Wait...'
@@ -217,6 +216,10 @@
             //$log.log('xPubKeys', xPubKeys)
 
             return api.getDeviceUUID().then(function(results) {
+
+              $rootScope.bitloxConnectErrorListener = $rootScope.$on('bitloxConnectError', function() {
+                cb(new Error("BitLox Disconnected"));
+              })              
               $log.log('got device UUID, finding wallet')
               var externalSource = wallet.getPrivKeyExternalSourceName()
               var bitloxInfo = externalSource.split('/')
