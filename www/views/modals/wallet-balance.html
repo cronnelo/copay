@@ -25,9 +25,9 @@
             <span class="wallet-balance__amount wallet-balance__amount--total">
               {{status.totalBalanceStr}}
             </span>
-            <div>
+            <div class="nowrap">
               <span class="wallet-balance__amount--alternative ng-binding">
-                {{status.totalBalanceAlternative}}&nbsp;{{status.alternativeIsoCode}}
+                {{status.totalBalanceAlternative}} {{status.alternativeIsoCode}}
               </span>
             </div>
           </span>
@@ -44,9 +44,9 @@
             <span class="wallet-balance__amount wallet-balance__amount--available">
               {{status.spendableBalanceStr}}
             </span>
-            <div>
+            <div class="nowrap">
               <span class="wallet-balance__amount--alternative ng-binding">
-                {{status.spendableBalanceAlternative}}&nbsp;{{status.alternativeIsoCode}}
+                {{status.spendableBalanceAlternative}} {{status.alternativeIsoCode}}
               </span>
             </div>
           </span>
@@ -63,9 +63,9 @@
             <span class="wallet-balance__amount wallet-balance__amount--confirming">
               {{status.pendingBalanceStr}}
             </span>
-            <div>
+            <div class="nowrap">
               <span class="wallet-balance__amount--alternative ng-binding">
-                {{status.pendingBalanceAlternative}}&nbsp;{{status.alternativeIsoCode}}
+                {{status.pendingBalanceAlternative}} {{status.alternativeIsoCode}}
               </span>
             </div>
           </span>
@@ -82,9 +82,9 @@
             <span class="wallet-balance__amount wallet-balance__amount--locked">
               {{status.lockedBalanceStr}}
             </span>
-            <div>
+            <div class="nowrap">
               <span class="wallet-balance__amount--alternative ng-binding">
-                {{status.lockedBalanceAlternative}}&nbsp;{{status.alternativeIsoCode}}
+                {{status.lockedBalanceAlternative}} {{status.alternativeIsoCode}}
               </span>
             </div>
           </span>
