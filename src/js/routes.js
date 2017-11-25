@@ -1255,7 +1255,7 @@ angular.module('copayApp').config(function(historicLogProvider, $provide, $logPr
         }
       });
   })
-  .run(function($rootScope, $state, $location, $log, $timeout, startupService, ionicToast, fingerprintService, $ionicHistory, $ionicPlatform, $window, appConfigService, lodash, platformInfo, profileService, uxLanguage, gettextCatalog, openURLService, storageService, scannerService, configService, emailService, /* plugins START HERE => */ coinbaseService, glideraService, amazonService, bitpayCardService, applicationService, mercadoLibreService) {
+  .run(function($rootScope, $state, $location, $log, $timeout, startupService, ionicToast, fingerprintService, $ionicHistory, $ionicPlatform, $window, appConfigService, lodash, platformInfo, profileService, uxLanguage, gettextCatalog, openURLService, storageService, scannerService, configService, emailService, /* plugins START HERE => */ coinbaseService, glideraService, amazonService, bitpayCardService, applicationService) {
 
     uxLanguage.init();
 
@@ -1391,11 +1391,27 @@ angular.module('copayApp').config(function(historicLogProvider, $provide, $logPr
       }
       win.menu = nativeMenuBar;
     }
+
+    $rootScope.isOffline = !navigator.online;
+
+    $window.addEventListener('offline', function() {
+      $rootScope.$apply(function() {
+        $rootScope.isOffline = true;
+      });
+    });
+
+    $window.addEventListener('online', function() {
+      $rootScope.$apply(function() {
+        $rootScope.isOffline = false;
+      });
+    });
+
     $rootScope.destroyBitloxListeners = function() {
       if($rootScope.bitloxConnectErrorListener) {
         $rootScope.bitloxConnectErrorListener();    
       }    
     }
+
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
       $log.debug('Route change from:', fromState.name || '-', ' to:', toState.name);
       $log.debug('            toParams:' + JSON.stringify(toParams || {}));

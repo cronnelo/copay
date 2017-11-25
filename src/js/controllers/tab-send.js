@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('copayApp.controllers').controller('tabSendController', function($scope, $rootScope, $log, $timeout, $ionicScrollDelegate, addressbookService, profileService, lodash, $state, walletService, incomingData, popupService, platformInfo, bwcError, gettextCatalog, scannerService, storageService) {
+angular.module('copayApp.controllers').controller('tabSendController', function($scope, $rootScope, $log, $timeout, $ionicScrollDelegate, addressbookService, profileService, lodash, $state, walletService, incomingData, popupService, platformInfo, bwcError, gettextCatalog, scannerService, storageService, ionicToast) {
 
   var originalList;
   var CONTACTS_SHOW_LIMIT;
@@ -209,7 +209,13 @@ angular.module('copayApp.controllers').controller('tabSendController', function(
     });
   };
 
-  $scope.$on("$ionicView.beforeEnter", function(event, data) {
+  $scope.$on("$ionicView.beforeEnter", function(event) {
+    if ($rootScope.isOffline) {
+      ionicToast.show(gettextCatalog.getString('No internet connection. Please try again.'), 'middle', false, 2000);
+      $state.go('tabs.home');
+      return;
+    }
+
     $scope.checkingBalance = true;
     $scope.formData = {
       search: null
