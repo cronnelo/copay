@@ -16,7 +16,10 @@
     </div>
 
     <div class="list card" ng-show="txps[0] && !fetchingProposals" style="padding: 0;">
-        <a ng-repeat="tx in txps" ng-click="openTxpModal(tx)" class="wallet-details__item item item-sub" ng-include="'views/includes/txp.html'"></a>
+        <a class="wallet-details__item item item-sub"
+           ng-include="'views/includes/txp.html'"
+           ng-repeat="tx in txps"
+           ng-click="openTxpModal(tx)"></a>
     </div>
 
     <div class="list card" ng-show="!txps[0] && !fetchingProposals">
