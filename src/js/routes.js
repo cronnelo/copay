@@ -1392,7 +1392,7 @@ angular.module('copayApp').config(function(historicLogProvider, $provide, $logPr
       win.menu = nativeMenuBar;
     }
 
-    $rootScope.isOffline = !navigator.online;
+    $rootScope.isOffline = !navigator.onLine;
 
     $window.addEventListener('offline', function() {
       $rootScope.$apply(function() {
