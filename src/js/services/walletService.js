@@ -686,21 +686,21 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
   };
 
   root.signTx = function(wallet, txp, password, cb) {
+    debugger;
     if (!wallet || !txp || !cb) {
-      $log.log('missing parameter')
+      $log.log('missing parameter');
       return cb('MISSING_PARAMETER');
-
     }
 
     if (wallet.isPrivKeyExternal()) {
-      $log.log( wallet.getPrivKeyExternalSourceName())
+      $log.log( wallet.getPrivKeyExternalSourceName());
       if (wallet.getPrivKeyExternalSourceName().indexOf('bitlox') > -1) {
-        $log.log('private key is bitlox')
+        $log.log('private key is bitlox');
         $rootScope.bitloxConnectErrorListener = $rootScope.$on('bitloxConnectError', function() {
           root.removeTx(wallet, txp, function() {  
             //noop
-          })  
-        })              
+          });
+        });
         return bitlox.wallet.signTransaction(wallet, txp, cb)
       }
       switch (wallet.getPrivKeyExternalSourceName()) {
@@ -791,7 +791,7 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
 
         updateRemotePreferencesFor(clients, prefs, next);
       });
-    };
+    }
 
     customNetworks.getAll().then(function(CUSTOMNETWORKS) {
 
@@ -920,7 +920,7 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
       case 'P2SH':
         return wallet.m * 72 + wallet.n * 36 + 44;
     }
-  };
+  }
 
 
   root.getEstimatedTxSize = function(wallet, nbOutputs) {
@@ -931,7 +931,7 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
     var inputSize = getEstimatedSizeForSingleInput(wallet);
     var outputSize = 34;
     var nbInputs = 1; //Assume 1 input
-    var nbOutputs = nbOutputs || 2; // Assume 2 outputs
+    nbOutputs = nbOutputs || 2; // Assume 2 outputs
 
     var size = overhead + inputSize * nbInputs + outputSize * nbOutputs;
     return parseInt((size * (1 + safetyMargin)).toFixed(0));
@@ -1010,7 +1010,7 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
       var addrObj = lodash.find(addr, function(a) {
         return a.address == address;
       });
-      var err = null;
+      err = null;
       if (!addrObj) {
         err = 'Error: specified address not in wallet';
       }
@@ -1124,7 +1124,6 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
   };
 
   root.publishAndSign = function(wallet, txp, cb, customStatusHandler) {
-
     var publishFn = root.publishTx;
 
     // Already published?
@@ -1167,10 +1166,10 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
               
               
               return root.removeTx(wallet, txp, function() {
-                $ionicLoading.hide()
+                $ionicLoading.hide();
                 // $rootScope.$emit('Local/TxAction', wallet.id);
-                return cb(null, signedTxp)       
-              })
+                return cb(null, signedTxp);
+              });
             }
           }
 
