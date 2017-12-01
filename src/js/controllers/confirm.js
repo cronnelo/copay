@@ -488,6 +488,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
     }
 
     ongoingProcess.set('creatingTx', true, onSendStatusChange);
+
     getTxp(lodash.clone(tx), wallet, false, function(err, txp) {
       ongoingProcess.set('creatingTx', false, onSendStatusChange);
       if (err) return;
@@ -520,9 +521,16 @@ angular.module('copayApp.controllers').controller('confirmController', function(
             if (err) setSendError(err);
           }, onSendStatusChange);
         }
+
         $rootScope.destroyBitloxListeners();
+
         walletService.publishAndSign(wallet, txp, function(err, txp) {
-          if (err) return setSendError(err);
+          if (err === 'cancel') {
+            return;
+          } else if (err) {
+            return setSendError(err);
+          }
+
           if (config.confirmedTxsNotifications && config.confirmedTxsNotifications.enabled) {
             txConfirmNotification.subscribe(wallet, {
               txid: txp.txid

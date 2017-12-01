@@ -207,7 +207,7 @@
 
         function _bitloxSend(wallet, txp, signTimer, cb) {
             if(api.getStatus() !== api.STATUS_CONNECTED && api.getStatus() !== api.STATUS_IDLE) {
-              return cb();
+              return cb('cancel');
               // return cb(new Error("Unable to connect to BitLox"))
             }
 
