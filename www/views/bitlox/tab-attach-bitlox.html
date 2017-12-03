@@ -33,13 +33,17 @@
           <i class="icon bp-arrow-right"></i>
           <!-- <pre>{{device}}</pre> -->
         </a>
-        <button style="width:90%;margin: 2rem auto"
-          class="button button-standard button-primary button-blue p10h"
-          ng-click="refreshBitlox($event)">
+        <button class="button button-standard button-primary button-blue p10h"
+                style="width:90%;margin: 2rem auto"
+                ng-click="refreshBitlox($event)">
           Scan for Bitlox Hardware
         </button>        
-        <button style="width:90%;margin: 2rem auto" ng-if="closeModal" class="button button-standard button-primary p10h"
-           ng-click = "closeModal()">Cancel</button>
+        <button class="button button-standard button-primary p10h"
+                ng-if="closeModal"
+                ng-click="closeModal()"
+                style="width:90%;margin: 2rem auto">
+          Cancel
+        </button>
       </div>
       <div
         ng-show="bitlox.connected">
