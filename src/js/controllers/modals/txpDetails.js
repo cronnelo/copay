@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('copayApp.controllers').controller('txpDetailsController', function($scope, $rootScope, $timeout, $interval, $log, ongoingProcess, platformInfo, $ionicScrollDelegate, txFormatService, bwcError, gettextCatalog, lodash, walletService, popupService, $ionicHistory, feeService) {
+angular.module('copayApp.controllers').controller('txpDetailsController', function($scope, $rootScope, $timeout, $interval, $log, ongoingProcess, platformInfo, $ionicScrollDelegate, txFormatService, bwcError, gettextCatalog, lodash, walletService, popupService, $ionicHistory, feeService, $state) {
   var isGlidera = $scope.isGlidera;
   var GLIDERA_LOCK_TIME = 6 * 60 * 60;
   var now = Math.floor(Date.now() / 1000);
@@ -294,5 +294,9 @@ angular.module('copayApp.controllers').controller('txpDetailsController', functi
     bwsEvent();
     $scope.loading = null;
     $scope.txpDetailsModal.hide();
+
+    if ($state.current.name === 'tabs.proposals') {
+      $rootScope.$broadcast('action/updateTxps', { walletId: $scope.wallet.id })
+    }
   };
 });

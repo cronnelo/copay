@@ -1,28 +1,43 @@
 'use strict';
 
 angular.module('copayApp.controllers').controller('proposalsController',
-  function($timeout, $scope, profileService, $log, txpModalService, addressbookService, timeService) {
+  function($timeout, $rootScope, $scope, profileService, $log, txpModalService, addressbookService, timeService, walletService) {
 
     $scope.fetchingProposals = true;
 
-    $scope.$on("$ionicView.enter", function(event, data) {
+    $scope.$on("$ionicView.enter", function() {
       addressbookService.list(function(err, ab) {
         if (err) $log.error(err);
         $scope.addressbook = ab || {};
+        updateTxps();
+      });
 
-        profileService.getTxps(50, function(err, txps) {
-          $scope.fetchingProposals = false;
+      $scope.$on('action/updateTxps', function(event, data) {
+        var wallet = profileService.getWallet(data.walletId);
+        walletService.getStatus(wallet, {}, function(err, status) {
           if (err) {
             $log.error(err);
             return;
           }
-          $scope.txps = txps;
-          $timeout(function() {
-            $scope.$apply();
-          });
+          wallet.status = status;
+          updateTxps();
         });
       });
     });
+
+    function updateTxps() {
+      profileService.getTxps({ limit: 50 }, function(err, txps) {
+        $scope.fetchingProposals = false;
+        if (err) {
+          $log.error(err);
+          return;
+        }
+        $scope.txps = txps;
+        $timeout(function() {
+          $scope.$apply();
+        });
+      });
+    }
 
     $scope.openTxpModal = txpModalService.open;
 
