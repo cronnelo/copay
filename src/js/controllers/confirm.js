@@ -129,7 +129,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
       description: data.stateParams.description,
       paypro: data.stateParams.paypro,
 
-      feeLevel: configFeeLevel,
+      feeLevel: $scope.network !== 'livenet' ? 'superEconomy' : configFeeLevel,
       spendUnconfirmed: walletConfig.spendUnconfirmed,
 
       // Vanity tx info (not in the real tx)
