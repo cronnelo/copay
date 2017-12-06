@@ -1,11 +1,10 @@
-<ion-view class="settings" show-tabs ng-controller="preferencesAltCurrencyController">
-  <ion-nav-bar class="bar-royal">
-    <ion-nav-title>
-      {{'Alternative Currency'|translate}}
-    </ion-nav-title>
-    <ion-nav-back-button>
-    </ion-nav-back-button>
-  </ion-nav-bar>
+<ion-modal-view class="settings" show-tabs ng-controller="preferencesAltCurrencyController">
+  <ion-header-bar align-title="center" class="bar-royal">
+    <div class="title">{{'Alternative Currency' | translate}}</div>
+    <button class="button button-clear" ng-click="ok()" translate>
+      OK
+    </button>
+  </ion-header-bar>
   <ion-content>
     <div class="bar bar-header item-input-inset m20b">
       <label class="item-input-wrapper">
@@ -38,4 +37,4 @@
       distance="50%">
    </ion-infinite-scroll>
   </ion-content>
-</ion-view>
+</ion-modal-view>

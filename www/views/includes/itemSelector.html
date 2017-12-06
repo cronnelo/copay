@@ -5,11 +5,19 @@
       <img class="icon-close" src="img/icon-close.svg" alt="close" ng-click="hide()">
     </div>
   </div>
-  <a class="item item-icon-left option no-border" ng-click="onSelect()">
+  <a ng-show="showSendMax" class="item item-icon-left option no-border" ng-click="sendMax()">
     <i class="icon ion-ios-speedometer-outline"></i>
     <div class="item-selector-inner">
       <div class="item-selector-details">
         <div class="item-selector-name" translate>Send max amount</div>
+      </div>
+    </div>
+  </a>
+  <a class="item item-icon-left option no-border" ng-click="selectAlternativeCurrency()">
+    <i class="icon ion-ios-pricetags"></i>
+    <div class="item-selector-inner">
+      <div class="item-selector-details">
+        <div class="item-selector-name" translate>Select Alternative Currency</div>
       </div>
     </div>
   </a>
