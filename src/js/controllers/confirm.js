@@ -56,7 +56,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
       $ionicHistory.clearHistory();
       $state.go('tabs.send');
     });
-  };
+  }
 
   function setNoWallet(msg) {
     $scope.wallet = null;
@@ -65,7 +65,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
     $timeout(function() {
       $scope.$apply();
     });
-  };
+  }
 
   $scope.$on("$ionicView.beforeEnter", function(event, data) {
 
@@ -116,7 +116,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
           }
         });
       });
-    };
+    }
 
     // Setup $scope
     $scope.network = (new bitcore.Address(data.stateParams.toAddress)).network.name;
@@ -176,7 +176,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
       excludeUnconfirmedUtxos: !tx.spendUnconfirmed,
       returnInputs: true,
     }, cb);
-  };
+  }
 
 
   function getTxp(tx, wallet, dryRun, cb) {
@@ -225,7 +225,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
       }
       return cb(null, ctxp);
     });
-  };
+  }
 
   function updateTx(tx, wallet, opts, cb) {
 
@@ -343,7 +343,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
       $scope.buttonText += gettextCatalog.getString('to accept');
     } else
       $scope.buttonText += gettextCatalog.getString('to send');
-  };
+  }
 
 
   $scope.toggleAddress = function() {
@@ -367,7 +367,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
         }));
       }
       return warningMsg.join('\n');
-    };
+    }
 
     var msg = gettextCatalog.getString("{{fee}} will be deducted for bitcoin networking fees.", {
       fee: txFormatService.formatAmountStr(sendMaxInfo.fee)
@@ -378,7 +378,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
       msg += '\n' + warningMsg;
 
     popupService.showAlert(null, msg, function() {});
-  };
+  }
 
   $scope.onWalletSelect = function(wallet) {
     setWallet(wallet, tx);
@@ -418,7 +418,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
       var m = Math.floor(totalSecs / 60);
       var s = totalSecs % 60;
       $scope.remainingTimeStr = ('0' + m).slice(-2) + ":" + ('0' + s).slice(-2);
-    };
+    }
 
     function setExpiredValues() {
       $scope.paymentExpired = true;
@@ -427,8 +427,8 @@ angular.module('copayApp.controllers').controller('confirmController', function(
       $timeout(function() {
         $scope.$apply();
       });
-    };
-  };
+    }
+  }
 
   /* sets a wallet on the UI, creates a TXPs for that wallet */
 
@@ -443,15 +443,14 @@ angular.module('copayApp.controllers').controller('confirmController', function(
 
     updateTx(tx, wallet, {
       dryRun: true
-    }, function(err) {
+    }, function() {
       $timeout(function() {
         $ionicScrollDelegate.resize();
         $scope.$apply();
       }, 10);
-
     });
 
-  };
+  }
 
   var setSendError = function(msg) {
     $scope.sendStatus = '';
@@ -511,7 +510,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
         popupService.showConfirm(null, message, okText, cancelText, function(ok) {
           return cb(!ok);
         });
-      };
+      }
 
       function publishAndSign() {
         if (!wallet.canSign() && !wallet.isPrivKeyExternal()) {
@@ -537,7 +536,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
             });
           }
         }, onSendStatusChange);
-      };
+      }
 
       confirmTx(function(nok) {
         if (nok) {
@@ -568,7 +567,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
     } else if (showName) {
       $scope.sendStatus = showName;
     }
-  };
+  }
 
   $scope.statusChangeHandler = statusChangeHandler;
 
@@ -627,6 +626,5 @@ angular.module('copayApp.controllers').controller('confirmController', function(
 
   $scope.$on('destroy', function() {
     $rootScope.destroyBitloxListeners();
-  })
-
+  });
 });
