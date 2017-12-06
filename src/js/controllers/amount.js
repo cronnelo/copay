@@ -38,6 +38,7 @@ angular.module('copayApp.controllers').controller('amountController', function($
     $scope.showSendMax = false;
 
     $scope.customAmount = data.stateParams.customAmount;
+
     if ($scope.toAddress) {
       $scope.network = (new bitcore.Address($scope.toAddress)).network.name;
     } else {
@@ -75,8 +76,10 @@ angular.module('copayApp.controllers').controller('amountController', function($
       } else if (e.keyCode === 86) {
         if (e.ctrlKey || e.metaKey)
           processClipboard();
-      } else if (e.keyCode === 13)
+      } else if (e.keyCode === 13) {
+        if ($scope.isRatesCalculator) return;
         $scope.finish();
+      }
 
       $timeout(function() {
         $scope.$apply();
@@ -90,6 +93,7 @@ angular.module('copayApp.controllers').controller('amountController', function($
     } else {
       $scope.alternativeIsoCode = config.alternativeIsoCode || 'USD';
     }
+
     $scope.specificAmount = $scope.specificAlternativeAmount = '';
     $scope.isCordova = platformInfo.isCordova;
     unitToSatoshi = config.unitToSatoshi;

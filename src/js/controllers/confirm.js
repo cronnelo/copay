@@ -585,7 +585,6 @@ angular.module('copayApp.controllers').controller('confirmController', function(
   };
 
   $scope.chooseFeeLevel = function(tx, wallet) {
-
     var scope = $rootScope.$new(true);
     scope.network = tx.network;
     scope.feeLevel = tx.feeLevel;

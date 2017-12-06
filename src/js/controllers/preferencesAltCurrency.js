@@ -8,12 +8,11 @@ angular.module('copayApp.controllers').controller('preferencesAltCurrencyControl
     $scope.searchedAltCurrency = '';
 
     function init() {
+      var unusedCurrencyList = [
+        { isoCode: 'LTL' },
+        { isoCode: 'BTC' }
+      ];
 
-      var unusedCurrencyList = [{
-        isoCode: 'LTL'
-      }, {
-        isoCode: 'BTC'
-      }];
       rateService.whenAvailable(function() {
         $scope.listComplete = false;
 
