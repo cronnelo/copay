@@ -31,6 +31,18 @@ angular.module('copayApp.controllers').controller('confirmController', function(
     }, 1);
   }
 
+  $scope.showItemSelector = false;
+  $scope.showItemSelectorMenu = function() {
+    $scope.showItemSelector = true;
+  };
+
+  $scope.updateAlternativeCurrency = function() {
+    updateTx($scope.tx, $scope.wallet, {
+      clearCache: true,
+      dryRun: true
+    });
+    refresh();
+  };
 
   $scope.showWalletSelector = function() {
     $scope.walletSelector = true;
