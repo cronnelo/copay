@@ -38,6 +38,7 @@
               data-network="network"
               data-bgcolor="tx.toColor"></i>
             <div class="ellipsis wallet-box"
+                 ng-class="{'m3t': !tx.toName}"
                  copy-to-clipboard="tx.toAddress"
                  clipboard-message="tx.toAddress"
                  clipboard-millisecond="5000"
