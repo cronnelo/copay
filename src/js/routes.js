@@ -482,7 +482,6 @@ angular.module('copayApp').config(function(historicLogProvider, $provide, $logPr
         url: '/altCurrency',
         views: {
           'tab-settings@tabs': {
-            controller: 'preferencesAltCurrencyController',
             templateUrl: 'views/preferencesAltCurrency.html'
           }
         }

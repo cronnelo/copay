@@ -24,9 +24,11 @@ angular.module('copayApp.controllers').controller('amountController', function($
     $scope.currency = data.stateParams.currency;
     $scope.forceCurrency = data.stateParams.forceCurrency;
 
-    $scope.showMenu = $ionicHistory.backView() && ($ionicHistory.backView().stateName == 'tabs.send' ||
+    $scope.showMenu = $ionicHistory.backView() &&
+      ($ionicHistory.backView().stateName === 'tabs.send' ||
+       $ionicHistory.backView().stateName === 'tabs.bitpayCard' ||
+       $scope.isRatesCalculator);
 
-    $ionicHistory.backView().stateName == 'tabs.bitpayCard');
     $scope.recipientType = data.stateParams.recipientType || null;
     $scope.toAddress = data.stateParams.toAddress;
     $scope.toName = data.stateParams.toName;
@@ -35,9 +37,10 @@ angular.module('copayApp.controllers').controller('amountController', function($
     $scope.toColor = data.stateParams.toColor;
     $scope.walletId = data.stateParams.walletId;
     $scope.wallet = data.stateParams.wallet;
-    $scope.showSendMax = false;
+    $scope.showItemSelector = false;
 
     $scope.customAmount = data.stateParams.customAmount;
+
     if ($scope.toAddress) {
       $scope.network = (new bitcore.Address($scope.toAddress)).network.name;
     } else {
@@ -75,8 +78,10 @@ angular.module('copayApp.controllers').controller('amountController', function($
       } else if (e.keyCode === 86) {
         if (e.ctrlKey || e.metaKey)
           processClipboard();
-      } else if (e.keyCode === 13)
+      } else if (e.keyCode === 13) {
+        if ($scope.isRatesCalculator) return;
         $scope.finish();
+      }
 
       $timeout(function() {
         $scope.$apply();
@@ -90,6 +95,7 @@ angular.module('copayApp.controllers').controller('amountController', function($
     } else {
       $scope.alternativeIsoCode = config.alternativeIsoCode || 'USD';
     }
+
     $scope.specificAmount = $scope.specificAlternativeAmount = '';
     $scope.isCordova = platformInfo.isCordova;
     unitToSatoshi = config.unitToSatoshi;
@@ -125,12 +131,12 @@ angular.module('copayApp.controllers').controller('amountController', function($
     if (value && evaluate(value) > 0) paste(evaluate(value));
   }
 
-  $scope.showSendMaxMenu = function() {
-    $scope.showSendMax = true;
+  $scope.showItemSelectorMenu = function() {
+    $scope.showItemSelector = true;
   };
 
   $scope.sendMax = function() {
-    $scope.showSendMax = false;
+    $scope.showItemSelector = false;
     $scope.useSendMax = true;
     $scope.finish();
   };
@@ -182,6 +188,11 @@ angular.module('copayApp.controllers').controller('amountController', function($
         return val.slice(0, -1) + operator;
       }
     }
+  };
+
+  $scope.updateAlternativeCurrency = function() {
+    $scope.alternativeIsoCode = configService.getSync().wallet.settings.alternativeIsoCode || 'USD';
+    processAmount();
   };
 
   function isOperator(val) {

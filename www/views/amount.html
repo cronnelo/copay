@@ -6,7 +6,7 @@
     <ion-nav-back-button>
     </ion-nav-back-button>
     <ion-nav-buttons side="secondary">
-      <button class="button back-button" ng-click="showSendMaxMenu()" ng-if="showMenu">
+      <button class="button back-button" ng-click="showItemSelectorMenu()" ng-if="showMenu">
         <i class="icon ion-ios-more"></i>
       </button>
     </ion-nav-buttons>
@@ -43,14 +43,24 @@
       </div>
 
       <div class="amount">
-        <div class="amount__editable" ng-class="{'amount__editable--minimize': smallFont, 'amount__editable--standard': !smallFont, 'amount__editable--placeholder': !amount}">
+        <div class="amount__editable"
+             ng-class="{
+               'amount__editable--minimize': smallFont,
+               'amount__editable--standard': !smallFont,
+               'amount__editable--placeholder': !amount
+             }">
           <span class="amount__number">{{amount || "0.00" }}</span>
           <a class="amount__currency-toggle" ng-click="toggleAlternative()" ng-show="showAlternativeAmount">
             {{alternativeIsoCode}}
           </a>
           <a class="amount__currency-toggle" ng-show="!showAlternativeAmount" ng-click="toggleAlternative()">{{unitName}}</a>
         </div>
-        <div ng-class="{'amount__results--minimize': smallFont, 'amount__results--standard': !smallFont, 'amount__results--placeholder': !amountResult}" ng-show="!showAlternativeAmount">
+        <div ng-class="{
+               'amount__results--minimize': smallFont,
+               'amount__results--standard': !smallFont,
+               'amount__results--placeholder': !amountResult
+             }"
+             ng-show="!showAlternativeAmount">
           <div class="amount__result" ng-show="globalResult">{{globalResult}} {{unitName}}</div>
           <div class="amount__result-equiv">
             <span ng-bind-html='amountSign'></span>
@@ -110,7 +120,9 @@
     </div>
   </ion-content>
   <item-selector
-    item-selector-show="showSendMax"
-    item-selector-on-select="sendMax">
+    show="showItemSelector"
+    show-send-max="!isRatesCalculator"
+    send-max-amount="sendMax"
+    update-alternative-currency="updateAlternativeCurrency">
   </item-selector>
 </ion-view>

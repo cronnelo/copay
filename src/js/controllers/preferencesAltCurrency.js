@@ -8,12 +8,11 @@ angular.module('copayApp.controllers').controller('preferencesAltCurrencyControl
     $scope.searchedAltCurrency = '';
 
     function init() {
+      var unusedCurrencyList = [
+        { isoCode: 'LTL' },
+        { isoCode: 'BTC' }
+      ];
 
-      var unusedCurrencyList = [{
-        isoCode: 'LTL'
-      }, {
-        isoCode: 'BTC'
-      }];
       rateService.whenAvailable(function() {
         $scope.listComplete = false;
 
@@ -75,9 +74,15 @@ angular.module('copayApp.controllers').controller('preferencesAltCurrencyControl
       configService.set(opts, function(err) {
         if (err) $log.warn(err);
 
-        $ionicHistory.goBack();
+        if (!$scope.inAmount) {
+          $ionicHistory.goBack();
+        } else {
+          // ok method from itemSelector.js
+          $scope.ok();
+        }
+
         saveLastUsed(newAltCurrency);
-        walletService.updateRemotePreferences(profileService.getWallets());
+        // walletService.updateRemotePreferences(profileService.getWallets());
       });
     };
 
@@ -86,15 +91,17 @@ angular.module('copayApp.controllers').controller('preferencesAltCurrencyControl
       $scope.lastUsedAltCurrencyList = lodash.uniq($scope.lastUsedAltCurrencyList, 'isoCode');
       $scope.lastUsedAltCurrencyList = $scope.lastUsedAltCurrencyList.slice(0, 3);
       storageService.setLastCurrencyUsed(JSON.stringify($scope.lastUsedAltCurrencyList), function() {});
-    };
+    }
 
-    $scope.$on("$ionicView.beforeEnter", function(event, data) {
-      var config = configService.getSync();
-      $scope.currentCurrency = config.wallet.settings.alternativeIsoCode;
+    function beforeEnter(event, data) {
+      $scope.currentCurrency = configService.getSync().wallet.settings.alternativeIsoCode;
 
       storageService.getLastCurrencyUsed(function(err, lastUsedAltCurrency) {
         $scope.lastUsedAltCurrencyList = lastUsedAltCurrency ? JSON.parse(lastUsedAltCurrency) : [];
         init();
       });
-    });
+    }
+
+    $scope.$on("$ionicView.beforeEnter", beforeEnter);
+    $scope.$on("$ionicModal.beforeEnter", beforeEnter);
   });
