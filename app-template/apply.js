@@ -37,7 +37,9 @@ Object.keys(templates).forEach(function(k) {
 
 
   if (k.indexOf('.json') > 0) {
-    content = content.replace('{', JSONheader);
+    if (k !== 'manifest.json') {
+      content = content.replace('{', JSONheader);
+    }
 
   } else if (k.indexOf('Makefile') >= 0) {
     content = MakefileHeader + content;
