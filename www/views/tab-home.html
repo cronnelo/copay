@@ -65,12 +65,10 @@
     </div>
 
     <div class="list card">
-      <div class="item item-icon-right item-heading">
+      <div class="item item-heading" ng-click="doneOrAdd()">
         <span translate>Wallets</span>
-        <span class="right text-light"
-          ng-show="showReorder"
-          ng-click="closeReorder()">Done</span>
-        <a ui-sref="tabs.add" ng-if="wallets[0]">
+        <span class="right text-light" ng-show="showReorder">Done</span>
+        <a ng-if="wallets[0]">
           <i class="icon ion-ios-plus-empty list-add-button"></i>
         </a>
       </div>
