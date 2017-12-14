@@ -249,11 +249,21 @@ angular.module('copayApp.controllers').controller('tabHomeController',
     };
 
     $scope.toggleReorder = function() {
-      $scope.showReorder = !$scope.showReorder;
+      if ($scope.wallets.length > 1) {
+        $scope.showReorder = !$scope.showReorder;
+      }
     };
 
     $scope.closeReorder = function() {
       $scope.showReorder = false;
+    };
+
+    $scope.doneOrAdd = function () {
+      if ($scope.showReorder) {
+        $scope.closeReorder();
+      } else {
+        $state.go('tabs.add');
+      }
     };
 
     var updateTxps = function() {
