@@ -686,7 +686,6 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
   };
 
   root.signTx = function(wallet, txp, password, cb) {
-    debugger;
     if (!wallet || !txp || !cb) {
       $log.log('missing parameter');
       return cb('MISSING_PARAMETER');
