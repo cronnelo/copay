@@ -56,3 +56,7 @@ ion-view.deflash-blue:before {
 .platform-ios.platform-cordova:not(.fullscreen) ion-view.deflash-blue:before {
   height: $bar-height + $ios-statusbar-height;
 }
+
+.loading-container .loading {
+  margin-top: -135px;
+}
