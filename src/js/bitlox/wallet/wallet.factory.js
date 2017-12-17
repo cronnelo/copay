@@ -233,18 +233,14 @@
             var xPubKeys = lodash.pluck(wallet.credentials.publicKeyRing, 'xPubKey');
             // var opts = {tx: txp, rawTx: bwcService.getUtils().buildTx(txp).uncheckedSerialize()}
             if(!xPubKeys) {
-              return cb(new Error("Unable to connect to BitLox, pub key error"));
+              return cb(new Error("Unable to connect to BitLox, pub key error"))
             }
             //$log.log('xPubKeys', xPubKeys)
 
             return api.getDeviceUUID().then(function(results) {
-              $rootScope.bitloxConnectErrorListener = $rootScope.$on('bitloxConnectError', function() {
-                var err = null;
-                if(api.getStatus() === api.STATUS_DISCONNECTED) {
-                  err = new Error("BitLox Disconnected");
-                }
 
-                cb(err);
+              $rootScope.bitloxConnectErrorListener = $rootScope.$on('bitloxConnectError', function() {
+                cb(new Error("BitLox Disconnected"));
               });
 
               $log.log('got device UUID, finding wallet');
