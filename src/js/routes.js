@@ -451,6 +451,15 @@ angular.module('copayApp').config(function(historicLogProvider, $provide, $logPr
           }
         }
       })
+      .state('tabs.toggle-bitlox-link', {
+        url: '/toggle-bitlox-link',
+        views: {
+          'tab-settings@tabs': {
+            controller: 'preferencesToggleBitLoxLinkController',
+            templateUrl: 'views/preferencesToggleBitLoxLink.html'
+          }
+        }
+      })
       .state('tabs.language', {
         url: '/language',
         views: {

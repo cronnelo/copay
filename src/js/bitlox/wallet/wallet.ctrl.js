@@ -7,15 +7,16 @@
     WalletCtrl.$inject = ['$scope', '$rootScope', '$log', '$state', '$stateParams', '$timeout', '$ionicPopup', '$ionicModal', '$ionicLoading', 'MAX_WALLETS', 'bitloxWallet', 'Toast', 'bitloxHidChrome', 'bitloxHidWeb', 'bitloxBleApi', '$ionicHistory', 'profileService',  'ongoingProcess', 'walletService', 'popupService', 'gettextCatalog', 'derivationPathHelper', 'bwcService', 'platformInfo', 'configService', 'externalLinkService'];
 
     function WalletCtrl($scope, $rootScope,  $log, $state, $stateParams, $timeout, $ionicPopup, $ionicModal, $ionicLoading, MAX_WALLETS, bitloxWallet, Toast, hidchrome, hidweb, bleapi, $ionicHistory, profileService, ongoingProcess, walletService, popupService, gettextCatalog, derivationPathHelper, bwcService, platformInfo, configService, externalLinkService) {
-        var defaults = configService.getDefaults();
+        $scope.showBitLoxBuyLink = configService.getSync().showBitLoxBuyLink;
+
         var api = hidweb;
         if (platformInfo.isChromeApp) {
           api = hidchrome;
-        }
-        else if(platformInfo.isMobile) {
+        } else if(platformInfo.isMobile) {
           api = bleapi;
           api.initializeBle();
         }
+
         $scope.api = api;
 
         $scope.openBitlox = function() {
@@ -27,7 +28,6 @@
           var cancelText = gettextCatalog.getString('Cancel');
           externalLinkService.open(url, optIn, title, message, okText, cancelText);
         }
-
 
         $scope.bitlox = {
           isMobile: platformInfo.isMobile,

@@ -135,6 +135,8 @@ angular.module('copayApp.controllers').controller('tabHomeController',
           $scope.nextStepsItems = nextStepsService.get();
         }
 
+        $scope.showBitLoxBuyLink = config.showBitLoxBuyLink;
+
         pushNotificationsService.init();
 
         $timeout(function() {
