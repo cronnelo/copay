@@ -1,0 +1,14 @@
+<ion-view class="settings" show-tabs>
+  <ion-nav-bar class="bar-royal">
+    <ion-nav-title>{{'BitLox options' | translate}}</ion-nav-title>
+    <ion-nav-back-button></ion-nav-back-button>
+  </ion-nav-bar>
+  <ion-content>
+    <div class="list">
+      <ion-toggle ng-model="showBitLoxBuyLink" toggle-class="toggle-balanced" ng-change="toggleBitLoxBuyLink()">
+        <span class="toggle-label" translate>Show BitLox Buy Link</span>
+      </ion-toggle>
+    </div>
+  </ion-content>
+</ion-view>
+
