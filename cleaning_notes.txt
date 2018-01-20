@@ -1,3 +1,5 @@
+Following a clean, the proper paths for the splash images will be wiped. Regenerate as follows.
+
 In @ionic/cli-utils/lib/cordova/resources.js alter the contents for splash screen generation to be the following:
 
 
