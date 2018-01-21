@@ -513,7 +513,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
         // if (amountUsd <= CONFIRM_LIMIT_USD)
         //   return cb();
 
-        var message = gettextCatalog.getString('Sending {{amountStr}} from {{name}}', {
+        var message = gettextCatalog.getString('Sending {{amountStr}} from\n{{name}}', {
           amountStr: tx.amountStr,
           name: wallet.name.trim()
         });
