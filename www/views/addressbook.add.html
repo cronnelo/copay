@@ -23,7 +23,11 @@
                  id="name"
                  name="name"
                  ng-model="addressbookEntry.name"
-                 required>
+                 autocomplete="off"
+                 autocorrect="off"
+                 autocapitalize="off"
+                 spellcheck="false"
+                 required />
         </label>
         <label class="item item-input item-stacked-label">
           <span class="input-label" translate>Email</span>
