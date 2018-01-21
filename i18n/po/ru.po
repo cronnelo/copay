@@ -2483,8 +2483,8 @@ msgid "Sending transaction"
 msgstr "Отправка транзакции"
 
 #: src/js/controllers/confirm.js:490
-msgid "Sending {{amountStr}} from\n{{name}}"
-msgstr "Отправка {{amountStr}} из \n{{name}}"
+msgid "Sending {{amountStr}} from {{name}}"
+msgstr "Отправка {{amountStr}} из  {{name}}"
 
 #: www/views/includes/walletHistory.html:42
 #: www/views/modals/tx-status.html:9

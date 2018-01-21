@@ -2482,8 +2482,8 @@ msgstr "Invio dell'importo massimo"
 msgid "Sending transaction"
 msgstr "Invio transazione"
 
-msgid "Sending {{amountStr}} from\n{{name}}"
-msgstr "L'invio di {{amountStr}} dal\n{{name}}"
+msgid "Sending {{amountStr}} from {{name}}"
+msgstr "L'invio di {{amountStr}} dal {{name}}"
 
 #: www/views/includes/walletHistory.html:42
 #: www/views/modals/tx-status.html:9
