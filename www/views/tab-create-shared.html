@@ -15,7 +15,11 @@
             ng-model="formData.walletName"
             ng-required="true"
             ng-focus="formFocus('wallet-name')"
-            ng-blur="formFocus(false)">
+            ng-blur="formFocus(false)"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false">
         </label>
 
         <label class="item item-input item-stacked-label">
