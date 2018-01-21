@@ -15,11 +15,11 @@ angular.module('copayApp.services').factory('pushNotificationsService', function
       $log.debug('Starting push notification registration...'); 
 
       //Keep in mind the function will return null if the token has not been established yet.
-      FCMPlugin.getToken(function(token) {
-        $log.debug('Get token for push notifications: ' + token);
-        _token = token;
-        root.enable();
-      }); 
+      // FCMPlugin.getToken(function(token) {
+      //   $log.debug('Get token for push notifications: ' + token);
+      //   _token = token;
+      //   root.enable();
+      // }); 
     }); 
   };
 
@@ -99,39 +99,39 @@ angular.module('copayApp.services').factory('pushNotificationsService', function
     });
   };
 
-  if (usePushNotifications) {
+  // if (usePushNotifications) {
     
-    FCMPlugin.onTokenRefresh(function(token) {
-      if (!_token) return;
-      $log.debug('Refresh and update token for push notifications...');
-      _token = token;
-      root.enable();
-    });
+  //   FCMPlugin.onTokenRefresh(function(token) {
+  //     if (!_token) return;
+  //     $log.debug('Refresh and update token for push notifications...');
+  //     _token = token;
+  //     root.enable();
+  //   });
 
-    FCMPlugin.onNotification(function(data) {
-      if (!_token) return;
-      $log.debug('New Event Push onNotification: ' + JSON.stringify(data));
-      if(data.wasTapped) {
-        // Notification was received on device tray and tapped by the user. 
-        var walletIdHashed = data.walletId;
-        if (!walletIdHashed) return;
-        $ionicHistory.nextViewOptions({
-          disableAnimate: true,
-          historyRoot: true
-        });
-        $ionicHistory.clearHistory();
-        $state.go('tabs.home', {}, {
-          'reload': true,
-          'notify': $state.current.name == 'tabs.home' ? false : true
-        }).then(function() {
-          _openWallet(walletIdHashed);
-        });
-      } else {
-        // TODO
-        // Notification was received in foreground. Maybe the user needs to be notified. 
-      }
-    });
-  } 
+  //   FCMPlugin.onNotification(function(data) {
+  //     if (!_token) return;
+  //     $log.debug('New Event Push onNotification: ' + JSON.stringify(data));
+  //     if(data.wasTapped) {
+  //       // Notification was received on device tray and tapped by the user. 
+  //       var walletIdHashed = data.walletId;
+  //       if (!walletIdHashed) return;
+  //       $ionicHistory.nextViewOptions({
+  //         disableAnimate: true,
+  //         historyRoot: true
+  //       });
+  //       $ionicHistory.clearHistory();
+  //       $state.go('tabs.home', {}, {
+  //         'reload': true,
+  //         'notify': $state.current.name == 'tabs.home' ? false : true
+  //       }).then(function() {
+  //         _openWallet(walletIdHashed);
+  //       });
+  //     } else {
+  //       // TODO
+  //       // Notification was received in foreground. Maybe the user needs to be notified. 
+  //     }
+  //   });
+  // } 
 
   return root;
 

@@ -169,7 +169,7 @@
             profileService.createWallet(opts, function(err, walletId) {
               // $log.debug("DONE IMPORTING")
               if (err) {
-                $log.error("create wallet error, trying import", err)
+                $log.log("create wallet error, trying import", err)
 
 
                 profileService.importExtendedPublicKey(opts, function(err2, walletId) {

@@ -138,7 +138,7 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
         tx.wallet = wallet;
 
         if (!tx.wallet) {
-          $log.error("no wallet at txp?");
+          $log.log("no wallet at txp?");
           return;
         }
 
@@ -614,7 +614,7 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
 
     storageService.removeTxHistory(wallet.id, function(err) {
       if (err) {
-        $log.error(err);
+        $log.log(err);
         return cb(err);
       }
       return cb();
@@ -695,11 +695,12 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
       $log.log( wallet.getPrivKeyExternalSourceName());
       if (wallet.getPrivKeyExternalSourceName().indexOf('bitlox') > -1) {
         $log.log('private key is bitlox');
-        $rootScope.bitloxConnectErrorListener = $rootScope.$on('bitloxConnectError', function() {
-          root.removeTx(wallet, txp, function() {  
-            //noop
-          });
-        });
+        // $rootScope.bitloxConnectErrorListener = $rootScope.$on('bitloxConnectError', function() {
+        //   root.removeTx(wallet, txp, function() {  
+        //     //noop
+        //   });
+        //   $rootScope.bitloxConnectErrorListener()
+        // });
         return bitlox.wallet.signTransaction(wallet, txp, cb)
       }
       switch (wallet.getPrivKeyExternalSourceName()) {
@@ -711,7 +712,7 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
           return _signWithIntelTEE(wallet, txp, cb);
         default:
           var msg = 'Unsupported External Key:' + wallet.getPrivKeyExternalSourceName();
-          $log.error(msg);
+          $log.log(msg);
           return cb(msg);
       }
     } else {
@@ -1143,14 +1144,14 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
 
         ongoingProcess.set('signingTx', true, customStatusHandler);
         root.signTx(wallet, publishedTxp, password, function(err, signedTxp) {
-
+          $rootScope.bitloxConnectErrorListener()
           ongoingProcess.set('signingTx', false, customStatusHandler);
           if (err) {
             $ionicLoading.hide();
             $log.warn('sign error:', err);
             var msg = err && err.message ?
               err.message :
-              gettextCatalog.getString('The payment was created but could not be completed. Please try again from home screen');
+              gettextCatalog.getString('The payment was canceled or rejected by the user, or the BitLox was disconnected.');
 
             $rootScope.$emit('Local/TxAction', wallet.id);
             return cb(msg);
@@ -1175,7 +1176,7 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
 
           root.invalidateCache(wallet);
 
-
+          $rootScope.destroyBitloxListeners();
           if (signedTxp.status == 'accepted') {
             ongoingProcess.set('broadcastingTx', true, customStatusHandler);
             root.broadcastTx(wallet, signedTxp, function(err, broadcastedTxp) {

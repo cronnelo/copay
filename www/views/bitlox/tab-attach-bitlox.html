@@ -7,8 +7,8 @@
 
 
   <ion-content>
-    <br /><br />
-    <!-- <div ng-controller="BitLoxCtrl"> -->
+    <br />
+    <br />
 
       <div class="list card" ng-hide="bitlox.connected" ng-if="!bitlox.isMobile && timer">
           <span class="item">
@@ -18,9 +18,12 @@
               <button class="button button-standard button-secondary" ng-if="closeModal" ng-click="closeModal()">Cancel</button>              
           </span>
       </div>
+
       <div class="list card"  ng-if="timer" ng-show="bitlox.isMobile && !bitlox.connected">
-        <div class="item item-remove-animate" ng-if="api.getNumDevices() < 1" style="border:0;vertical-align: middle">
-          <span >No devices found</span><br /><br />
+        <div class="item item-remove-animate center-child" style="border:0;">
+          <span>No devices found</span>
+          <br />
+          <br />
         </div>
         <a ng-repeat="device in api.getKnownDevices()"
            ng-click="connectBle(device.address, false)"
@@ -55,7 +58,7 @@
           class="item item-sub item-icon-left item-big-icon-left item-icon-right wallet"
           type="item-text-wrap" ui-sref="tabs.add.create-bitlox">
             <i class="icon big-icon-svg">
-              <img src="img/icon-wallet.svg" class="bg wallet icon-create-wallet"/>
+              <img src="img/icon-wallet.svg" class="bg wallet"/>
             </i>
             <span class="add-type" translate>Create/Restore<br />BitLox Wallet</span>
             <i class="icon bp-arrow-right"></i>

@@ -83,8 +83,8 @@
                 });
                 return wallets;
             }, function(err) {
-              $log.error('listWallets call failed')
-              $log.error(err)
+              $log.log('listWallets call failed')
+              $log.log(err)
             });
         };
 
@@ -100,7 +100,7 @@
                 try {
                     bip32 = new BIP32(data.payload.xpub);
                 } catch(ex) {
-                    $log.error(ex);
+                    $log.log(ex);
                     return $q.reject(ex);
                 }
                 wallet.xpub = data.payload.xpub;
@@ -210,7 +210,9 @@
               return cb('cancel');
               // return cb(new Error("Unable to connect to BitLox"))
             }
-
+            $rootScope.bitloxConnectErrorListener = $rootScope.$on('bitloxConnectError', function() {
+              cb(new Error("BitLox Disconnected"), null, true);
+            });
             $ionicLoading.show({
               template: 'Connecting to BitLox, Please Wait...'
             });
@@ -239,9 +241,6 @@
 
             return api.getDeviceUUID().then(function(results) {
 
-              $rootScope.bitloxConnectErrorListener = $rootScope.$on('bitloxConnectError', function() {
-                cb(new Error("BitLox Disconnected"));
-              });
 
               $log.log('got device UUID, finding wallet');
 
@@ -302,6 +301,8 @@
                             }
 
                             if(result.type === api.TYPE_SIGNATURE_RETURN) {
+                              
+                              api.disconnect(true)
                               txp.signatures = result.payload.signedScripts;
                               tx.replaceScripts(txp.signatures);
 
@@ -317,6 +318,7 @@
                                   api.setQrCode(p + 1);
                                 }
                               });
+
 
                               // comment out these lines and send `return cb(null,txp) to skip broadcast`
                               return txUtil.submit(tx.signedHex).then(function() {

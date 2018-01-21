@@ -73,8 +73,8 @@ msgid "Add Account"
 msgstr "Add Account"
 
 #: src/js/services/bitpayAccountService.js:68
-msgid "Add BitPay Account?"
-msgstr "Add BitPay Account?"
+msgid "Add BitLox Account?"
+msgstr "Add BitLox Account?"
 
 #: www/views/addressbook.add.html:4
 #: www/views/addressbook.html:22
@@ -227,8 +227,8 @@ msgstr "Are you sure you want to skip it?"
 
 #: src/js/controllers/preferencesBitpayCard.js:7
 #: src/js/controllers/preferencesBitpayServices.js:20
-msgid "Are you sure you would like to remove your BitPay Card ({{lastFourDigits}}) from this device?"
-msgstr "Are you sure you would like to remove your BitPay Card ({{lastFourDigits}}) from this device?"
+msgid "Are you sure you would like to remove your BitLox  Card ({{lastFourDigits}}) from this device?"
+msgstr "Are you sure you would like to remove your BitLox Card ({{lastFourDigits}}) from this device?"
 
 #: www/views/includes/walletInfo.html:5
 msgid "Auditable"
@@ -296,8 +296,8 @@ msgid "Be sure to store your recovery phrase in a secure place. If this app is d
 msgstr "Be sure to store your recovery phrase in a secure place. If this app is deleted, your money cannot be recovered without it."
 
 #: www/views/preferencesBitpayServices.html:9
-msgid "BitPay Visa&reg; Cards"
-msgstr "BitPay Visa&reg; Cards"
+msgid "BitLox Visa&reg; Cards"
+msgstr "BitLox Visa&reg; Cards"
 
 #: www/views/addressbook.add.html:38
 msgid "Bitcoin Address"
@@ -471,8 +471,8 @@ msgid "Confirming"
 msgstr "Confirming"
 
 #: www/views/bitpayCardIntro.html:37
-msgid "Connect my BitPay Card"
-msgstr "Connect my BitPay Card"
+msgid "Connect my BitLox Card"
+msgstr "Connect my BitLox Card"
 
 #: src/js/services/onGoingProcess.js:13
 msgid "Connecting to Coinbase..."
@@ -803,8 +803,8 @@ msgid "Enter Spending Password"
 msgstr "Enter Spending Password"
 
 #: src/js/services/bitpayAccountService.js:104
-msgid "Enter Two Factor for your BitPay account"
-msgstr "Enter Two Factor for your BitPay account"
+msgid "Enter Two Factor for your BitLox account"
+msgstr "Enter Two Factor for your BitLox account"
 
 #: src/js/services/walletService.js:934
 msgid "Enter new spending password"
@@ -897,8 +897,8 @@ msgid "Error creating wallet"
 msgstr "Error creating wallet"
 
 #: src/js/controllers/bitpayCardIntro.js:14
-msgid "Error pairing Bitpay Account"
-msgstr "Error pairing Bitpay Account"
+msgid "Error pairing BitLox Account"
+msgstr "Error pairing BitLox Account"
 
 #: src/js/controllers/paperWallet.js:41
 msgid "Error scanning funds:"
@@ -978,8 +978,8 @@ msgid "Feedback could not be submitted. Please try again later."
 msgstr "Feedback could not be submitted. Please try again later."
 
 #: src/js/services/onGoingProcess.js:42
-msgid "Fetching BitPay Account..."
-msgstr "Fetching BitPay Account..."
+msgid "Fetching BitLox Account..."
+msgstr "Fetching BitLox Account..."
 
 #: src/js/services/onGoingProcess.js:21
 msgid "Fetching Payment Information"
@@ -1013,8 +1013,8 @@ msgid "From"
 msgstr "From"
 
 #: src/js/controllers/bitpayCardIntro.js:71
-msgid "From BitPay account"
-msgstr "From BitPay account"
+msgid "From BitLox account"
+msgstr "From BitLox account"
 
 #: www/views/tab-export-qrCode.html:5
 msgid "From the destination device, go to Add wallet &gt; Import wallet and scan this QR code"
@@ -1198,8 +1198,8 @@ msgid "If enabled, wallets will also try to spend unconfirmed funds. This option
 msgstr "If enabled, wallets will also try to spend unconfirmed funds. This option may cause transaction delays."
 
 #: src/js/controllers/onboarding/backupRequest.js:18
-msgid "If this device is replaced or this app is deleted, neither you nor BitPay can recover your funds without a backup."
-msgstr "If this device is replaced or this app is deleted, neither you nor BitPay can recover your funds without a backup."
+msgid "If this device is replaced or this app is deleted, neither you nor BitLox can recover your funds without a backup."
+msgstr "If this device is replaced or this app is deleted, neither you nor BitLox can recover your funds without a backup."
 
 #: www/views/feedback/complete.html:23
 msgid "If you have additional feedback, please let us know by tapping the \"Send feedback\" option in the Settings tab."
@@ -1559,8 +1559,8 @@ msgid "Not enough funds for fee"
 msgstr "Not enough funds for fee"
 
 #: www/views/onboarding/tour.html:45
-msgid "Not even BitPay can access it."
-msgstr "Not even BitPay can access it."
+msgid "Not even Bitlox can access it."
+msgstr "Not even BitLox can access it."
 
 #: src/js/controllers/paperWallet.js:47
 msgid "Not funds found"
@@ -1657,8 +1657,8 @@ msgid "Open wallet"
 msgstr "Open wallet"
 
 #: www/views/bitpayCardIntro.html:34
-msgid "Order the BitPay Card"
-msgstr "Order the BitPay Card"
+msgid "Order the BitLox Card"
+msgstr "Order the BitLox Card"
 
 #: www/views/join.html:100
 #: www/views/join.html:93
@@ -1962,16 +1962,16 @@ msgid "Release information"
 msgstr "Release information"
 
 #: src/js/controllers/preferencesBitpayServices.js:7
-msgid "Remove BitPay Account?"
-msgstr "Remove BitPay Account?"
+msgid "Remove BitLox Account?"
+msgstr "Remove BitLox Account?"
 
 #: src/js/controllers/preferencesBitpayServices.js:19
-msgid "Remove BitPay Card?"
-msgstr "Remove BitPay Card?"
+msgid "Remove BitLox Card?"
+msgstr "Remove BitLox Card?"
 
 #: src/js/controllers/preferencesBitpayServices.js:8
-msgid "Removing your BitPay account will remove all associated BitPay account data from this device. Are you sure you would like to remove your BitPay Account ({{email}}) from this device?"
-msgstr "Removing your BitPay account will remove all associated BitPay account data from this device. Are you sure you would like to remove your BitPay Account ({{email}}) from this device?"
+msgid "Removing your BitLox account will remove all associated BitLox account data from this device. Are you sure you would like to remove your BitLox Account ({{email}}) from this device?"
+msgstr "Removing your BitLox account will remove all associated BitLox account data from this device. Are you sure you would like to remove your BitLox Account ({{email}}) from this device?"
 
 #: www/views/tab-export-file.html:17
 msgid "Repeat password"
@@ -2152,8 +2152,8 @@ msgid "Sending transaction"
 msgstr "Sending transaction"
 
 #: src/js/controllers/confirm.js:489
-msgid "Sending {{amountStr}} from your {{name}} wallet"
-msgstr "Sending {{amountStr}} from your {{name}} wallet"
+msgid "Sending {{amountStr}} from {{name}}"
+msgstr "Sending {{amountStr}} from {{name}}"
 
 #: www/views/modals/search.html:60
 #: www/views/modals/tx-status.html:9
@@ -2397,8 +2397,8 @@ msgid "The maximum number of consecutive unused addresses (20) has been reached.
 msgstr "The maximum number of consecutive unused addresses (20) has been reached. When one of your unused addresses receives a payment, a new address will be generated and shown in your Receive tab."
 
 #: src/js/controllers/onboarding/terms.js:21
-msgid "The official English Terms of Service are available on the BitPay website."
-msgstr "The official English Terms of Service are available on the BitPay website."
+msgid "The official English Terms of Service are available on the BitLox website."
+msgstr "The official English Terms of Service are available on the BitLox website."
 
 #: www/views/tab-import-phrase.html:4
 msgid "The password of the recovery phrase (if set)"
@@ -2983,8 +2983,8 @@ msgid "[Balance Hidden]"
 msgstr "[Balance Hidden]"
 
 #: src/js/controllers/bitpayCardIntro.js:11
-msgid "add your BitPay Visa card(s)"
-msgstr "add your BitPay Visa card(s)"
+msgid "add your BitLox Visa card(s)"
+msgstr "add your BitLox Visa card(s)"
 
 #: www/views/tab-receive.html:75
 msgid "address not available"
@@ -3029,8 +3029,8 @@ msgid "to send"
 msgstr "to send"
 
 #: www/views/preferencesBwsUrl.html:21
-msgid "{{appName}} depends on Bitcore Wallet Service (BWS) for blockchain information, networking and Copayer synchronization. The default configuration points to https://bws.bitpay.com (BitPay's public BWS instance)."
-msgstr "{{appName}} depends on Bitcore Wallet Service (BWS) for blockchain information, networking and Copayer synchronization. The default configuration points to https://bws.bitpay.com (BitPay's public BWS instance)."
+msgid "{{appName}} depends on Bitcore Wallet Service (BWS) for blockchain information, networking and Copayer synchronization. The default configuration points to https://bws.bitlox.com (BitLox's public BWS instance)."
+msgstr "{{appName}} depends on Bitcore Wallet Service (BWS) for blockchain information, networking and Copayer synchronization. The default configuration points to https://bws.bitlox.com (BitLox's public BWS instance)."
 
 #: src/js/controllers/lockSetup.js:98
 msgid "{{appName}} startup is locked by PIN. Are you sure you want to disable it?"
