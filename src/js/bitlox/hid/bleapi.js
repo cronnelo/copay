@@ -614,8 +614,8 @@ this.initializeBle = function() {
       platform = window.device.platform.toLowerCase()
       BleApi.initProtoBuf(function(err, device) {
         if(err) {
-          $log.error("ProtoBuf Failed to Load Messages File")
-          $log.error(err)
+          $log.log("ProtoBuf Failed to Load Messages File")
+          $log.log(err)
         }
         protoDevice = device
         bleReady = true;
@@ -634,8 +634,8 @@ this.initProtoBuf = function(cb) {
   // $log.debug(pathToProto)
   ProtoBuf.loadProtoFile(pathToProto, function(err, builder) {
     if(err) {
-      $log.error("load protofile error")
-      $log.error(err)
+      $log.log("load protofile error")
+      $log.log(err)
       return cb(err)
     }
     var Device = builder.build();
@@ -817,7 +817,7 @@ this.startScanNew = function() {
 		},
 		function(errorCode)
 		{
-      $log.error("BITLOX BLE SCAN ERROR: "+ errorCode)
+      $log.log("BITLOX BLE SCAN ERROR: "+ errorCode)
 			// Report error.
 			BleApi.deviceFound(null, errorCode);
 		}
@@ -911,7 +911,7 @@ this.connect = function(address)	{
 
   return this.currentPromise.promise
 }
-this.disconnect = function() {
+this.disconnect = function(skipNotify) {
   currentCommand = null
 
   this.sessionIdHex = null;
@@ -926,7 +926,7 @@ this.disconnect = function() {
   })
   if(status !== BleApi.STATUS_DISCONNECTED && status !== BleApi.STATUS_INITIALIZING) { 
     // $log.debug("broadcasting disconnection notice")
-    $rootScope.$broadcast('bitloxConnectError'); 
+    if(!skipNotify) { $rootScope.$broadcast('bitloxConnectError'); }
   }
   
   BleApi.startScanNew();
@@ -1050,7 +1050,7 @@ this.write = function(data, timer, noPromise, forcePing) {
   }, function(err) {
     if(err) {
       $log.debug("Command write error")
-      return BleApi.disconnect();
+      return BleApi.disconnect(true);
     }
     $rootScope.$applyAsync(function() {
       status = BleApi.STATUS_READING
@@ -1156,7 +1156,7 @@ this.sendData = function(data,type,retainCommand) {
 
   if(!retainCommand && type !== BleApi.expectedResponseType) {
     $log.debug("UNEXPECTED RESPONSE: " + type)
-    BleApi.disconnect()
+    BleApi.disconnect(true)
   }
   if(!retainCommand) { currentCommand = null; BleApi.expectedResponseType = null; }
   
@@ -3272,7 +3272,7 @@ $log.debug("address_handle_index " + address_handle_index);
     //         window.plugins.toast.show("key depth: " + key.depth, 'short', 'center', function(a){$log.debug('toast success: ' + a)}, function(b){alert('toast error: ' + b)});
 
     if (key.depth != 1) {
-        $log.error("Non-standard key depth: should be 1, and it is " + key.depth + ", are you sure you want to use that?");
+        $log.log("Non-standard key depth: should be 1, and it is " + key.depth + ", are you sure you want to use that?");
     }
 
 		addressListForMessages.length = 0;

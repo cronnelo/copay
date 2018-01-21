@@ -83,8 +83,8 @@
                 });
                 return wallets;
             }, function(err) {
-              $log.error('listWallets call failed')
-              $log.error(err)
+              $log.log('listWallets call failed')
+              $log.log(err)
             });
         };
 
@@ -100,7 +100,7 @@
                 try {
                     bip32 = new BIP32(data.payload.xpub);
                 } catch(ex) {
-                    $log.error(ex);
+                    $log.log(ex);
                     return $q.reject(ex);
                 }
                 wallet.xpub = data.payload.xpub;

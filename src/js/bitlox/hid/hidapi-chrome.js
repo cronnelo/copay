@@ -119,14 +119,14 @@ function HidApi($q, $log, $timeout, $interval, $rootScope,
                 
                 HidApi.setStatus(HidApi.STATUS_DISCONNECTED);
                 
-                $log.error("device:"+chrome.runtime.lastError);
+                $log.log("device:"+chrome.runtime.lastError);
                 return deferred.reject(chrome.runtime.lastError);
             }
             if (!devices || !devices.length) {
                 
                 HidApi.setStatus(HidApi.STATUS_DISCONNECTED);
                 
-                $log.error("device: No devices");
+                $log.log("device: No devices");
                 return deferred.reject(new Error("No devices"));
             }
             // $log.log("device: Got devices", devices);
@@ -138,7 +138,7 @@ function HidApi($q, $log, $timeout, $interval, $rootScope,
                     
                     HidApi.setStatus(HidApi.STATUS_DISCONNECTED);
                     
-                    $log.error("device:"+ chrome.runtime.lastError);
+                    $log.log("device:"+ chrome.runtime.lastError);
                     return deferred.reject(chrome.runtime.lastError);
                 }
                 if (!connection) {
@@ -223,7 +223,7 @@ function HidApi($q, $log, $timeout, $interval, $rootScope,
 //                     $log.log("write: writing", thisAb.byteLength, "bytes", thisData, HidApi.abconv.ab2hex(thisAb));
                     chrome.hid.send(dev, 0, thisAb, function() {
                         if (chrome.runtime.lastError) {
-                            $log.error("write error:", chrome.runtime.lastError);
+                            $log.log("write error:", chrome.runtime.lastError);
                             return next(chrome.runtime.lastError);
                         }
 //                         $log.log("write: wrote", thisAb.byteLength);
