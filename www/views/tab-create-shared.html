@@ -33,8 +33,9 @@
           <div class="input-label" translate>
             Total number of copayers
           </div>
-          <select class="m10t" ng-model="formData.totalCopayers" ng-options="totalCopayers as totalCopayers for totalCopayers in TCValues"
-            ng-change="setTotalCopayers(formData.totalCopayers)">
+          <select ng-model="formData.totalCopayers"
+                  ng-options="totalCopayers as totalCopayers for totalCopayers in TCValues"
+                  ng-change="setTotalCopayers(formData.totalCopayers)">
           </select>
         </label>
 
