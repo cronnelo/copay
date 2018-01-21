@@ -533,7 +533,6 @@ angular.module('copayApp.controllers').controller('confirmController', function(
           }, onSendStatusChange);
         }
 
-        $rootScope.destroyBitloxListeners();
 
         walletService.publishAndSign(wallet, txp, function(err, txp) {
           if (err === 'cancel') {
@@ -636,7 +635,4 @@ angular.module('copayApp.controllers').controller('confirmController', function(
     };
   };
 
-  $scope.$on('destroy', function() {
-    $rootScope.destroyBitloxListeners();
-  });
 });

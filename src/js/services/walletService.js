@@ -695,11 +695,12 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
       $log.log( wallet.getPrivKeyExternalSourceName());
       if (wallet.getPrivKeyExternalSourceName().indexOf('bitlox') > -1) {
         $log.log('private key is bitlox');
-        $rootScope.bitloxConnectErrorListener = $rootScope.$on('bitloxConnectError', function() {
-          root.removeTx(wallet, txp, function() {  
-            //noop
-          });
-        });
+        // $rootScope.bitloxConnectErrorListener = $rootScope.$on('bitloxConnectError', function() {
+        //   root.removeTx(wallet, txp, function() {  
+        //     //noop
+        //   });
+        //   $rootScope.bitloxConnectErrorListener()
+        // });
         return bitlox.wallet.signTransaction(wallet, txp, cb)
       }
       switch (wallet.getPrivKeyExternalSourceName()) {
@@ -1143,11 +1144,10 @@ angular.module('copayApp.services').factory('walletService', function($log, $tim
 
         ongoingProcess.set('signingTx', true, customStatusHandler);
         root.signTx(wallet, publishedTxp, password, function(err, signedTxp) {
-
+          $rootScope.bitloxConnectErrorListener()
           ongoingProcess.set('signingTx', false, customStatusHandler);
           if (err) {
             $ionicLoading.hide();
-            $rootScope.destroyBitloxListeners();
             $log.warn('sign error:', err);
             var msg = err && err.message ?
               err.message :

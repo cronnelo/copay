@@ -861,7 +861,7 @@ this.connect = function(address)	{
     
     if(status !== BleApi.STATUS_DISCONNECTED && status !== BleApi.STATUS_INITIALIZING) {
       $log.debug('connection timeout')     
-      BleApi.disconnect();
+      BleApi.disconnect(true);
       $rootScope.$broadcast('bitloxConnectError'); 
 
     }    
