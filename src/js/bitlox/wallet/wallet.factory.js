@@ -210,7 +210,9 @@
               return cb('cancel');
               // return cb(new Error("Unable to connect to BitLox"))
             }
-
+            $rootScope.bitloxConnectErrorListener = $rootScope.$on('bitloxConnectError', function() {
+              cb(new Error("BitLox Disconnected"), null, true);
+            });
             $ionicLoading.show({
               template: 'Connecting to BitLox, Please Wait...'
             });
@@ -238,9 +240,7 @@
             //$log.log('xPubKeys', xPubKeys)
 
             return api.getDeviceUUID().then(function(results) {
-              $rootScope.bitloxConnectErrorListener = $rootScope.$on('bitloxConnectError', function() {
-                cb(new Error("BitLox Disconnected"), null, true);
-              });
+
 
               $log.log('got device UUID, finding wallet');
 
