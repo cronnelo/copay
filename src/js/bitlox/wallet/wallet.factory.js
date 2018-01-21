@@ -301,6 +301,8 @@
                             }
 
                             if(result.type === api.TYPE_SIGNATURE_RETURN) {
+                              
+                              api.disconnect(true)
                               txp.signatures = result.payload.signedScripts;
                               tx.replaceScripts(txp.signatures);
 
@@ -316,6 +318,7 @@
                                   api.setQrCode(p + 1);
                                 }
                               });
+
 
                               // comment out these lines and send `return cb(null,txp) to skip broadcast`
                               return txUtil.submit(tx.signedHex).then(function() {
