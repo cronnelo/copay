@@ -2485,7 +2485,7 @@ msgid "Sending transaction"
 msgstr "取引送信中"
 
 #: src/js/controllers/confirm.js:490
-msgid "Sending {{amountStr}} from your {{name}} wallet"
+msgid "Sending {{amountStr}} from\n{{name}}"
 msgstr "ウォレット {{name}} から {{amountStr}} の送金を行います。"
 
 #: www/views/includes/walletHistory.html:42

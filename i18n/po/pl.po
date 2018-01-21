@@ -2483,8 +2483,8 @@ msgid "Sending transaction"
 msgstr "Wysyłanie transakcji"
 
 #: src/js/controllers/confirm.js:490
-msgid "Sending {{amountStr}} from your {{name}} wallet"
-msgstr "Wysyłanie {{amountStr}} z twojego portfela {{name}}"
+msgid "Sending {{amountStr}} from\n{{name}}"
+msgstr "Wysyłanie {{amountStr}} z\n{{name}}"
 
 #: www/views/includes/walletHistory.html:42
 #: www/views/modals/tx-status.html:9

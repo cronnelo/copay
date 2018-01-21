@@ -2483,7 +2483,7 @@ msgid "Sending transaction"
 msgstr "正在发送交易"
 
 #: src/js/controllers/confirm.js:490
-msgid "Sending {{amountStr}} from your {{name}} wallet"
+msgid "Sending {{amountStr}} from\n{{name}}"
 msgstr "从你的 {{name}} 钱包发送 {{amountStr}}"
 
 #: www/views/includes/walletHistory.html:42

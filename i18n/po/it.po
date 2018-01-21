@@ -2482,9 +2482,8 @@ msgstr "Invio dell'importo massimo"
 msgid "Sending transaction"
 msgstr "Invio transazione"
 
-#: src/js/controllers/confirm.js:490
-msgid "Sending {{amountStr}} from your {{name}} wallet"
-msgstr "L'invio di {{amountStr}} dal tuo portafoglio {{name}}"
+msgid "Sending {{amountStr}} from\n{{name}}"
+msgstr "L'invio di {{amountStr}} dal\n{{name}}"
 
 #: www/views/includes/walletHistory.html:42
 #: www/views/modals/tx-status.html:9

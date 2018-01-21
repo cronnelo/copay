@@ -2478,7 +2478,7 @@ msgid "Sending transaction"
 msgstr ""
 
 #: src/js/controllers/confirm.js:490
-msgid "Sending {{amountStr}} from your {{name}} wallet"
+msgid "Sending {{amountStr}} from\n{{name}}"
 msgstr ""
 
 #: www/views/includes/walletHistory.html:42

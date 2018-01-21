@@ -506,16 +506,16 @@ angular.module('copayApp.controllers').controller('confirmController', function(
 
       // confirm txs for more that 20usd, if not spending/touchid is enabled
       function confirmTx(cb) {
-        if (walletService.isEncrypted(wallet))
-          return cb();
+        // if (walletService.isEncrypted(wallet))
+        //   return cb();
 
-        var amountUsd = parseFloat(txFormatService.formatToUSD(txp.amount));
-        if (amountUsd <= CONFIRM_LIMIT_USD)
-          return cb();
+        // var amountUsd = parseFloat(txFormatService.formatToUSD(txp.amount));
+        // if (amountUsd <= CONFIRM_LIMIT_USD)
+        //   return cb();
 
-        var message = gettextCatalog.getString('Sending {{amountStr}} from your {{name}} wallet', {
+        var message = gettextCatalog.getString('Sending {{amountStr}} from {{name}}', {
           amountStr: tx.amountStr,
-          name: wallet.name
+          name: wallet.name.trim()
         });
         var okText = gettextCatalog.getString('Confirm');
         var cancelText = gettextCatalog.getString('Cancel');

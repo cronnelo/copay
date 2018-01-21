@@ -2152,8 +2152,8 @@ msgid "Sending transaction"
 msgstr "Sending transaction"
 
 #: src/js/controllers/confirm.js:489
-msgid "Sending {{amountStr}} from your {{name}} wallet"
-msgstr "Sending {{amountStr}} from your {{name}} wallet"
+msgid "Sending {{amountStr}} from\n{{name}}"
+msgstr "Sending {{amountStr}} from\n{{name}}"
 
 #: www/views/modals/search.html:60
 #: www/views/modals/tx-status.html:9
