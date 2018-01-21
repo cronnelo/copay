@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('copayApp.directives')
-  .directive('walletSelector', function($timeout) {
+  .directive('walletSelector', function($timeout, $ionicHistory) {
     return {
       restrict: 'E',
       templateUrl: 'views/includes/walletSelector.html',
@@ -16,7 +16,12 @@ angular.module('copayApp.directives')
       link: function(scope, element, attrs) {
         scope.hide = function() {
           scope.show = false;
+
+          if (!scope.selectedWallet) {
+            $ionicHistory.goBack(-2);
+          }
         };
+
         scope.selectWallet = function(wallet) {
           $timeout(function() {
             scope.hide();

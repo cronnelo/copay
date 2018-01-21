@@ -1,5 +1,5 @@
 .settings {
-  @extend .deflash-blue;
+  
   .icon-bitpay {
     background-image: url("../img/icon-bitpay.svg");
   }
@@ -20,8 +20,11 @@
   .has-comment {
     border-bottom: 0 none;
   }
+  .ion-ios-search + input {
+    line-height: normal;
+  }
   .comment {
-    padding: 15px;
+    padding: 4px 15px 15px 15px;
     background-color: #fff;
     font-size:0.9em;
     color: $v-mid-gray;
@@ -73,6 +76,9 @@
       text-transform: uppercase;
       font-size: 12px;
       font-weight: bold;
+    }
+    input {
+      line-height: normal;
     }
   }
  .settings-list {

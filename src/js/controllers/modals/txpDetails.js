@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('copayApp.controllers').controller('txpDetailsController', function($scope, $rootScope, $timeout, $interval, $log, ongoingProcess, platformInfo, $ionicScrollDelegate, txFormatService, bwcError, gettextCatalog, lodash, walletService, popupService, $ionicHistory, feeService) {
+angular.module('copayApp.controllers').controller('txpDetailsController', function($scope, $rootScope, $timeout, $interval, $log, ongoingProcess, platformInfo, $ionicScrollDelegate, txFormatService, bwcError, gettextCatalog, lodash, walletService, popupService, $ionicHistory, feeService, $state) {
   var isGlidera = $scope.isGlidera;
   var GLIDERA_LOCK_TIME = 6 * 60 * 60;
   var now = Math.floor(Date.now() / 1000);
@@ -134,19 +134,12 @@ angular.module('copayApp.controllers').controller('txpDetailsController', functi
     $scope.loading = false;
     popupService.showAlert(gettextCatalog.getString('Error'), bwcError.msg(err, prefix));
   };
-  $scope.$on('destroy', function() {
-    destroyBitloxListeners();
-  })
-  function destroyBitloxListeners() {
-    if($rootScope.bitloxConnectErrorListener) {
-      $rootScope.bitloxConnectErrorListener();    
-    }    
-  }
+
+
 
   $scope.sign = function(onSendStatusChange) {
     $scope.loading = true;
     
-    destroyBitloxListeners();
     walletService.publishAndSign($scope.wallet, $scope.tx, function(err, txp) {
       $scope.$emit('UpdateTx');
       if (err) return setError(err, gettextCatalog.getString('Could not send payment'));
@@ -284,7 +277,28 @@ angular.module('copayApp.controllers').controller('txpDetailsController', functi
   $scope.statusChangeHandler = statusChangeHandler;
 
   $scope.onConfirm = function() {
-    $scope.sign(statusChangeHandler);
+    // confirm txs for more that 20usd, if not spending/touchid is enabled
+    function confirmTx(cb) {
+      var message = gettextCatalog.getString('Sending {{amountStr}} from {{name}}', {
+        amountStr: $scope.tx.amountStr,
+        name: $scope.wallet.name.trim()
+      });
+      var okText = gettextCatalog.getString('Confirm');
+      var cancelText = gettextCatalog.getString('Cancel');
+      popupService.showConfirm(null, message, okText, cancelText, function(ok) {
+        return cb(!ok);
+      });
+    }    
+    confirmTx(function(nok) {
+      if (nok) {
+        $timeout(function() {
+          $scope.$apply();
+        });
+        return;
+      }
+      $scope.sign(statusChangeHandler);
+    });    
+    
   };
 
   $scope.onSuccessConfirm = function() {
@@ -298,5 +312,9 @@ angular.module('copayApp.controllers').controller('txpDetailsController', functi
     bwsEvent();
     $scope.loading = null;
     $scope.txpDetailsModal.hide();
+
+    if ($state.current.name === 'tabs.proposals') {
+      $rootScope.$broadcast('action/updateTxps', { walletId: $scope.wallet.id })
+    }
   };
 });

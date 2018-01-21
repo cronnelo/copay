@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('copayApp.services').factory('addressbookService', function(bitcore, storageService, lodash) {
+angular.module('copayApp.services').factory('addressbookService', function(bitcore, storageService, lodash, customNetworks) {
   var root = {};
 
   root.get = function(addr, cb) {
@@ -19,19 +19,23 @@ angular.module('copayApp.services').factory('addressbookService', function(bitco
   };
 
   root.list = function(cb) {
-    storageService.getAddressbook('testnet', function(err, ab) {
-      if (err) return cb('Could not get the Addressbook');
-
-      if (ab) ab = JSON.parse(ab);
-
-      ab = ab || {};
-      storageService.getAddressbook('livenet', function(err, ab2) {
-        if (ab2) ab2 = JSON.parse(ab2);
-
-        ab2 = ab2 || {};
-        return cb(err, lodash.defaults(ab2, ab));
+    customNetworks.getAll().then(function(CUSTOMNETWORKS) {
+      var addressbookRequests = lodash.map(CUSTOMNETWORKS, function(network) {
+        return async.apply(storageService.getAddressbook, network.name);
       });
-    });
+
+      async.parallel(addressbookRequests, function(err, rawAddressbook) {
+        if (err) return cb('Could not get the Addressbook');
+
+        var addressbook = rawAddressbook.map(function(ab) {
+          return JSON.parse(ab || '{}');
+        });
+
+        addressbook = lodash.defaults.apply(null, addressbook);
+
+        cb(err, addressbook);
+      });
+    })
   };
 
   root.add = function(entry, cb) {

@@ -1,6 +1,6 @@
 #txp-details,
 #view-confirm {
-  @extend .deflash-blue;
+  
   $item-lateral-padding: 20px;
   $item-vertical-padding: 10px;
   $item-border-color: #EFEFEF;
@@ -21,7 +21,7 @@
     width: 20px;
   }
   .head {
-    padding: 30px $item-lateral-padding 3rem;
+    padding: 30px $item-lateral-padding;
     border-top: 0;
 
     .sending-label {
@@ -124,9 +124,18 @@
       background-color: rgba(203, 203, 203, .13);
       margin-top: 10px;
       margin-bottom: 5px;
-      display: flex;
       align-items: center;
       border-radius: 4px;
+
+      .wallet-box {
+        font-size: 16px;
+        padding-left: 6px;
+      }
+
+      .sub-wallet-box {
+        font-size: 14px;
+        padding-left: 6px;
+      }
 
       .recipient-address {
         display:inline;
@@ -140,12 +149,33 @@
         color: grey;
         position: inherit;
         padding: 0 10px;
-        float: right;
+        float: left;
+
+        &.big-icon-svg {
+          & > .bg {
+            width: 24px;
+            height: 24px;
+          }
+
+        }
       }
+
+      &.with-sub-wallet {
+        padding: 10px 0 6px 10px;
+
+        i {
+          &.big-icon-svg {
+           & > .bg {
+              width: 40px;
+              height: 40px;
+            }
+          }
+        }
+      }
+
       contact {
         margin-left: 8px;
         font-size: 13px;
-        display: inline-block;
       }
     }
     .wallet {
@@ -165,6 +195,10 @@
           margin-right: .7rem;
           box-shadow: none;
         }
+      }
+
+      .wallet-name {
+        margin-top: -3px;
       }
     }
 
@@ -269,7 +303,6 @@
   .view-on-blockchain-btn {
     background: #e8e7e7;
     color: rgba(58, 58, 58, .6);
-    margin-bottom: 1.5rem;
   }
   .glidera-success {
     padding: 20px;

@@ -1,9 +1,20 @@
+.button-blue {
+  background-color: #4A90E2 !important;
+
+  &:active {
+    background-color: darken(#4A90E2, 15%) !important;
+  }
+}
+
 .open-bitlox {
   span {
     line-height: 3.1em
   }
 }
-
+.confirmed-check {
+  width: 20px;
+  margin: -4px 0px;
+}
 .popup {
   border-radius: 2px !important;
 }
@@ -25,10 +36,7 @@
   background: #444455;
   box-shadow: none !important;
 }
-#tab-home .tab-home__logo {
-  padding-top: 7.5px;
-  padding-bottom: 7.5px;
-}
+
 #txp-details .info .payment-proposal-to, #view-confirm .info .payment-proposal-to {
   background-color: rgba(203, 203, 203, 0.39) !important;
 }
@@ -41,4 +49,20 @@
   color: gray !important;
   padding-top: 5px;
   padding-bottom: 5px;
+}
+.has-header {
+  background-color: #f2f2f2 !important;
+}
+.has-header[id*='onboard'],[id*='backup-warning'] .has-header{
+  background-color: $v-onboarding-pane-bg !important;
+}
+#tab-scan, #tab-attach-bitlox {
+  .has-header {
+    background-color: transparent !important;
+  }
+}
+#onboarding-disclaimer {
+  .has-header {
+    background-color: transparent !important;
+  }
 }

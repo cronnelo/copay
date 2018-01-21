@@ -1,5 +1,5 @@
 #tab-receive {
-  @extend .deflash-blue;
+  
   .button-share {
     color: #fff;
     box-shadow: none;
@@ -11,10 +11,10 @@
     }
   }
   .button-request {
-    margin-top: 10px;
+    margin-top: 40px;
     background: transparent;
     border: none;
-    font-size: 12px;
+    font-size: 100%;
     color: $v-text-accent-color;
     i.icon {
       vertical-align: middle;

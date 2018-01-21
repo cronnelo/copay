@@ -236,7 +236,16 @@
   bottom: 5px;
   font-size: 20px;
   color: #fff;
-  width:95%;
+  width: 95%;
+
+  .wallet-info {
+    img {
+      height:0.6em;
+      margin-right: 1px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+  }
 }
 
 .wallet-not-backed-up-warning {

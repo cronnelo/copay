@@ -2487,8 +2487,8 @@ msgid "Sending transaction"
 msgstr "Enviando transacción"
 
 #: src/js/controllers/confirm.js:490
-msgid "Sending {{amountStr}} from your {{name}} wallet"
-msgstr "Enviando {{amountStr}} desde tu billetera {{name}}"
+msgid "Sending {{amountStr}} from {{name}}"
+msgstr "Enviando {{amountStr}} desde {{name}}"
 
 #: www/views/includes/walletHistory.html:42
 #: www/views/modals/tx-status.html:9

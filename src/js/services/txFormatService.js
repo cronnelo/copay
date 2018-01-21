@@ -68,7 +68,7 @@ angular.module('copayApp.services').factory('txFormatService', function($filter,
     var config = configService.getSync().wallet.settings;
 
     var val = function() {
-      var v1 = parseFloat((rateService.toFiat(satoshis, config.alternativeIsoCode, network)).toFixed(2));
+      var v1 = parseFloat((rateService.toFiat(satoshis, config.alternativeIsoCode, network)));
       v1 = $filter('formatFiatAmount')(v1);
       if (!v1) return null;
 
@@ -83,23 +83,75 @@ angular.module('copayApp.services').factory('txFormatService', function($filter,
     } else {
       if (!rateService.isAvailable()) return null;
       return val();
+    }
+  };
+
+  root.formatFormerAlternativeStr = function(satoshis, network, customRate, cb) {
+    if (isNaN(satoshis)) return;
+    var config = configService.getSync().wallet.settings;
+
+    var val = function() {
+      var v1 = parseFloat((rateService.toFiat(satoshis, config.alternativeIsoCode, network, customRate)));
+      v1 = $filter('formatFiatAmount')(v1);
+      if (!v1) return null;
+
+      return v1 + ' ' + config.alternativeIsoCode;
+    };
+
+    // Async version
+    if (cb) {
+      rateService.whenAvailable(function() {
+        return cb(val());
+      });
+    } else {
+      if (!rateService.isAvailable()) return null;
+      return val();
+    }
+  };
+
+  root.alternativeAmountWithSymbol = function(satoshis, network, cb) {
+    if (isNaN(satoshis)) return;
+    var config = configService.getSync().wallet.settings;
+    var _symbol = '≈';
+
+    var val = function() {
+      var fiat = rateService.toFiat(satoshis, config.alternativeIsoCode, network);
+
+      if (fiat.toFixed(2) === '0.00' && fiat > 0) {
+        _symbol = '<';
+      }
+
+      fiat = $filter('formatFiatAmount')(fiat);
+
+      if (!fiat) return null;
+
+      return _symbol + ' ' + fiat + ' ' + config.alternativeIsoCode;
+    };
+
+    // Async version
+    if (cb) {
+      rateService.whenAvailable(function() {
+        return cb(val());
+      });
+    } else {
+      if (!rateService.isAvailable()) return null;
+      return val();
     };
   };
 
-  root.processTx = function(tx, network) {
-    if (!tx || tx.action == 'invalid')
+
+  root.processTx = function(tx, network, customRate) {
+    if (!tx || tx.action == 'invalid') {
       return tx;
-
-    var CUSTOMNETWORKS = customNetworks.getStatic()
-
-      var networkObj = CUSTOMNETWORKS[network];
-      var unitSymbol = "BTC";
-    if(networkObj) {
-      unitSymbol = networkObj.symbol;
     }
+
+    var CUSTOMNETWORKS = customNetworks.getStatic();
+
+    var networkObj = CUSTOMNETWORKS[network];
+    var unitSymbol = networkObj ? networkObj.symbol : "BTC";
+
     // New transaction output format
     if (tx.outputs && tx.outputs.length) {
-
       var outputsNr = tx.outputs.length;
 
       if (tx.action != 'received') {
@@ -109,7 +161,9 @@ angular.module('copayApp.services').factory('txFormatService', function($filter,
         }
         tx.amount = lodash.reduce(tx.outputs, function(total, o) {
           o.amountStr = root.formatAmountStr(o.amount) + " " + unitSymbol;
-          o.alternativeAmountStr = root.formatAlternativeStr(o.amount, networkObj);
+          o.alternativeAmountStr = customRate
+            ? root.formatFormerAlternativeStr(tx.amount, networkObj, customRate)
+            : root.formatAlternativeStr(tx.amount, networkObj);
           return total + o.amount;
         }, 0);
       }
@@ -117,7 +171,11 @@ angular.module('copayApp.services').factory('txFormatService', function($filter,
     }
 
     tx.amountStr = root.formatAmountStr(tx.amount) + " " + unitSymbol;
-    tx.alternativeAmountStr = root.formatAlternativeStr(tx.amount, networkObj);
+
+    tx.alternativeAmountStr = customRate
+      ? root.formatFormerAlternativeStr(tx.amount, networkObj, customRate)
+      : root.formatAlternativeStr(tx.amount, networkObj);
+
     tx.feeStr = root.formatAmountStr(tx.fee || tx.fees) + " " + unitSymbol;
 
     if (tx.amountStr) {

@@ -102,39 +102,54 @@ angular.module('copayApp.controllers').controller('txDetailsController', functio
       if (err) {
         $log.warn('Error getting transaction: ' + err);
         $ionicHistory.goBack();
-        return popupService.showAlert(gettextCatalog.getString('Error'), gettextCatalog.getString('Transaction not available at this time'));
-      }
-      $scope.btx = txFormatService.processTx(tx, $scope.wallet.credentials.network);
-      customNetworks.getAll().then(function(CUSTOMNETWORKS) {
-        txFormatService.formatAlternativeStr(tx.fees, CUSTOMNETWORKS[$scope.wallet.credentials.network], function(v) {
-          $scope.feeFiatStr = v;
-          $scope.btx.feeRateStr = ($scope.btx.fees / ($scope.btx.amount + $scope.btx.fees) * 100).toFixed(2) + '%';
-        });
-      })
-
-      if ($scope.btx.action != 'invalid') {
-        if ($scope.btx.action == 'sent') $scope.title = gettextCatalog.getString('Sent Funds');
-        if ($scope.btx.action == 'received') $scope.title = gettextCatalog.getString('Received Funds');
-        if ($scope.btx.action == 'moved') $scope.title = gettextCatalog.getString('Moved Funds');
+        return popupService.showAlert(
+          gettextCatalog.getString('Error'),
+          gettextCatalog.getString('Transaction not available at this time')
+        );
       }
 
-      updateMemo();
-      initActionList();
-      getFiatRate();
-      $timeout(function() {
-        $scope.$digest();
-      });
+      $scope.wallet.getFiatRate({
+        code: $scope.wallet.status.alternativeIsoCode,
+        ts: tx.time * 1000
+      }, function(err, res) {
+        if (err) {
+          $log.debug('Could not get historic rate');
+          return;
+        }
 
-      feeService.getFeeLevels($scope.wallet.credentials.network, function(err, levels) {
-        if (err) return;
-        walletService.getLowAmount($scope.wallet, levels, function(err, amount) {
-          if (err) return;
-          $scope.btx.lowAmount = tx.amount < amount;
+        $scope.btx = txFormatService.processTx(tx, $scope.wallet.credentials.network, res.rate);
 
-          $timeout(function() {
-            $scope.$apply();
+        customNetworks.getAll().then(function(CUSTOMNETWORKS) {
+          txFormatService.formatAlternativeStr(tx.fees, CUSTOMNETWORKS[$scope.wallet.credentials.network], function(v) {
+            $scope.feeFiatStr = v;
+            $scope.btx.feeRateStr = ($scope.btx.fees / ($scope.btx.amount + $scope.btx.fees) * 100).toFixed(2) + '%';
           });
+        })
 
+        if ($scope.btx.action != 'invalid') {
+          if ($scope.btx.action == 'sent') $scope.title = gettextCatalog.getString('Sent Funds');
+          if ($scope.btx.action == 'received') $scope.title = gettextCatalog.getString('Received Funds');
+          if ($scope.btx.action == 'moved') $scope.title = gettextCatalog.getString('Moved Funds');
+        }
+
+        updateMemo();
+        initActionList();
+        getFiatRate();
+
+        $timeout(function() {
+          $scope.$digest();
+        });
+
+        feeService.getFeeLevels($scope.wallet.credentials.network, function(err, levels) {
+          if (err) return;
+          walletService.getLowAmount($scope.wallet, levels, function(err, amount) {
+            if (err) return;
+            $scope.btx.lowAmount = tx.amount < amount;
+
+            $timeout(function() {
+              $scope.$apply();
+            });
+          });
         });
       });
     });
@@ -204,6 +219,7 @@ angular.module('copayApp.controllers').controller('txDetailsController', functio
         $log.debug('Could not get historic rate');
         return;
       }
+
       if (res && res.rate) {
         $scope.rateDate = res.fetchedOn;
         $scope.rate = res.rate;

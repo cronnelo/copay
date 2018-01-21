@@ -1,6 +1,6 @@
 #view-confirm {
   background-color: #ffffff;
-  @extend .deflash-blue;
+  
 
   .item-note {
     float: none;
@@ -27,9 +27,6 @@
     span {
       margin: 5px 0 0 8px;
     }
-  }
-  .wallet-name {
-    margin-top: -3px;
   }
   .toggle {
     cursor: pointer;

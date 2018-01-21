@@ -41,6 +41,11 @@ angular.module('copayApp.filters', [])
 
         var fractionSize = 2;
         var value = numberFilter(amount, fractionSize);
+
+        if (value === '0.00' && amount > 0) {
+          value = '0.01';
+        }
+
         var sep = value.indexOf(formats.DECIMAL_SEP);
         var group = value.indexOf(formats.GROUP_SEP);
 
@@ -56,8 +61,7 @@ angular.module('copayApp.filters', [])
             var finalValue = intValue + floatValue;
             return finalValue;
           } else {
-            value = parseFloat(value);
-            return value.toFixed(2);
+            return parseFloat(value).toFixed(2);
           }
         }
         return 0;

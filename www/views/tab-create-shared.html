@@ -1,4 +1,4 @@
-<ion-view class="settings" show-tabs>
+<ion-view class="settings" hide-tabs>
   <ion-nav-bar class="bar-royal">
     <ion-nav-title>{{'Create Shared Wallet' | translate}}</ion-nav-title>
     <ion-nav-back-button>
@@ -15,7 +15,11 @@
             ng-model="formData.walletName"
             ng-required="true"
             ng-focus="formFocus('wallet-name')"
-            ng-blur="formFocus(false)">
+            ng-blur="formFocus(false)"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false">
         </label>
 
         <label class="item item-input item-stacked-label">
@@ -26,6 +30,7 @@
             ng-required="formData.totalCopayers != 1"
             ng-disabled="formData.totalCopayers == 1"
             ng-focus="formFocus('my-name')"
+            autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
             ng-blur="formFocus(false)">
         </label>
 
@@ -33,8 +38,9 @@
           <div class="input-label" translate>
             Total number of copayers
           </div>
-          <select class="m10t" ng-model="formData.totalCopayers" ng-options="totalCopayers as totalCopayers for totalCopayers in TCValues"
-            ng-change="setTotalCopayers(formData.totalCopayers)">
+          <select ng-model="formData.totalCopayers"
+                  ng-options="totalCopayers as totalCopayers for totalCopayers in TCValues"
+                  ng-change="setTotalCopayers(formData.totalCopayers)">
           </select>
         </label>
 
@@ -173,10 +179,12 @@
         </div> <!-- advanced -->
       </div> <!-- list -->
 
-      <button type="submit" class="button button-standard button-primary"
-        ng-disabled="setupForm.$invalid || ((encrypt && !formData.passwordSaved) || encrypt && ((formData.seedSource.id == 'new' && !formData.createPassphrase) || (formData.seedSource.id == 'set' && !formData.passphrase)))">
-        <span translate>Create {{formData.requiredCopayers}}-of-{{formData.totalCopayers}} wallet</span>
-      </button>
+      <div class="p20b">
+        <button type="submit" class="button button-standard button-primary"
+          ng-disabled="setupForm.$invalid || ((encrypt && !formData.passwordSaved) || encrypt && ((formData.seedSource.id == 'new' && !formData.createPassphrase) || (formData.seedSource.id == 'set' && !formData.passphrase)))">
+          <span translate>Create {{formData.requiredCopayers}}-of-{{formData.totalCopayers}} wallet</span>
+        </button>
+      </div>
     </form>
   </ion-content>
   <network-selector

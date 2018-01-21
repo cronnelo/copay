@@ -296,8 +296,8 @@ angular.module('copayApp.controllers').controller('walletDetailsController', fun
 
     scrollPos = scrollPos || 0;
     var amountHeight = 210 - scrollPos;
-    if (amountHeight < 80) {
-      amountHeight = 80;
+    if (amountHeight < 110) {
+      amountHeight = 110;
     }
     var contentMargin = amountHeight;
     if (contentMargin > 210) {
@@ -336,7 +336,9 @@ angular.module('copayApp.controllers').controller('walletDetailsController', fun
     $window.requestAnimationFrame(function() {
       $scope.amountHeight = amountHeight + 'px';
       $scope.contentMargin = contentMargin + 'px';
-      $scope.amountScale = 'scale3d(' + s + ',' + s + ',' + s + ') translateY(' + t + 'px)';
+
+      $scope.amountScale = 'translateY(' + t + 'px)';
+      // $scope.amountScale = 'scale3d(' + s + ',' + s + ',' + s + ') translateY(' + t + 'px)';
       $scope.$digest();
       getScrollPosition();
     });
@@ -382,10 +384,10 @@ angular.module('copayApp.controllers').controller('walletDetailsController', fun
 
   $scope.$on("$ionicView.afterLeave", function(event, data) {
 
-    if ($window.StatusBar) {
-      var statusBarColor = appConfigService.name == 'copay' ? '#192c3a' : '#1e3186';
-      $window.StatusBar.backgroundColorByHexString(statusBarColor);
-    }
+    // if ($window.StatusBar) {
+    //   var statusBarColor = appConfigService.name == 'copay' ? '#192c3a' : '#1e3186';
+    //   $window.StatusBar.backgroundColorByHexString(statusBarColor);
+    // }
   });
 
   $scope.$on("$ionicView.leave", function(event, data) {
@@ -409,8 +411,8 @@ angular.module('copayApp.controllers').controller('walletDetailsController', fun
       }
     });
     var statusBarColorHexString = rgbToHex(rgb.r, rgb.g, rgb.b);
-    if ($window.StatusBar)
-      $window.StatusBar.backgroundColorByHexString(statusBarColorHexString);
+    // if ($window.StatusBar)
+    //   $window.StatusBar.backgroundColorByHexString(statusBarColorHexString);
   }
 
   function hexToRgb(hex) {

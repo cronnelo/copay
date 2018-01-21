@@ -1,6 +1,6 @@
 'use strict';
 angular.module('copayApp.services')
-  .factory('profileService', function profileServiceFactory($rootScope, $timeout, $filter, $log, $state, sjcl, lodash, storageService, bwcService, configService, gettextCatalog, bwcError, uxLanguage, platformInfo, appConfigService) {
+  .factory('profileService', function profileServiceFactory($rootScope, $timeout, $filter, $log, $state, sjcl, lodash, storageService, bwcService, configService, gettextCatalog, bwcError, uxLanguage, platformInfo, appConfigService, orderedWallet, customNetworks) {
     var isChromeApp = platformInfo.isChromeApp;
     var isCordova = platformInfo.isCordova;
     var isWindowsPhoneApp = platformInfo.isCordova && platformInfo.isWP;
@@ -261,27 +261,28 @@ angular.module('copayApp.services')
             });
           });
         }
+        customNetworks.getAll().then(function() { 
+          bindWallets(function() {
+            root.isBound = true;
 
-        bindWallets(function() {
-          root.isBound = true;
-
-          lodash.each(root._queue, function(x) {
-            $timeout(function() {
-              return x();
-            }, 1);
-          });
-          root._queue = [];
+            lodash.each(root._queue, function(x) {
+              $timeout(function() {
+                return x();
+              }, 1);
+            });
+            root._queue = [];
 
 
 
-          root.isDisclaimerAccepted(function(val) {
-            if (!val) {
-              return cb(new Error('NONAGREEDDISCLAIMER: Non agreed disclaimer'));
-            }
-            return cb();
+            root.isDisclaimerAccepted(function(val) {
+              if (!val) {
+                return cb(new Error('NONAGREEDDISCLAIMER: Non agreed disclaimer'));
+              }
+              return cb();
+            });
           });
         });
-      });
+      })
     };
 
     root._queue = [];
@@ -682,11 +683,8 @@ angular.module('copayApp.services')
           if (err) return cb(err);
           root.bindProfile(p, function(err) {
             // ignore NONAGREEDDISCLAIMER
-
-            customNetworks.getAll().then(function() {            
-              if (err && err.toString().match('NONAGREEDDISCLAIMER')) return cb();
-              return cb(err);
-            })
+            if (err && err.toString().match('NONAGREEDDISCLAIMER')) return cb();
+            return cb(err);
           });
         });
       });
@@ -812,6 +810,15 @@ angular.module('copayApp.services')
           return x.isComplete();
         }, 'createdOn'
       ]);
+    };
+
+    root.getOrderedWallets = function (opts, callback) {
+      if (arguments.length === 1 && typeof opts === 'function') {
+        callback = opts;
+        opts = null;
+      }
+
+      orderedWallet.arrange(root.getWallets(opts), callback);
     };
 
     root.toggleHideBalanceFlag = function(walletId, cb) {

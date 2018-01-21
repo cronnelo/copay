@@ -8,6 +8,7 @@ angular.module('copayApp.controllers').controller('amountController', function($
   var satToBtc;
   var SMALL_FONT_SIZE_LIMIT = 10;
   var LENGTH_EXPRESSION_LIMIT = 19;
+  var DECIMAL_LIMIT = 8;
   var isNW = platformInfo.isNW;
   $scope.isChromeApp = platformInfo.isChromeApp;
 
@@ -18,13 +19,16 @@ angular.module('copayApp.controllers').controller('amountController', function($
   $scope.$on("$ionicView.beforeEnter", function(event, data) {
     // Go to...
     _id = data.stateParams.id; // Optional (BitPay Card ID or Wallet ID)
+    $scope.isRatesCalculator = data.stateParams.ratesCalculator;
     $scope.nextStep = data.stateParams.nextStep;
     $scope.currency = data.stateParams.currency;
     $scope.forceCurrency = data.stateParams.forceCurrency;
 
-    $scope.showMenu = $ionicHistory.backView() && ($ionicHistory.backView().stateName == 'tabs.send' ||
+    $scope.showMenu = $ionicHistory.backView() &&
+      ($ionicHistory.backView().stateName === 'tabs.send' ||
+       $ionicHistory.backView().stateName === 'tabs.bitpayCard' ||
+       $scope.isRatesCalculator);
 
-      $ionicHistory.backView().stateName == 'tabs.bitpayCard');
     $scope.recipientType = data.stateParams.recipientType || null;
     $scope.toAddress = data.stateParams.toAddress;
     $scope.toName = data.stateParams.toName;
@@ -33,26 +37,34 @@ angular.module('copayApp.controllers').controller('amountController', function($
     $scope.toColor = data.stateParams.toColor;
     $scope.walletId = data.stateParams.walletId;
     $scope.wallet = data.stateParams.wallet;
-    $scope.showSendMax = false;
+    $scope.showItemSelector = false;
 
     $scope.customAmount = data.stateParams.customAmount;
-    $scope.network = (new bitcore.Address($scope.toAddress)).network.name;
-    $scope.unitName = "BTC";
+
+    if ($scope.toAddress) {
+      $scope.network = (new bitcore.Address($scope.toAddress)).network.name;
+    } else {
+      $scope.network = data.stateParams.network;
+    }
+
+    $scope.unitName = 'BTC';
+    $scope.amountSign = '&asymp;';
+
     customNetworks.getAll().then(function(CUSTOMNETWORKS) {
       if(CUSTOMNETWORKS[$scope.network]) {
         $scope.unitName = CUSTOMNETWORKS[$scope.network].symbol;
       }      
-    })
+    });
 
-    if (!$scope.nextStep && !data.stateParams.toAddress) {
-      $log.error('Bad params at amount')
+    if (!$scope.isRatesCalculator && !$scope.nextStep && !data.stateParams.toAddress) {
+      $log.error('Bad params at amount');
       throw ('bad params');
     }
 
     var reNr = /^[1234567890\.]$/;
     var reOp = /^[\*\+\-\/]$/;
 
-    var disableKeys = angular.element($window).on('keydown', function(e) {
+    angular.element($window).on('keydown', function disableKeys(e) {
       if (!e.key) return;
       if (e.which === 8) { // you can add others here inside brackets.
         e.preventDefault();
@@ -66,8 +78,10 @@ angular.module('copayApp.controllers').controller('amountController', function($
       } else if (e.keyCode === 86) {
         if (e.ctrlKey || e.metaKey)
           processClipboard();
-      } else if (e.keyCode === 13)
+      } else if (e.keyCode === 13) {
+        if ($scope.isRatesCalculator) return;
         $scope.finish();
+      }
 
       $timeout(function() {
         $scope.$apply();
@@ -81,6 +95,7 @@ angular.module('copayApp.controllers').controller('amountController', function($
     } else {
       $scope.alternativeIsoCode = config.alternativeIsoCode || 'USD';
     }
+
     $scope.specificAmount = $scope.specificAlternativeAmount = '';
     $scope.isCordova = platformInfo.isCordova;
     unitToSatoshi = config.unitToSatoshi;
@@ -108,20 +123,20 @@ angular.module('copayApp.controllers').controller('amountController', function($
     $timeout(function() {
       $scope.$apply();
     });
-  };
+  }
 
   function processClipboard() {
     if (!isNW) return;
     var value = nodeWebkitService.readFromClipboard();
     if (value && evaluate(value) > 0) paste(evaluate(value));
-  };
+  }
 
-  $scope.showSendMaxMenu = function() {
-    $scope.showSendMax = true;
+  $scope.showItemSelectorMenu = function() {
+    $scope.showItemSelector = true;
   };
 
   $scope.sendMax = function() {
-    $scope.showSendMax = false;
+    $scope.showItemSelector = false;
     $scope.useSendMax = true;
     $scope.finish();
   };
@@ -139,12 +154,23 @@ angular.module('copayApp.controllers').controller('amountController', function($
   function checkFontSize() {
     if ($scope.amount && $scope.amount.length >= SMALL_FONT_SIZE_LIMIT) $scope.smallFont = true;
     else $scope.smallFont = false;
-  };
+  }
 
   $scope.pushDigit = function(digit) {
     if ($scope.amount && $scope.amount.length >= LENGTH_EXPRESSION_LIMIT) return;
-    if ($scope.amount.indexOf('.') > -1 && digit == '.') return;
-    if ($scope.showAlternativeAmount && $scope.amount.indexOf('.') > -1 && $scope.amount[$scope.amount.indexOf('.') + 2]) return;
+
+    // if ($scope.amount.indexOf('.') > -1 && digit == '.') return;
+
+    if ($scope.showAlternativeAmount &&
+        $scope.amount.indexOf('.') > -1 &&
+        $scope.amount[$scope.amount.indexOf('.') + 2]) {
+      return;
+    }
+
+    if ($scope.amount.indexOf('.') > -1) {
+      var decimalCount = $scope.amount.split('.')[1].length + 1;
+      if (decimalCount > DECIMAL_LIMIT) return;
+    }
 
     $scope.amount = ($scope.amount + digit).replace('..', '.');
     checkFontSize();
@@ -161,18 +187,23 @@ angular.module('copayApp.controllers').controller('amountController', function($
       } else {
         return val.slice(0, -1) + operator;
       }
-    };
+    }
+  };
+
+  $scope.updateAlternativeCurrency = function() {
+    $scope.alternativeIsoCode = configService.getSync().wallet.settings.alternativeIsoCode || 'USD';
+    processAmount();
   };
 
   function isOperator(val) {
     var regex = /[\/\-\+\x\*]/;
     return regex.test(val);
-  };
+  }
 
   function isExpression(val) {
     var regex = /^\.?\d+(\.?\d+)?([\/\-\+\*x]\d?\.?\d+)+$/;
     return regex.test(val);
-  };
+  }
 
   $scope.removeDigit = function() {
     $scope.amount = ($scope.amount).toString().slice(0, -1);
@@ -182,6 +213,7 @@ angular.module('copayApp.controllers').controller('amountController', function($
 
   $scope.resetAmount = function() {
     $scope.amount = $scope.alternativeResult = $scope.amountResult = $scope.globalResult = '';
+    $scope.amountSign = '&asymp;';
     $scope.allowSend = false;
     checkFontSize();
   };
@@ -195,24 +227,32 @@ angular.module('copayApp.controllers').controller('amountController', function($
       $scope.amountResult = $filter('formatFiatAmount')(toFiat(result));
       $scope.alternativeResult = txFormatService.formatAmount(fromFiat(result) * unitToSatoshi, true);
     }
-  };
+  }
 
   function processResult(val) {
     if ($scope.showAlternativeAmount)
       return $filter('formatFiatAmount')(val);
     else
       return txFormatService.formatAmount(val.toFixed(unitDecimals) * unitToSatoshi, true);
-  };
+  }
 
   function fromFiat(val) {
     var CUSTOMNETWORKS = customNetworks.getStatic();
     return parseFloat((rateService.fromFiat(val, $scope.alternativeIsoCode, CUSTOMNETWORKS[$scope.network]) * satToUnit).toFixed(unitDecimals));
-  };
+  }
 
   function toFiat(val) {
-    var CUSTOMNETWORKS = customNetworks.getStatic();
-    return parseFloat((rateService.toFiat(val * unitToSatoshi, $scope.alternativeIsoCode, CUSTOMNETWORKS[$scope.network])).toFixed(2));
-  };
+    var network = customNetworks.getStatic()[$scope.network];
+    var fiat = rateService.toFiat(val * unitToSatoshi, $scope.alternativeIsoCode, network);
+
+    if (fiat.toFixed(2) === '0.00' && fiat > 0) {
+      $scope.amountSign = '&lt;';
+    } else {
+      $scope.amountSign = '&asymp;';
+    }
+
+    return parseFloat(fiat);
+  }
 
   function evaluate(val) {
     var result;
@@ -223,7 +263,7 @@ angular.module('copayApp.controllers').controller('amountController', function($
     }
     if (!lodash.isFinite(result)) return 0;
     return result;
-  };
+  }
 
   function format(val) {
     var result = val.toString();
@@ -232,7 +272,7 @@ angular.module('copayApp.controllers').controller('amountController', function($
       result = result.slice(0, -1);
 
     return result.replace('x', '*');
-  };
+  }
 
   $scope.finish = function() {
     var _amount = evaluate(format($scope.amount));

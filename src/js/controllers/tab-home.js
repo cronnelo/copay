@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('copayApp.controllers').controller('tabHomeController',
-  function($rootScope, $timeout, $scope, $state, $stateParams, $ionicModal, $ionicScrollDelegate, $window, gettextCatalog, lodash, popupService, ongoingProcess, externalLinkService, latestReleaseService, profileService, walletService, configService, $log, platformInfo, storageService, txpModalService, appConfigService, startupService, addressbookService, feedbackService, bwcError, nextStepsService, buyAndSellService, homeIntegrationsService, bitpayCardService, pushNotificationsService, timeService, bitcore, customNetworks) {
+  function($rootScope, $timeout, $scope, $state, $stateParams, $ionicModal, $ionicScrollDelegate, $window, gettextCatalog, lodash, popupService, ongoingProcess, externalLinkService, latestReleaseService, profileService, walletService, configService, $log, platformInfo, storageService, txpModalService, appConfigService, startupService, addressbookService, feedbackService, bwcError, nextStepsService, buyAndSellService, homeIntegrationsService, bitpayCardService, pushNotificationsService, timeService, bitcore, customNetworks, txFormatService, $q, $ionicLoading, rateService) {
 
     var wallet;
     var listeners = [];
@@ -18,6 +18,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
     $scope.isNW = platformInfo.isNW;
     $scope.showRateCard = {};
     $scope.defaults = {};
+    $scope.showReorder = false;
 
     $scope.$on("$ionicView.afterEnter", function() {
       startupService.ready();
@@ -44,8 +45,16 @@ angular.module('copayApp.controllers').controller('tabHomeController',
           }
         });
       }
-      $scope.wallets = profileService.getWallets();
+
       $scope.defaults = configService.getDefaults();
+      $scope.wallets = profileService.getWallets();
+
+      $scope.setRates();
+
+      profileService.getOrderedWallets(function(orderedWallets) {
+        $scope.orderedWallets = orderedWallets;
+      });
+
       storageService.getFeedbackInfo(function(error, info) {
 
         if ($scope.isWindowsPhoneApp) {
@@ -71,6 +80,7 @@ angular.module('copayApp.controllers').controller('tabHomeController',
             $scope.$apply();
           });
         }
+
       });
 
       function initFeedBackInfo() {
@@ -125,6 +135,8 @@ angular.module('copayApp.controllers').controller('tabHomeController',
           $scope.nextStepsItems = nextStepsService.get();
         }
 
+        $scope.showBitLoxBuyLink = config.showBitLoxBuyLink;
+
         pushNotificationsService.init();
 
         $timeout(function() {
@@ -139,6 +151,37 @@ angular.module('copayApp.controllers').controller('tabHomeController',
         x();
       });
     });
+
+    $scope.setRates = function(showLoading) {
+      var unitToSatoshi = $scope.defaults.wallet.settings.unitToSatoshi;
+
+      if (showLoading) {
+        $ionicLoading.show({
+          duration: 1800,
+          template: '<ion-spinner></ion-spinner> <br/> Fetching rates...'
+        });
+      }
+
+      var networkPromise = lodash.map(customNetworks.getStatic(), function(network) {
+        var defer = $q.defer();
+
+        rateService._fetchCurrencies(function() {
+          txFormatService.formatAlternativeStr(1 * unitToSatoshi, network, function(altStr) {
+            defer.resolve({
+              symbol: network.symbol,
+              altStr: altStr,
+              network: network.name
+            });
+          });          
+        });
+
+        return defer.promise;
+      });
+
+      $q.all(networkPromise).then(function(rates) {
+        $scope.rates = rates;
+      });
+    };
 
     $scope.createdWithinPastDay = function(time) {
       return timeService.withinPastDay(time);
@@ -193,6 +236,36 @@ angular.module('copayApp.controllers').controller('tabHomeController',
       $state.go('tabs.wallet', {
         walletId: wallet.credentials.walletId
       });
+    };
+
+    $scope.reorderWallet = function(wallet, fromIndex, toIndex) {
+      $scope.orderedWallets.splice(fromIndex, 1);
+      $scope.orderedWallets.splice(toIndex, 0, wallet);
+
+      var orderedWallets = $scope.orderedWallets.map(function(wallet) {
+        return wallet.name;
+      });
+
+      storageService.setOrderedWallet(JSON.stringify(orderedWallets), function () {});
+      $scope.toggleReorder();
+    };
+
+    $scope.toggleReorder = function() {
+      if ($scope.wallets.length > 1) {
+        $scope.showReorder = !$scope.showReorder;
+      }
+    };
+
+    $scope.closeReorder = function() {
+      $scope.showReorder = false;
+    };
+
+    $scope.doneOrAdd = function () {
+      if ($scope.showReorder) {
+        $scope.closeReorder();
+      } else {
+        $state.go('tabs.add');
+      }
     };
 
     var updateTxps = function() {

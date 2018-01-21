@@ -1,5 +1,5 @@
 #tab-home {
-  @extend .deflash-blue;
+  
   .icon-create-wallet {
     background-color: #4A90E2; // default wallet color
   }
@@ -30,13 +30,44 @@
     .item {
       color: #444;
       border-top:none;
-      padding-bottom: 1rem;
-      padding-top:1rem;
       &.item-extra-padding {
         padding-top: 1.5rem;
         padding-bottom: 1.5rem;
       }
+
+      .item-right-edit {
+        width: 100%;
+        transform: translate3d(100%, 0, 0);
+
+        &.active {
+          transform: translate3d(0, 0, 0);
+        }
+
+        background: transparent;
+        .ion-navicon {
+          right: 0;
+        }
+      }
+
+      .ion-ios-refresh-empty {
+        cursor: pointer;
+        &:before {
+          transform: scale(1.6);
+        }
+      }
+
+      > .rate-symbol {
+        display: inline-block;
+        width: 54px;
+      }
     }
+
+    .disable-pointer-events {
+      .bp-arrow-right {
+        visibility: hidden;
+      }
+    }
+
     .item-sub {
       &:first-child:before {
         width: 95%
@@ -55,6 +86,18 @@
             width:90%;
           }
         }
+      }
+    }
+
+    .item-complex {
+      & > .item-content {
+        padding: 1rem 54px 1rem 74px;
+      }
+    }
+
+    .rates {
+      .item-content {
+        padding: 16px;
       }
     }
   }

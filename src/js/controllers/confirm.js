@@ -31,6 +31,18 @@ angular.module('copayApp.controllers').controller('confirmController', function(
     }, 1);
   }
 
+  $scope.showItemSelector = false;
+  $scope.showItemSelectorMenu = function() {
+    $scope.showItemSelector = true;
+  };
+
+  $scope.updateAlternativeCurrency = function() {
+    updateTx($scope.tx, $scope.wallet, {
+      clearCache: true,
+      dryRun: true
+    });
+    refresh();
+  };
 
   $scope.showWalletSelector = function() {
     $scope.walletSelector = true;
@@ -56,7 +68,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
       $ionicHistory.clearHistory();
       $state.go('tabs.send');
     });
-  };
+  }
 
   function setNoWallet(msg) {
     $scope.wallet = null;
@@ -65,7 +77,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
     $timeout(function() {
       $scope.$apply();
     });
-  };
+  }
 
   $scope.$on("$ionicView.beforeEnter", function(event, data) {
 
@@ -116,7 +128,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
           }
         });
       });
-    };
+    }
 
     // Setup $scope
     $scope.network = (new bitcore.Address(data.stateParams.toAddress)).network.name;
@@ -129,7 +141,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
       description: data.stateParams.description,
       paypro: data.stateParams.paypro,
 
-      feeLevel: configFeeLevel,
+      feeLevel: $scope.network !== 'livenet' ? 'superEconomy' : configFeeLevel,
       spendUnconfirmed: walletConfig.spendUnconfirmed,
 
       // Vanity tx info (not in the real tx)
@@ -176,7 +188,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
       excludeUnconfirmedUtxos: !tx.spendUnconfirmed,
       returnInputs: true,
     }, cb);
-  };
+  }
 
 
   function getTxp(tx, wallet, dryRun, cb) {
@@ -225,7 +237,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
       }
       return cb(null, ctxp);
     });
-  };
+  }
 
   function updateTx(tx, wallet, opts, cb) {
 
@@ -240,13 +252,14 @@ angular.module('copayApp.controllers').controller('confirmController', function(
 
       // Amount
       tx.amountStr = txFormatService.formatAmountStr(tx.toAmount);
-      tx.amountValueStr = tx.amountStr.split(' ')[0];
-      tx.amountUnitStr = tx.amountStr.split(' ')[1];
+      tx.amountValueStr = tx.amountStr;
       customNetworks.getAll().then(function(CUSTOMNETWORKS) {
-        txFormatService.formatAlternativeStr(tx.toAmount, CUSTOMNETWORKS[$scope.network], function(v) {
-          tx.alternativeAmountStr = v;
+        var network = CUSTOMNETWORKS[$scope.network];
+        tx.amountUnitStr = network.symbol;
+        txFormatService.alternativeAmountWithSymbol(tx.toAmount, network, function(amount) {
+          tx.alternativeAmountStr = amount;
         });
-      })
+      });
     }
 
     updateAmount();
@@ -296,12 +309,20 @@ angular.module('copayApp.controllers').controller('confirmController', function(
           if (err) return cb(err);
 
           txp.feeStr = txFormatService.formatAmountStr(txp.fee);
+
           customNetworks.getAll().then(function(CUSTOMNETWORKS) {
-            txFormatService.formatAlternativeStr(txp.fee, CUSTOMNETWORKS[wallet.credentials.network], function(v) {
-              txp.alternativeFeeStr = v;
+            var network = CUSTOMNETWORKS[wallet.credentials.network];
+
+            txFormatService.alternativeAmountWithSymbol(txp.fee, network, function(fee) {
+              txp.alternativeFeeStr = fee;
             });
 
-            var per = (txp.fee / (txp.amount + txp.fee) * 100);
+            var per = (txp.fee / txp.amount) * 100;
+
+            if (per > 0.00 && per < 0.01) {
+              per = 0.01;
+            }
+
             txp.feeRatePerStr = per.toFixed(2) + '%';
             txp.feeToHigh = per > FEE_TOO_HIGH_LIMIT_PER;
 
@@ -311,7 +332,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
 
             return cb();
           });
-        })          
+        });
       });
     });
   }
@@ -334,7 +355,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
       $scope.buttonText += gettextCatalog.getString('to accept');
     } else
       $scope.buttonText += gettextCatalog.getString('to send');
-  };
+  }
 
 
   $scope.toggleAddress = function() {
@@ -358,7 +379,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
         }));
       }
       return warningMsg.join('\n');
-    };
+    }
 
     var msg = gettextCatalog.getString("{{fee}} will be deducted for bitcoin networking fees.", {
       fee: txFormatService.formatAmountStr(sendMaxInfo.fee)
@@ -369,7 +390,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
       msg += '\n' + warningMsg;
 
     popupService.showAlert(null, msg, function() {});
-  };
+  }
 
   $scope.onWalletSelect = function(wallet) {
     setWallet(wallet, tx);
@@ -409,7 +430,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
       var m = Math.floor(totalSecs / 60);
       var s = totalSecs % 60;
       $scope.remainingTimeStr = ('0' + m).slice(-2) + ":" + ('0' + s).slice(-2);
-    };
+    }
 
     function setExpiredValues() {
       $scope.paymentExpired = true;
@@ -418,8 +439,8 @@ angular.module('copayApp.controllers').controller('confirmController', function(
       $timeout(function() {
         $scope.$apply();
       });
-    };
-  };
+    }
+  }
 
   /* sets a wallet on the UI, creates a TXPs for that wallet */
 
@@ -434,15 +455,14 @@ angular.module('copayApp.controllers').controller('confirmController', function(
 
     updateTx(tx, wallet, {
       dryRun: true
-    }, function(err) {
+    }, function() {
       $timeout(function() {
         $ionicScrollDelegate.resize();
         $scope.$apply();
       }, 10);
-
     });
 
-  };
+  }
 
   var setSendError = function(msg) {
     $scope.sendStatus = '';
@@ -479,29 +499,30 @@ angular.module('copayApp.controllers').controller('confirmController', function(
     }
 
     ongoingProcess.set('creatingTx', true, onSendStatusChange);
+
     getTxp(lodash.clone(tx), wallet, false, function(err, txp) {
       ongoingProcess.set('creatingTx', false, onSendStatusChange);
       if (err) return;
 
       // confirm txs for more that 20usd, if not spending/touchid is enabled
       function confirmTx(cb) {
-        if (walletService.isEncrypted(wallet))
-          return cb();
+        // if (walletService.isEncrypted(wallet))
+        //   return cb();
 
-        var amountUsd = parseFloat(txFormatService.formatToUSD(txp.amount));
-        if (amountUsd <= CONFIRM_LIMIT_USD)
-          return cb();
+        // var amountUsd = parseFloat(txFormatService.formatToUSD(txp.amount));
+        // if (amountUsd <= CONFIRM_LIMIT_USD)
+        //   return cb();
 
-        var message = gettextCatalog.getString('Sending {{amountStr}} from your {{name}} wallet', {
+        var message = gettextCatalog.getString('Sending {{amountStr}} from\n{{name}}', {
           amountStr: tx.amountStr,
-          name: wallet.name
+          name: wallet.name.trim()
         });
         var okText = gettextCatalog.getString('Confirm');
         var cancelText = gettextCatalog.getString('Cancel');
         popupService.showConfirm(null, message, okText, cancelText, function(ok) {
           return cb(!ok);
         });
-      };
+      }
 
       function publishAndSign() {
         if (!wallet.canSign() && !wallet.isPrivKeyExternal()) {
@@ -511,16 +532,22 @@ angular.module('copayApp.controllers').controller('confirmController', function(
             if (err) setSendError(err);
           }, onSendStatusChange);
         }
-        destroyBitloxListeners();
+
+
         walletService.publishAndSign(wallet, txp, function(err, txp) {
-          if (err) return setSendError(err);
+          if (err === 'cancel') {
+            return;
+          } else if (err) {
+            return setSendError(err);
+          }
+
           if (config.confirmedTxsNotifications && config.confirmedTxsNotifications.enabled) {
             txConfirmNotification.subscribe(wallet, {
               txid: txp.txid
             });
           }
         }, onSendStatusChange);
-      };
+      }
 
       confirmTx(function(nok) {
         if (nok) {
@@ -551,7 +578,7 @@ angular.module('copayApp.controllers').controller('confirmController', function(
     } else if (showName) {
       $scope.sendStatus = showName;
     }
-  };
+  }
 
   $scope.statusChangeHandler = statusChangeHandler;
 
@@ -568,7 +595,6 @@ angular.module('copayApp.controllers').controller('confirmController', function(
   };
 
   $scope.chooseFeeLevel = function(tx, wallet) {
-
     var scope = $rootScope.$new(true);
     scope.network = tx.network;
     scope.feeLevel = tx.feeLevel;
@@ -609,12 +635,4 @@ angular.module('copayApp.controllers').controller('confirmController', function(
     };
   };
 
-  $scope.$on('destroy', function() {
-    destroyBitloxListeners();
-  })
-  function destroyBitloxListeners() {
-    if($rootScope.bitloxConnectErrorListener) {
-      $rootScope.bitloxConnectErrorListener();    
-    }    
-  }
 });

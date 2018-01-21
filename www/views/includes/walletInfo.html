@@ -1,21 +1,31 @@
+<ion-spinner
+  class="spinner-dark recent right"
+  icon="crescent"
+  ng-show="updatingStatus || (updatingTxHistory && updatingTxHistoryProgress<=5)">
+</ion-spinner>
 
-<ion-spinner class="spinner-dark recent right" icon="crescent" ng-show="updatingStatus || (updatingTxHistory && updatingTxHistoryProgress<=5)"   ></ion-spinner>
+<div class="wallet-info">
+  <span ng-show="wallet.status.wallet.singleAddress" class="size-12">
+    <span translate>Auditable</span>
+  </span>
 
-<div>
-<span ng-show="wallet.status.wallet.singleAddress" class="size-12"><span translate>Auditable</span></span>
-<img style="height:0.6em; margin-right: 1px;" ng-show="wallet.network === 'testnet'" src="img/icon-testnet-white.svg">
-<img style="height:0.6em; margin-right: 1px;" ng-show="!wallet.canSign() && !wallet.isPrivKeyExternal()" src="img/icon-read-only-white.svg">
+  <img ng-show="wallet.network === 'testnet'" src="img/icon-testnet-white.svg">
+  <img ng-show="!wallet.canSign() && !wallet.isPrivKeyExternal()" src="img/icon-read-only-white.svg">
+  <img ng-show="wallet.getPrivKeyExternalSourceName().indexOf('bitlox') > -1" src="img/icon-wallet-bitlox.svg">
+  <img ng-show="wallet.getPrivKeyExternalSourceName() == 'trezor'" src="img/icon-trezor-white.svg">
+  <img ng-show="wallet.getPrivKeyExternalSourceName() == 'ledger'" src="img/icon-ledger-white.svg">
+  <img ng-show="wallet.getPrivKeyExternalSourceName() == 'intelTEE'" src="img/icon-inteltee-white.svg">
 
-<img style="height:0.6em; margin-right: 1px;"  ng-show="wallet.getPrivKeyExternalSourceName().indexOf('bitlox') > -1" src="img/icon-wallet-bitlox.svg">
+  <span ng-show="wallet.credentials.n > 1" class="size-12">
+    <span translate>{{wallet.m}}-of-{{wallet.n}}</span>
+  </span>
 
-<img style="height:0.6em; margin-right: 1px;"  ng-show="wallet.getPrivKeyExternalSourceName() == 'trezor'" src="img/icon-trezor-white.svg">
-<img style="height:0.6em; margin-right: 1px;"  ng-show="wallet.getPrivKeyExternalSourceName() == 'ledger'" src="img/icon-ledger-white.svg">
-<img style="height:0.6em; margin-right: 1px;"  ng-show="wallet.getPrivKeyExternalSourceName() == 'intelTEE'" src="img/icon-inteltee-white.svg">
-<span ng-show="wallet.credentials.n > 1" class="size-12"><span translate>{{wallet.m}}-of-{{wallet.n}}</span></span>
-<span class="size-12 dib" style="height:0.6em; margin-right: 1px;" ng-show="wallet.credentials.account">#{{wallet.credentials.account || 0}} </span>
+  <span class="size-12 dib" ng-show="wallet.credentials.account">
+    #{{wallet.credentials.account || 0}}
+  </span>
 
-<img style="height:0.6em; margin-right: 1px;" ng-show="wallet.isPrivKeyEncrypted()" src="img/icon-lock-white.svg">
+  <img ng-show="wallet.isPrivKeyEncrypted()" src="img/icon-lock-white.svg">
 
-<!-- <img style="height:1em" ng&#45;show="wallet.preferences.email" src="img/icon&#45;email.svg"> -->
-<img style="height:0.6em; margin-right: 1px;" ng-show="wallet.usingCustomBWS" src="img/icon-bws-white.svg">
+  <!-- <img style="height:1em" ng&#45;show="wallet.preferences.email" src="img/icon&#45;email.svg"> -->
+  <img ng-show="wallet.usingCustomBWS" src="img/icon-bws-white.svg">
 </div>

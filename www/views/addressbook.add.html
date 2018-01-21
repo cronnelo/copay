@@ -23,7 +23,11 @@
                  id="name"
                  name="name"
                  ng-model="addressbookEntry.name"
-                 required>
+                 autocomplete="off"
+                 autocorrect="off"
+                 autocapitalize="off"
+                 spellcheck="false"
+                 required />
         </label>
         <label class="item item-input item-stacked-label">
           <span class="input-label" translate>Email</span>
@@ -34,18 +38,27 @@
                  ng-model="addressbookEntry.email">
         </label>
         <div>
-          <label class="item item-input item-stacked-label">
+          <div class="item item-input item-stacked-label">
             <span class="input-label" translate>Cryptocurrency Address</span>
-            <div class="input-notification">
-              <i ng-show="!addressbookForm.address.$invalid" class="icon ion-checkmark-circled valid"></i>
-              <i ng-show="addressbookForm.address.$invalid && addressbookEntry.address" class="icon ion-close-circled invalid"></i>
+            <div class="input-notification" ng-click="clearAddressInput(addressbookForm)">
+              <i ng-show="addressbookForm.address.$valid" class="icon ion-checkmark-circled valid"></i>
+              <i ng-show="addressbookForm.address.$invalid && addressbookForm.address.$dirty"
+                 class="icon ion-close-circled invalid"
+                 ng-click="clearAddressInput()"></i>
             </div>
             <input type="text"
                    id="address"
                    name="address"
                    ng-model="addressbookEntry.address"
-                   valid-address required>
-          </label>
+                   ng-paste="stripUnnecessaryAddressValue($event)"
+                   valid-address
+                   required>
+            <p ng-show="addressbookForm.address.$invalid && addressbookForm.address.$dirty"
+               class="invalid-field"
+               translate>
+              Invalid Address
+            </p>
+          </div>
           <div class="qr-scan-icon">
             <qr-scanner on-scan="onQrCodeScannedAddressBook(data, addressbookForm)"></qr-scanner>
           </div>
@@ -56,7 +69,8 @@
         <button type="submit"
                 class="button button-standard button-primary"
                 ng-click="add(addressbookEntry)"
-                ng-disabled="!addressbookForm.$valid" translate>
+                ng-disabled="!addressbookForm.$valid"
+                translate>
           Save
         </button>
       </div>

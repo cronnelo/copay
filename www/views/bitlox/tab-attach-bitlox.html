@@ -1,4 +1,4 @@
-<ion-view id="tab-home">
+<ion-view id="tab-attach-bitlox" hide-tabs ng-controller="WalletCtrl">
   <ion-nav-bar class="bar-royal">
     <ion-nav-title>Attach a BitLox</ion-nav-title>
     <ion-nav-back-button>
@@ -6,35 +6,47 @@
   </ion-nav-bar>
 
 
-  <ion-content ng-controller="WalletCtrl" >
-    <br /><br />
-    <!-- <div ng-controller="BitLoxCtrl"> -->
+  <ion-content>
+    <br />
+    <br />
 
       <div class="list card" ng-hide="bitlox.connected" ng-if="!bitlox.isMobile && timer">
           <span class="item">
               No BitLox device detected.<br /><br />
-              Please turn on your BitLox, enter the device PIN, and select USB mode.<br/><br/>
-              <button class="button button-standard button-primary" ng-click="reset()">Refresh</button>
+              Please turn on your BitLox, enter the device PIN, select USB mode, and then touch the refresh button on this screen.<br/><br/>
+              <button class="button button-standard button-primary button-blue" ng-click="reset()">Refresh</button>
               <button class="button button-standard button-secondary" ng-if="closeModal" ng-click="closeModal()">Cancel</button>              
           </span>
       </div>
+
       <div class="list card"  ng-if="timer" ng-show="bitlox.isMobile && !bitlox.connected">
-        <a class="item item-remove-animate" ng-click="refreshBitlox($event)">
-          <span  ng-if="api.getNumDevices() < 1">No devices found - </span>Press here to refresh
-        </a>
+        <div class="item item-remove-animate center-child" style="border:0;">
+          <span>No devices found</span>
+          <br />
+          <br />
+        </div>
         <a ng-repeat="device in api.getKnownDevices()"
            ng-click="connectBle(device.address, false)"
            style="padding-top: 2rem; padding-bottom: 2rem"
            class="item item-sub item-icon-left item-big-icon-left item-icon-right wallet">
            <i class="icon big-icon-svg">
-             <img src="img/icon-wallet-bitlox.svg" class="bg wallet icon-create-wallet"/>
+             <img src="img/icon-wallet-bitlox.svg" class="bg wallet icon-create-wallet button-blue"/>
            </i>
           <span>{{device.name}}</span>
           <i class="icon bp-arrow-right"></i>
           <!-- <pre>{{device}}</pre> -->
         </a>
-        <button ng-if="closeModal" style="width:100%" class="button icon icon-left ion-ios-close-outline"
-           ng-click = "closeModal()">Cancel</button>
+        <button class="button button-standard button-primary button-blue p10h"
+                style="width:90%;margin: 2rem auto"
+                ng-click="refreshBitlox($event)">
+          Scan for Bitlox Hardware
+        </button>        
+        <button class="button button-standard button-primary p10h"
+                ng-if="closeModal"
+                ng-click="closeModal()"
+                style="width:90%;margin: 2rem auto">
+          Cancel
+        </button>
       </div>
       <div
         ng-show="bitlox.connected">
@@ -46,7 +58,7 @@
           class="item item-sub item-icon-left item-big-icon-left item-icon-right wallet"
           type="item-text-wrap" ui-sref="tabs.add.create-bitlox">
             <i class="icon big-icon-svg">
-              <img src="img/icon-wallet.svg" class="bg wallet icon-create-wallet"/>
+              <img src="img/icon-wallet.svg" class="bg wallet"/>
             </i>
             <span class="add-type" translate>Create/Restore<br />BitLox Wallet</span>
             <i class="icon bp-arrow-right"></i>
@@ -86,10 +98,10 @@
       </div>
     <!-- </div> -->
 
-    <div class="list card"  ng-hide="bitlox.connected" ng-if="!bitlox.isMobile && timer">
+    <div class="list card"  ng-if="showBitLoxBuyLink && !bitlox.connected && timer">
       <a ng-click="openBitlox();"  ng-click="openBitlox($event)" class="open-bitlox item item-sub item-icon-left item-big-icon-left">
        <i class="icon big-icon-svg">
-         <img src="img/icon-wallet-bitlox.svg" class="bg wallet icon-create-wallet"/>
+         <img src="img/icon-wallet-bitlox.svg" class="bg wallet icon-create-wallet button-blue"/>
        </i>
         <span style="text-decoration: none" translate>Buy a BitLox Now</span>
       </a>

@@ -8,7 +8,7 @@
    -ms-user-select: auto;
    user-select: auto;
  }
-
+ 
 .box-notification {
   padding: 0.5rem;
   border: 1px solid;
@@ -136,6 +136,10 @@ input[type=number] {
   white-space: nowrap;
 }
 
+.nowrap {
+  white-space: nowrap;
+}
+
 .updating {
   div {
     text-align: center;
@@ -247,6 +251,10 @@ input[type=number] {
 
 .size-42 {
   font-size: 42px;
+}
+
+.m3t {
+  margin-top: 3px;
 }
 
 .m5t {
@@ -457,13 +465,12 @@ input[type=file] {
   float: left;
 }
 
-.keyboard-open .tabs {
-   display: none;
- }
-
- .keyboard-open .has-tabs {
-   bottom: 0;
+.center-child {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
 
 .white-space-initial {
   white-space: initial;

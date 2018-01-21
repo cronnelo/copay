@@ -328,7 +328,32 @@ angular.module('copayApp').config(function(historicLogProvider, $provide, $logPr
         url: '/add',
         views: {
           'tab-home@tabs': {
-            templateUrl: 'views/add.html'
+            templateUrl: 'views/add.html',
+            controller: function($scope, $state, $ionicPopup, platformInfo) {
+              $scope.goToAttachBitlox = function() {
+                if (!platformInfo.isAndroid) {
+                  return $state.go('tabs.add.attach-bitlox');
+                }
+
+                $ionicPopup.show({
+                  template: 'Since Android 6.0, Bluetooth requires "coarse" location\
+                  permissions to scan for devices properly. This means that the app\
+                  can see which country/region you are in, NOT your exact location!\
+                  You must allow these location privileges to use the BitLox device,\
+                  but the scan will still work if you have Location Services turned\
+                  off. For increased privacy, ensure your location services are\
+                  turned off while using this app.',
+                  cssClass: 'no-header',
+                  buttons: [{
+                    text: 'Access my BitLox via BLE',
+                    type: 'button-primary',
+                    onTap: function() {
+                      return $state.go('tabs.add.attach-bitlox', { accessBLE: true });
+                    }
+                  }]
+                });
+              };
+            }
           }
         }
       })
@@ -357,7 +382,7 @@ angular.module('copayApp').config(function(historicLogProvider, $provide, $logPr
         },
         views: {
           'tab-home@tabs': {
-            templateUrl: 'views/bitlox/tab-attach-bitlox.html',
+            templateUrl: 'views/bitlox/tab-attach-bitlox.html'
           },
         }
       })
@@ -393,6 +418,26 @@ angular.module('copayApp').config(function(historicLogProvider, $provide, $logPr
 
       /*
        *
+       * Rates Calculator
+       *
+       */
+
+      .state('tabs.rates-calculator', {
+        url: '/rates-calculator',
+        params: {
+          ratesCalculator: true,
+          network: ''
+        },
+        views: {
+          'tab-home@tabs': {
+            controller: 'amountController',
+            templateUrl: 'views/amount.html'
+          }
+        }
+      })
+
+      /*
+       *
        * Global Settings
        *
        */
@@ -403,6 +448,15 @@ angular.module('copayApp').config(function(historicLogProvider, $provide, $logPr
           'tab-settings@tabs': {
             controller: 'preferencesNotificationsController',
             templateUrl: 'views/preferencesNotifications.html'
+          }
+        }
+      })
+      .state('tabs.toggle-bitlox-link', {
+        url: '/toggle-bitlox-link',
+        views: {
+          'tab-settings@tabs': {
+            controller: 'preferencesToggleBitLoxLinkController',
+            templateUrl: 'views/preferencesToggleBitLoxLink.html'
           }
         }
       })
@@ -437,7 +491,6 @@ angular.module('copayApp').config(function(historicLogProvider, $provide, $logPr
         url: '/altCurrency',
         views: {
           'tab-settings@tabs': {
-            controller: 'preferencesAltCurrencyController',
             templateUrl: 'views/preferencesAltCurrency.html'
           }
         }
@@ -1210,7 +1263,7 @@ angular.module('copayApp').config(function(historicLogProvider, $provide, $logPr
         }
       });
   })
-  .run(function($rootScope, $state, $location, $log, $timeout, startupService, ionicToast, fingerprintService, $ionicHistory, $ionicPlatform, $window, appConfigService, lodash, platformInfo, profileService, uxLanguage, gettextCatalog, openURLService, storageService, scannerService, configService, emailService, /* plugins START HERE => */ coinbaseService, glideraService, amazonService, bitpayCardService, applicationService, mercadoLibreService) {
+  .run(function($rootScope, $state, $location, $log, $timeout, startupService, ionicToast, fingerprintService, $ionicHistory, $ionicPlatform, $window, appConfigService, lodash, platformInfo, profileService, uxLanguage, gettextCatalog, openURLService, storageService, scannerService, configService, emailService, /* plugins START HERE => */ coinbaseService, glideraService, amazonService, bitpayCardService, applicationService) {
 
     uxLanguage.init();
 
@@ -1345,6 +1398,26 @@ angular.module('copayApp').config(function(historicLogProvider, $provide, $logPr
         $log.debug('This is not OSX');
       }
       win.menu = nativeMenuBar;
+    }
+
+    $rootScope.isOffline = !navigator.onLine;
+
+    $window.addEventListener('offline', function() {
+      $rootScope.$apply(function() {
+        $rootScope.isOffline = true;
+      });
+    });
+
+    $window.addEventListener('online', function() {
+      $rootScope.$apply(function() {
+        $rootScope.isOffline = false;
+      });
+    });
+
+    $rootScope.destroyBitloxListeners = function() {
+      if($rootScope.bitloxConnectErrorListener) {
+        $rootScope.bitloxConnectErrorListener();    
+      }    
     }
 
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {

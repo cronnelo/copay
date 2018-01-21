@@ -1,5 +1,5 @@
 #tab-send {
-  @extend .deflash-blue;
+  
   .input {
     input {
       width: 100%;
@@ -35,7 +35,7 @@
   .send-heading {
     font-size: 14px;
     font-weight: bold;
-    padding: 0 0 16px 0;
+    padding: 6px 0 16px 0;
     border: none;
   }
   .send-header-wrapper {
@@ -47,6 +47,10 @@
     background-color: #f2f2f2;
     border-radius: 3px;
     border: none;
+    .search-input {
+      padding-left: 0;
+      line-height: normal;
+    }
     .svg#Bitcoin_Symbol {
       width: 14px;
       .st0 {
@@ -54,15 +58,8 @@
       }
     }
     &.focus {
-      background: none;
       .svg#Bitcoin_Symbol {
         display: none;
-      }
-      .search-input {
-        padding-left: 0;
-        &:focus::-webkit-input-placeholder {
-          opacity: 0;
-        }
       }
     }
   }

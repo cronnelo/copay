@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('copayApp.controllers').controller('tabReceiveController', function($rootScope, $scope, $timeout, $log, $ionicModal, $state, $ionicHistory, $ionicPopover, storageService, platformInfo, walletService, profileService, configService, lodash, gettextCatalog, popupService, bwcError, bitcore) {
+angular.module('copayApp.controllers').controller('tabReceiveController', function($rootScope, $scope, $timeout, $log, $ionicModal, $state, $ionicHistory, $ionicPopover, storageService, platformInfo, walletService, profileService, configService, lodash, gettextCatalog, popupService, bwcError, bitcore, orderedWallet) {
 
   var listeners = [];
   $scope.isCordova = platformInfo.isCordova;
@@ -94,23 +94,28 @@ angular.module('copayApp.controllers').controller('tabReceiveController', functi
     }
   };
 
-  $scope.$on("$ionicView.beforeEnter", function(event, data) {
-    $scope.wallets = profileService.getWallets();
-    $scope.singleWallet = $scope.wallets.length == 1;
-
-    if (!$scope.wallets[0]) return;
-
-    // select first wallet if no wallet selected previously
-    var selectedWallet = checkSelectedWallet($scope.wallet, $scope.wallets);
-    $scope.onWalletSelect(selectedWallet);
-    
+  $scope.$on("$ionicView.beforeEnter", function() {
     $scope.showShareButton = platformInfo.isCordova ? (platformInfo.isIOS ? 'iOS' : 'Android') : null;
-    listeners = [
-      $rootScope.$on('bwsEvent', function(e, walletId, type, n) {
-        // Update current address
-        if ($scope.wallet && walletId == $scope.wallet.id && type == 'NewIncomingTx') $scope.setAddress(true);
-      })
-    ];
+
+    profileService.getOrderedWallets({ onlyComplete: true }, function(wallets) {
+      $scope.wallets = wallets;
+      $scope.singleWallet = $scope.wallets.length == 1;
+
+      if (!$scope.wallets[0]) return;
+
+      // select first wallet if no wallet selected previously
+      var selectedWallet = checkSelectedWallet($scope.wallet, $scope.wallets);
+      $scope.onWalletSelect(selectedWallet);
+
+      listeners = [
+        $rootScope.$on('bwsEvent', function(e, walletId, type, n) {
+          // Update current address
+          if ($scope.wallet && walletId == $scope.wallet.id && type == 'NewIncomingTx') {
+            $scope.setAddress(true);
+          }
+        })
+      ];
+    });
   });
 
   $scope.$on("$ionicView.leave", function(event, data) {
