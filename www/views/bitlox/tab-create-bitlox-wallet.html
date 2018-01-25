@@ -28,7 +28,7 @@
             <span class="toggle-label" translate>Restore From Mnemonic?</span>
           </ion-toggle>
 
-          <div ng-show="newWallet.isRestore">
+          <div ng-show="newWallet.isRestore" style="padding: 16px;">
               <p>
                   To quickly restore the wallet, type the words of your
                   mnemonic into the text box below, and you will get a list
@@ -46,14 +46,17 @@
               </p>
               <div class="form-group">
                   <textarea class="form-control"
-                            ng-model="userWords"
                             placeholder="Enter your Mnemonic here"
+                            ng-model="userWords"
                             ng-change="updateWordNumbers()"
-                            ng-keyup="updateWordNumbers()"></textarea>
+                            ng-keyup="updateWordNumbers()"
+                            autocomplete="off"
+                            autocorrect="off"
+                            autocapitalize="off"
+                            spellcheck="false" ></textarea>
               </div>
               <div>
-                  <span ng-repeat="(index, wordNum) in wordIndexes"
-                        style="padding-right: 8px">
+                  <span ng-repeat="(index, wordNum) in wordIndexes" style="padding-right: 8px">
                       {{index + 1}}:{{wordNum}}
                   </span>
               </div>
