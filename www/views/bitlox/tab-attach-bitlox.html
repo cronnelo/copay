@@ -15,12 +15,12 @@
               No BitLox device detected.<br /><br />
               Please turn on your BitLox, enter the device PIN, select USB mode, and then touch the refresh button on this screen.<br/><br/>
               <button class="button button-standard button-primary button-blue" ng-click="reset()">Refresh</button>
-              <button class="button button-standard button-secondary" ng-if="closeModal" ng-click="closeModal()">Cancel</button>              
+              <button class="button button-standard button-secondary" ng-if="closeModal" ng-click="closeModal()">Cancel</button>
           </span>
       </div>
 
       <div class="list card"  ng-if="timer" ng-show="bitlox.isMobile && !bitlox.connected">
-        <div class="item item-remove-animate center-child" style="border:0;">
+        <div class="item item-remove-animate center-child" ng-if="api.getNumDevices() < 1" style="border:0;">
           <span>No devices found</span>
           <br />
           <br />
@@ -40,7 +40,7 @@
                 style="width:90%;margin: 2rem auto"
                 ng-click="refreshBitlox($event)">
           Scan for Bitlox Hardware
-        </button>        
+        </button>
         <button class="button button-standard button-primary p10h"
                 ng-if="closeModal"
                 ng-click="closeModal()"
@@ -105,6 +105,6 @@
        </i>
         <span style="text-decoration: none" translate>Buy a BitLox Now</span>
       </a>
-    </div>    
+    </div>
   </ion-content>
 </ion-view>
